@@ -1,0 +1,62 @@
+# screenshot
+"scrot '/home/j/ss-%H:%M:%S-$wx$h.png'"
+    Print
+"alltray -nt 'urxvt -e scrot -s "/home/j/ss-%H:%M:%S-$wx$h.png"'"
+    Alt + Print
+"alltray -nt 'urxvt -e scrot -sb "/home/j/ss-%H:%M:%S-$wx$h.png"'"
+    Alt + Shift + Print
+"scrot -d5 '/home/j/ss-%H:%M:%S-$wx$h.png'"
+    Control + Print
+"alltray -nt 'urxvt -e scrot -d5 -s "/home/j/ss-%H:%M:%S-$wx$h.png"'"
+    Control + Alt + Print
+
+# special keys
+"jsession-quit halt"
+    XF86PowerOff
+"[ -z `nmcli nm wifi|grep enabled` ] && nmcli nm wifi on || nmcli nm wifi off"
+    XF86WLAN
+"/home/j/bin/audctl down"
+    XF86AudioLowerVolume
+"/home/j/bin/audctl up"
+    XF86AudioRaiseVolume
+"(slock &) && jsession-quit suspend"
+    XF86Sleep
+"/home/j/bin/toggle-ext"
+    XF86Display
+"/home/j/bin/audctl toggle"
+    XF86AudioMute
+
+# media
+"mpc && mpc toggle || (mpd && mpc play)"
+    Mod4 + p
+"(mpc || mpd) && mpc prev"
+    Mod4 + comma
+"(mpc || mpd) && mpc next"
+    Mod4 + period
+"/home/j/bin/mpc-notify"
+    Mod4 + m
+# utils
+"(slock &) && sleep .5 && xset dpms force off"
+    Mod4 + l
+"gvfs-open computer:/"
+    Mod4 + c
+"xdg-open ~"
+    Mod4 + h
+"/home/j/bin/gmrun-smart"
+    Mod4 + r
+
+# programs
+"firefox"
+    Control + Alt + f
+"gedit"
+    Control + Alt + g
+"/home/j/bin/irssi-urxvt"
+    Control + Alt + i
+"kate"
+    Control + Alt + k
+"mythfrontend"
+    Control + Alt + m
+"urxvt"
+    Control + Alt + t
+"zb-fetcher gui"
+    Control + Alt + z

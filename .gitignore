@@ -1,0 +1,14 @@
+*
+!.gitignore
+!mm.cfg
+!.jsession/
+!.jsession/*
+.jsession/running
+!.bashrc
+!.ghci
+!.gitignore_global
+!.startup
+!.vimrc
+!.Xdefaults
+!.xbindkeysrc
+!.xinitrc

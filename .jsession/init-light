@@ -1,0 +1,9 @@
+xset r rate 250 60
+setxkbmap gb dvorakukp -option -option caps:none
+compiz ccp
+xbindkeys
+kupfer --no-splash
+xfce4-panel
+/usr/lib/xfce4/notifyd/xfce4-notifyd
+redshift -l 52.4:0
+/home/j/.startup light
