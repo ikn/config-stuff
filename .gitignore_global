@@ -1,6 +1,7 @@
 .gitignore
-*.pyc
-*.pyo
+*.py[co]
 __pycache__
 *.kate-swp
+.*.swp
 *~
+.nfs*
