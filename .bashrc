@@ -15,6 +15,7 @@ alias up='sudo pacman -Syu'
 alias lookfor='pacman -Ss'
 alias aur-sync-git='aur-sync -f $(pacman -Qqm | grep \\-git$)'
 
+alias l='ls'
 alias py='python'
 alias py2='python2'
 alias lock='echo try vlock'
@@ -26,6 +27,7 @@ alias portal='run-game run-wine C:\\\\windows\\\\command\\\\start.exe steam://ru
 alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'
 alias freq='grep MHz /proc/cpuinfo'
+alias searchin='echo use ack'
 alias mrefresh='mpc || mpd; mpc clear && mpc ls | mpc add'
 alias wallpaper-img='feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"'
 alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/bin/.white.png'
@@ -33,6 +35,7 @@ alias fplog='tail -f ~/.macromedia/Flash_Player/Logs/flashlog.txt'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stop_net='killall nm-applet mail-notification thunderbird firefox; sudo systemctl stop crashplan.service dcron.service NetworkManager.service chrony.service'
 alias stop_tv='sudo systemctl stop mythtv.service'
+alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 
 nethogs () {
     [ "`tail /sys/class/net/wlan0/operstate`" = "up" ] && device=wlan0
@@ -82,13 +85,6 @@ search () {
     find . -regextype posix-extended -iregex ".*$1.*"
 }
 
-searchin () {
-    d="$1"
-    p="$2"
-    shift 2
-    find "$d" -type f -print0 "$@" | xargs -0 grep -i "$p"
-}
-
 alias p='python -ic "
 import os, atexit, readline, rlcompleter
 hist = \"/home/j/.pyhistory\"
@@ -113,13 +109,13 @@ if os.path.exists(hist):
 readline.parse_and_bind(\"tab: complete\")
 del os, atexit, readline, rlcompleter"'
 
-export PYTHONPATH=$PYTHONPATH:"~/Documents/Coding/Python modules"
+export PYTHONPATH=$PYTHONPATH:"$HOME/Documents/Coding/Python modules"
 
 export EDITOR=/usr/bin/vim
 export GREP_OPTIONS='--color=auto'
 export JAR=fastjar
 
-PATH="~/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 

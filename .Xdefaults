@@ -16,9 +16,9 @@ URxvt.keysym.M-v: perl:clipboard:paste
 URxvt.keysym.M-a: perl:keyboard-select:activate
 ! clickable, keyboardable URLs
 URxvt.keysym.M-u: perl:url-select:select_next
-URxvt.underlineURLs: true
-URxvt.urlButton: 3
-URxvt.urlLauncher: firefox
+URxvt.url-select.underline: true
+URxvt.url-select.button: 3
+URxvt.url-select.launcher: firefox
 ! disable picture insert thing on ctrl-shift
 URxvt.iso14755: False
 ! appearance
