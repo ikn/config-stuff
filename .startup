@@ -1,6 +1,6 @@
 #! /bin/bash
 
-wifi=true
+wifi=false
 
 sleep 2
 feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"
@@ -10,7 +10,7 @@ if [ "$1" != light ]; then
     alltray -nt -k VoidSymbol firefox &
     if $wifi; then
         sleep 10
-    
+    else
         sleep 3
     fi
     alltray -nt -k XF86Launch1 thunderbird &

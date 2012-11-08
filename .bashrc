@@ -23,11 +23,12 @@ alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias aos='aos wine ".wine/drive_c/Ace of Spades/client.exe"'
 alias portal='run-game run-wine C:\\\\windows\\\\command\\\\start.exe steam://rungameid/400'
+alias wproxy='ssh -D 8080 wp'
 
 alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'
 alias freq='grep MHz /proc/cpuinfo'
-alias searchin='echo use ack'
+alias searchin='echo use ack; true'
 alias mrefresh='mpc || mpd; mpc clear && mpc ls | mpc add'
 alias wallpaper-img='feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"'
 alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/bin/.white.png'
@@ -119,12 +120,9 @@ export PATH="$HOME/bin:$PATH"
 
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
-if [ "$STARTIRSSI" = "y" ]; then
-    echo -ne "\033]0;irssi\007"
-    irssi
-    exit
-elif [ "$STARTIRSSI" = "n" ]; then
-    echo -ne "\033]0;irssi\007"
-    irssi -!
-    exit
+irccmd=weechat-curses
+if [ "$STARTIRC" = "y" ]; then
+    exec "$irccmd"
+elif [ "$STARTIRC" = "n" ]; then
+    exec "$irccmd" -a
 fi

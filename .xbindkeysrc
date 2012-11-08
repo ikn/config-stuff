@@ -38,9 +38,9 @@
 # utils
 "(slock &) && sleep .5 && xset dpms force off"
     Mod4 + l
-"gvfs-open computer:/"
+"pcmanfm computer:/ --new-win"
     Mod4 + c
-"xdg-open ~"
+"pcmanfm ~ --new-win"
     Mod4 + h
 "/home/j/bin/gmrun-smart"
     Mod4 + r
@@ -50,7 +50,7 @@
     Control + Alt + f
 "gedit"
     Control + Alt + g
-"/home/j/bin/irssi-urxvt"
+"/home/j/bin/irc-urxvt"
     Control + Alt + i
 "kate"
     Control + Alt + k
