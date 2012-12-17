@@ -1,14 +1,14 @@
 xset r rate 250 60
-setxkbmap gb dvorakukp -option -option caps:none
-#setxkbmap gb dvorakukp -option -option caps:none -option terminate:ctrl_alt_bksp
+#setxkbmap gb dvorakukp -option -option caps:none
+setxkbmap gb dvorakukp -option -option caps:none -option terminate:ctrl_alt_bksp
 compiz ccp
 xbindkeys
 kupfer --no-splash
 xfce4-panel
 /usr/lib/xfce4/notifyd/xfce4-notifyd
 redshift -l 52.4:0
-#nm-applet
+nm-applet
 #xplanet -output /home/j/Documents/Image/other/desktops/xplanet.png -geometry 1366x768 -radius 30 -center +850+250 -latitude 30 -searchdir /home/j/Documents/Image/other/xplanet
-#transmission-gtk -m
+transmission-gtk -m
 mail-notification
 /home/j/.startup
