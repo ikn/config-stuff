@@ -11,8 +11,8 @@
     Control + Alt + Print
 
 # special keys
-"jsession-quit halt"
-    XF86PowerOff
+#"jsession-quit halt"
+#    XF86PowerOff
 "[ -z `nmcli nm wifi|grep enabled` ] && nmcli nm wifi on || nmcli nm wifi off"
     XF86WLAN
 "/home/j/bin/audctl down"

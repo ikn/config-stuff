@@ -14,6 +14,7 @@ alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
 alias lookfor='pacman -Ss'
 alias aur-sync-git='aur-sync -f $(pacman -Qqm | grep \\-git$)'
+alias owned='pacman -Qo `find .` 2> &1 | grep -v ^error'
 
 alias l='ls'
 alias py='python'
@@ -35,7 +36,7 @@ alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/bin/.white.png'
 alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/null'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stop_net='killall nm-applet mail-notification thunderbird firefox; sudo systemctl stop crashplan.service dcron.service NetworkManager.service chrony.service'
-alias stop_tv='sudo systemctl stop mythtv.service'
+alias stop_tv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 
 nethogs () {

@@ -5,6 +5,7 @@
 !.jsession/*
 .jsession/running
 !.bashrc
+!.conkyrc
 !.ghci
 !.gitignore_global
 !.startup
