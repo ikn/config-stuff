@@ -7,7 +7,7 @@ draw_shades no
 draw_borders no
 
 alignment bottom_right
-gap_x 1940
+gap_x 20
 gap_y 35
 use_spacer none
 

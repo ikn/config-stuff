@@ -6,7 +6,6 @@ shopt -s histappend
 alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
-alias youtube-dl='youtube-dl -l'
 alias ssh='ssh -t'
 
 alias inst='sudo pacman -S'
@@ -38,6 +37,12 @@ alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stop_net='killall nm-applet mail-notification thunderbird firefox; sudo systemctl stop crashplan.service dcron.service NetworkManager.service chrony.service'
 alias stop_tv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
+
+ytdl () {
+    pushd ~/media/videos &> /dev/null
+    youtube-dl -t --max-quality 44 --prefer-free-formats "$@"
+    popd &> /dev/null
+}
 
 nethogs () {
     [ "`tail /sys/class/net/wlan0/operstate`" = "up" ] && device=wlan0
