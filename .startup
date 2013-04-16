@@ -7,7 +7,9 @@ feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"
 conky &
 
 if [ "$1" != light ]; then
-    if $wiki; then nm-applet &; fi
+    if $wiki; then
+        nm-applet &
+    fi
     alltray -nt -k VoidSymbol firefox &
     if $wifi; then
         sleep 10
