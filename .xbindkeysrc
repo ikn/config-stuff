@@ -36,7 +36,7 @@
 "/home/j/bin/mpc-notify"
     Mod4 + m
 # utils
-"(slock &) && sleep .5 && xset dpms force off"
+"/home/j/bin/lock"
     Mod4 + l
 "spacefm"
     Mod4 + h

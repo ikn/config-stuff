@@ -8,6 +8,7 @@ alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
 alias ssh='ssh -t'
 alias free='free -h'
+alias sed='sed -r'
 
 alias pacman='pacman'
 alias inst='sudo pacman -S'
@@ -15,7 +16,6 @@ alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
 alias lookfor='pacman -Ss'
 alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
-alias aur-sync-git='aur-sync -f $(pacman -Qqm | grep \\-git$)'
 
 alias l='ls'
 alias py='python'
@@ -37,6 +37,18 @@ alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stop_net='killall nm-applet mail-notification thunderbird firefox; sudo systemctl stop crashplan.service dcron.service NetworkManager.service chrony.service'
 alias stop_tv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
+
+aur-sync-git () {
+    aur-sync -f $(pacman -Qm | while read line; do
+        pkg=($line)
+        if echo ${pkg[1]} | egrep '^[[:digit:]]{8}-[[:digit:]]+$' > /dev/null \
+           || echo ${pkg[1]} | grep -- '-git$' > /dev/null; then
+            if [ ${pkg[0]} != supermeatboy ]; then
+                echo ${pkg[0]}
+            fi
+        fi
+    done)
+}
 
 ytdl () {
     pushd ~/media/videos &> /dev/null

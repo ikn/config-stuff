@@ -1,13 +1,13 @@
 #! /bin/bash
 
-wifi=true
+wifi=false
 
 sleep 2
 feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"
 conky &
 
 if [ "$1" != light ]; then
-    if $wiki; then
+    if $wifi; then
         nm-applet &
     fi
     alltray -nt -k VoidSymbol firefox &
