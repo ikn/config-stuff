@@ -7,7 +7,6 @@ alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
 alias ssh='ssh -t'
-alias free='free -h'
 alias sed='sed -r'
 
 alias pacman='pacman'
@@ -101,7 +100,14 @@ man () {
 }
 
 search () {
-    find . -regextype posix-extended -iregex ".*$1.*"
+    pat="$1"
+    shift
+    find . -regextype posix-extended -iregex ".*$pat.*" "$@"
+}
+
+sumfs () {
+    search "$1" -type f -print0 | grep -zZv /$ | xargs -0 ls -l | \
+        awk '{print $5}' | paste -sd+ - | bc
 }
 
 alias p='python -ic "
@@ -133,6 +139,7 @@ export PYTHONPATH=$PYTHONPATH:"$HOME/Documents/Coding/Python modules"
 export EDITOR=/usr/bin/vim
 export GREP_OPTIONS='--color=auto'
 export JAR=fastjar
+export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
 export PATH="$HOME/bin:$PATH"
 

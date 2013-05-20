@@ -6,7 +6,7 @@ xbindkeys
 urxvtd
 kupfer --no-splash
 xfce4-panel
-pwrnotify 3 5 10
+pwrnotify 3 5 20
 redshift -l 52.4:0
 #xplanet -output /home/j/Documents/Image/other/desktops/xplanet.png -geometry 1366x768 -radius 30 -center +850+250 -latitude 30 -searchdir /home/j/Documents/Image/other/xplanet
 #transmission-gtk -m

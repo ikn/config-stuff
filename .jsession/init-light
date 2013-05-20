@@ -5,6 +5,6 @@ xbindkeys
 urxvtd
 kupfer --no-splash
 xfce4-panel
-pwrnotify 3 5 10
+pwrnotify 3 5 20
 redshift -l 52.4:0
 /home/j/.startup light

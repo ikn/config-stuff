@@ -8,6 +8,7 @@
 !.conkyrc
 !.ghci
 !.gitignore_global
+!.profile
 !.startup
 !.vimrc
 !.Xdefaults
