@@ -1,2 +1,2 @@
-init=~/.jsession/init-light
+init=~/.jsession/init:~/.jsession/init-full
 noinit=

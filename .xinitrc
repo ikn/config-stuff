@@ -1,7 +1,9 @@
 #! /bin/sh
 
 if [ "$1" = light ]; then
-    exec jsession /home/j/.jsession/conf-light
-else
+    /home/j/.startup light &
     exec jsession
+else
+    /home/j/.startup
+    exec jsession /home/j/.jsession/conf-full
 fi
