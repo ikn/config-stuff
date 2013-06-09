@@ -26,15 +26,6 @@
 "/home/j/bin/audctl toggle"
     XF86AudioMute
 
-# media
-"mpc && mpc toggle || (mpd && mpc play)"
-    Mod4 + p
-"(mpc || mpd) && mpc prev"
-    Mod4 + comma
-"(mpc || mpd) && mpc next"
-    Mod4 + period
-"/home/j/bin/mpc-notify"
-    Mod4 + m
 # utils
 "/home/j/bin/lock"
     Mod4 + l
