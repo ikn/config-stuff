@@ -41,6 +41,8 @@
     Control + Alt + g
 "/home/j/bin/irc-urxvt"
     Control + Alt + i
+"/home/j/bin/irc-remote-urxvt"
+    Control + Shift + Alt + i
 "kate"
     Control + Alt + k
 "mythfrontend"

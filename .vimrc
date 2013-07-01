@@ -12,6 +12,7 @@ set smartcase
 syntax on
 set background=dark
 set linebreak
+set colorcolumn=80
 " editing: settings
 set expandtab
 set tabstop=4

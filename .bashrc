@@ -24,6 +24,7 @@ alias lock='echo try vlock'
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias wproxy='ssh -D 8080 wp'
+alias :q='exit'
 
 alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'
@@ -151,4 +152,7 @@ if [ "$STARTIRC" = "y" ]; then
     exec "$irccmd"
 elif [ "$STARTIRC" = "n" ]; then
     exec "$irccmd" -a
+fi
+if [ "$STARTIRCREMOTE" = "y" ]; then
+    TERM=xterm ssh codd "tmux attach"; exit
 fi

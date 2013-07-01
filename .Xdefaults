@@ -1,3 +1,4 @@
+*multiClickTime: 200
 !! urxvt
 URxvt.perl-ext-common: default,selection,url-select,clipboard,keyboard-select
 ! transparency
