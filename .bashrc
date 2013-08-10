@@ -7,7 +7,6 @@ alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
 alias ssh='ssh -t'
-alias sed='sed -r'
 alias ag='ag -i'
 
 alias pacman='pacman'
@@ -18,6 +17,7 @@ alias lookfor='pacman -Ss'
 alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
 
 alias l='ls'
+alias sedr='sed -r'
 alias py='python'
 alias py2='python2'
 alias lock='echo try vlock'
@@ -89,6 +89,12 @@ fl () {
     flash $n vlc
 }
 
+flcp () {
+    flash | cut -d" " -f1 | while read num; do
+        flash "$num" "cp -t ."
+    done
+}
+
 man () {
     env \
     LESS_TERMCAP_mb=$(printf "\e[1;31m") \
@@ -110,6 +116,14 @@ search () {
 sumfs () {
     search "$1" -type f -print0 | grep -zZv /$ | xargs -0 ls -l | \
         awk '{print $5}' | paste -sd+ - | bc
+}
+
+vidmem () {
+    sudo bash -c '
+        for f in /sys/kernel/debug/dri/*/i915_gem_gtt; do
+            echo $((`tail -n1 "$f" | cut -d" " -f4`/1024/1024))
+        done
+    '
 }
 
 alias p='python -ic "
