@@ -39,10 +39,10 @@
     Control + Alt + f
 "gedit"
     Control + Alt + g
-"/home/j/bin/irc-urxvt"
-    Control + Alt + i
+#"/home/j/bin/irc-urxvt"
+#    Control + Alt + i
 "/home/j/bin/irc-remote-urxvt"
-    Control + Shift + Alt + i
+    Control + Alt + i
 "kate"
     Control + Alt + k
 "mythfrontend"

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=full
+Comment=jsession full configuration
+Exec=jsession /home/j/.jsession/conf-full
+Type=XSession

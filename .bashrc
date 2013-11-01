@@ -8,12 +8,17 @@ alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
 alias ssh='ssh -t'
 alias ag='ag -i'
+alias free='free -m'
+alias info='info --vi-keys'
+alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
+alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
+alias pactree='pactree -c'
 
-alias pacman='pacman'
+alias pac='pacman'
+alias paclog='less /var/log/pacman.log'
 alias inst='sudo pacman -S'
 alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
-alias lookfor='pacman -Ss'
 alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
 
 alias l='ls'
@@ -21,29 +26,26 @@ alias sedr='sed -r'
 alias py='python'
 alias py2='python2'
 alias lock='echo try vlock'
-alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
-alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
-alias wproxy='ssh -D 8080 wp'
 alias :q='exit'
+alias crontab='fcrontab'
 
 alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'
 alias freq='grep MHz /proc/cpuinfo'
-alias searchin='echo use ag; true'
-alias mrefresh='mpc || mpd; mpc clear && mpc ls | mpc add'
 alias wallpaper-img='feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"'
 alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/bin/.white.png'
 alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/null'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
-alias stop_net='killall nm-applet mail-notification thunderbird firefox; sudo systemctl stop crashplan.service dcron.service NetworkManager.service chrony.service'
-alias stop_tv='sudo systemctl stop mythbackend.service'
+alias stoptv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
         pkg=($line)
-        if echo ${pkg[1]} | egrep '^[[:digit:]]{8}-[[:digit:]]+$' > /dev/null \
-           || echo ${pkg[1]} | grep -- '-git$' > /dev/null; then
+        if echo ${pkg[1]} | egrep -q '^[[:digit:]]{8}-[[:digit:]]+$' \
+           || echo ${pkg[0]} | grep -q -- '-git$' \
+           || echo ${pkg[0]} | grep -q -- '-hg$' \
+           || echo ${pkg[0]} | grep -q -- '-bzr$'; then
             if [ ${pkg[0]} != supermeatboy ]; then
                 echo ${pkg[0]}
             fi
@@ -53,7 +55,7 @@ aur-sync-git () {
 
 ytdl () {
     pushd ~/media/videos &> /dev/null
-    youtube-dl -t --max-quality 44 --prefer-free-formats "$@"
+    youtube-dl -t --max-quality 22 --prefer-free-formats "$@"
     popd &> /dev/null
 }
 
@@ -168,5 +170,9 @@ elif [ "$STARTIRC" = "n" ]; then
     exec "$irccmd" -a
 fi
 if [ "$STARTIRCREMOTE" = "y" ]; then
-    TERM=xterm ssh codd "tmux attach"; exit
+    irc () {
+        TERM=xterm-256color ssh $host "bash -l -c 'tmux attach'" && exit
+    }
+
+    host=rpi irc || host=home irc
 fi
