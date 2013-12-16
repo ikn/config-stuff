@@ -39,6 +39,10 @@ alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stoptv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 
+show () {
+    declare -f "$1" || alias "$1"
+}
+
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
         pkg=($line)
@@ -54,8 +58,14 @@ aur-sync-git () {
 }
 
 ytdl () {
-    pushd ~/media/videos &> /dev/null
+    pushd ~/media/videos/yt &> /dev/null
     youtube-dl -t --max-quality 22 --prefer-free-formats "$@"
+    popd &> /dev/null
+}
+
+ytdl-low () {
+    pushd ~/media/videos/yt &> /dev/null
+    youtube-dl -t --max-quality 18 --prefer-free-formats "$@"
     popd &> /dev/null
 }
 
