@@ -43,6 +43,11 @@ show () {
     declare -f "$1" || alias "$1"
 }
 
+fix-perms () {
+    find "$1" -type d | xargs chmod 755
+    find "$1" -type f | xargs chmod 644
+}
+
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
         pkg=($line)
