@@ -44,8 +44,10 @@ show () {
 }
 
 fix-perms () {
-    find "$1" -type d | xargs chmod 755
-    find "$1" -type f | xargs chmod 644
+    for dir in "$@"; do
+        find "$dir" -type d | xargs chmod 755
+        find "$dir" -type f | xargs chmod 644
+    done
 }
 
 aur-sync-git () {
@@ -80,7 +82,7 @@ nethogs () {
 }
 
 gitar () {
-    name=$(basename $(readlink -f ..))
+    name=$(basename "$(readlink -f ..)")
     if [ -z "$2" ]; then
         ext=tar.gz
     else
