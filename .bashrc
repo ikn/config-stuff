@@ -65,13 +65,13 @@ aur-sync-git () {
 }
 
 ytdl () {
-    pushd ~/media/videos/yt &> /dev/null
+    pushd ~/media/videos &> /dev/null
     youtube-dl -t --max-quality 22 --prefer-free-formats "$@"
     popd &> /dev/null
 }
 
 ytdl-low () {
-    pushd ~/media/videos/yt &> /dev/null
+    pushd ~/media/videos &> /dev/null
     youtube-dl -t --max-quality 18 --prefer-free-formats "$@"
     popd &> /dev/null
 }
