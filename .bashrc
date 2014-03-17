@@ -45,8 +45,8 @@ show () {
 
 fix-perms () {
     for dir in "$@"; do
-        find "$dir" -type d | xargs chmod 755
-        find "$dir" -type f | xargs chmod 644
+        find "$dir" -type d | xargs chmod 755 2> /dev/null
+        find "$dir" -type f | xargs chmod 644 2> /dev/null
     done
 }
 
@@ -74,6 +74,16 @@ ytdl-low () {
     pushd ~/media/videos &> /dev/null
     youtube-dl -t --max-quality 18 --prefer-free-formats "$@"
     popd &> /dev/null
+}
+
+ytvlc () {
+    vlc "$(youtube-dl -g --max-quality 22 --prefer-free-formats "$@")" --meta-title="$(youtube-dl -e "$1")"
+}
+
+ytvlc-low () {
+    url="$1"
+    shift
+    ytvlc "$url" --max-quality 18 "$@"
 }
 
 nethogs () {
@@ -127,9 +137,7 @@ man () {
 }
 
 search () {
-    pat="$1"
-    shift
-    find . -regextype posix-extended -iregex ".*$pat.*" "$@"
+    ag -ug "$@"
 }
 
 sumfs () {
