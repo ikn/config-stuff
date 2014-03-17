@@ -21,32 +21,28 @@ ${font :pixelsize=11:Bold}HDD$font ${hr 2}
 / $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_free_perc /}%
 ${fs_bar /}
 /home $alignc ${fs_used /home} / ${fs_size /home} $alignr ${fs_free_perc /home}%
-${fs_bar /home}${if_mounted /media/Data}
+${fs_bar /home}
 Data $alignc ${fs_used /media/Data} / ${fs_size /media/Data} $alignr ${fs_free_perc /media/Data}%
-${fs_bar /media/Data}${endif}${if_mounted /media/Vista}
-Vista $alignc ${fs_used /media/Vista} / ${fs_size /media/Vista} $alignr ${fs_free_perc /media/Vista}%
-${fs_bar /media/Vista}${endif}${if_mounted /media/j-ext}
-external $alignc ${fs_used /media/j-ext} / ${fs_size /media/j-ext} $alignr ${fs_free_perc /media/j-ext}%
-${fs_bar /media/j-ext}${endif}
+${fs_bar /media/Data}
 
 ${font :pixelsize=11:Bold}MEMORY$font ${hr 2}
 $mem / $memmax $alignr $memperc%
 $membar
 
 ${font :pixelsize=11:Bold}CPU$font ${hr 2}
-${loadavg} ${execi 5 temp 2}°C ${execi 5 temp 3}°C
+${loadavg}
+${execi 5 temp 2}°C ${execi 5 temp 3}°C ${execi 5 temp 4}°C ${execi 5 temp 5}°C
 ${cpugraph cpu0}
-${cpu cpu1}% ${cpubar cpu1}
-${cpu cpu2}% ${cpubar cpu2}
+${cpu cpu1}% ${cpubar cpu1 6,50} $alignr ${cpu cpu2}% ${cpubar cpu2 6,50}
+${cpu cpu3}% ${cpubar cpu3 6,50} $alignr ${cpu cpu4}% ${cpubar cpu4 6,50}
+${cpu cpu5}% ${cpubar cpu5 6,50} $alignr ${cpu cpu6}% ${cpubar cpu6 6,50}
+${cpu cpu7}% ${cpubar cpu7 6,50} $alignr ${cpu cpu8}% ${cpubar cpu8 6,50}
 
 ${font :pixelsize=11:Bold}NETWORK$font ${hr 2}
-${if_match "${tail /sys/class/net/wlan0/operstate 1}"=="up"}down: ${downspeedf wlan0} KiB/s (${totaldown wlan0})
-up: ${upspeedf wlan0} KiB/s (${totalup wlan0})${else}down: ${downspeedf eth0} KiB/s (${totaldown eth0})
-up: ${upspeedf eth0} KiB/s (${totalup eth0})${endif}
+down: ${downspeedf enp3s0} KiB/s (${totaldown enp3s0})
+up: ${upspeedf enp3s0} KiB/s (${totalup enp3s0})
 
 ${font :pixelsize=11:Bold}RUNTIME$font ${hr 2}
 up ${uptime_short}
-${battery} $alignr ${battery_time}
-${battery_bar}
 
 ${font :pixelsize=22}${time %a %d %b}
