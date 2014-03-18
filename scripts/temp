@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if [ -z "$1" ]; then
+    for f in /sys/devices/platform/coretemp.0/temp*_input; do
+        echo $(( $(cat $f) / 1000 ))
+    done
+else
+    echo $(( $(cat /sys/devices/platform/coretemp.0/temp${1}_input) / 1000 ))
+fi

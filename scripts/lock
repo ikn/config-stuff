@@ -1,0 +1,11 @@
+#! /bin/sh
+
+slock &
+local_pid="$!"
+# force pseudo-TTY allocation so that killing ssh kills the remote process
+ssh -tt rpi PATH=. slock &
+remote_pid="$!"
+sleep .5
+xset dpms force off
+wait "$local_pid"
+kill "$remote_pid"

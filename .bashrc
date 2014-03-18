@@ -33,7 +33,7 @@ alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'
 alias freq='grep MHz /proc/cpuinfo'
 alias wallpaper-img='feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"'
-alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/bin/.white.png'
+alias wallpaper-blank='feh --no-fehbg --bg-tile /home/j/.white.png'
 alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/null'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stoptv='sudo systemctl stop mythbackend.service'
@@ -188,12 +188,6 @@ export PATH="$HOME/bin:$PATH"
 
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
-irccmd=weechat-curses
-if [ "$STARTIRC" = "y" ]; then
-    exec "$irccmd"
-elif [ "$STARTIRC" = "n" ]; then
-    exec "$irccmd" -a
-fi
 if [ "$STARTIRCREMOTE" = "y" ]; then
     irc () {
         TERM=xterm-256color ssh $host "bash -l -c 'tmux attach'" && exit
