@@ -27,7 +27,7 @@ URxvt.font: xft:Monospace:pixelsize=13
 URxvt.cursorUnderline: True
 URxvt.scrollstyle: plain
 URxvt.scrollBar_right: True
-URxvt.geometry: 80x26
+URxvt.geometry: 100x34
 !URxvt.letterSpace: -1
 ! colours
 URxvt.color0  : #2E2E34343636

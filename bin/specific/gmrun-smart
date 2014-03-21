@@ -1,5 +1,5 @@
 #! /bin/bash
 
 if [ -z "`pidof gmrun`" ]; then
-    gmrun -g +479+358
+    gmrun -g +756+450
 fi

@@ -1,4 +1,3 @@
 /home/j/.startup
-#xplanet -output /home/j/Documents/Image/other/desktops/xplanet.png -geometry 1366x768 -radius 30 -center +850+250 -latitude 30 -searchdir /home/j/Documents/Image/other/xplanet
 #transmission-gtk -m
 mail-notification

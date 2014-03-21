@@ -184,7 +184,7 @@ export GREP_OPTIONS='--color=auto'
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
-export PATH="$HOME/bin:$HOME/scripts:$PATH"
+export PATH="$HOME/bin/specific:$HOME/bin/nonspecific:$PATH"
 
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 

@@ -13,7 +13,7 @@ use_spacer none
 
 use_xft yes
 xftfont Sans:pixelsize=11
-default_color 812
+default_color ddd
 no_buffers yes
 
 TEXT
@@ -31,7 +31,7 @@ $membar
 
 ${font :pixelsize=11:Bold}CPU$font ${hr 2}
 ${loadavg}
-${execi 5 temp 2}°C ${execi 5 temp 3}°C ${execi 5 temp 4}°C ${execi 5 temp 5}°C
+${execi 5 /home/j/bin/specific/temp 2}°C ${execi 5 /home/j/bin/specific/temp 3}°C ${execi 5 /home/j/bin/specific/temp 4}°C ${execi 5 /home/j/bin/specific/temp 5}°C
 ${cpugraph cpu0}
 ${cpu cpu1}% ${cpubar cpu1 6,50} $alignr ${cpu cpu2}% ${cpubar cpu2 6,50}
 ${cpu cpu3}% ${cpubar cpu3 6,50} $alignr ${cpu cpu4}% ${cpubar cpu4 6,50}

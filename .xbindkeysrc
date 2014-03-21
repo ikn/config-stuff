@@ -10,28 +10,25 @@
 "alltray -nt 'urxvt -e scrot -d5 -s "/home/j/ss-%H:%M:%S-$wx$h.png"'"
     Control + Alt + Print
 
-# special keys
-#"jsession-quit halt"
-#    XF86PowerOff
-"[ -z `nmcli nm wifi|grep enabled` ] && nmcli nm wifi on || nmcli nm wifi off"
-    XF86WLAN
-"/home/j/bin/audctl down"
-    XF86AudioLowerVolume
-"/home/j/bin/audctl up"
-    XF86AudioRaiseVolume
+# power/media
 "(slock &) && jsession-quit suspend"
     XF86Sleep
-"/home/j/bin/toggle-ext"
-    XF86Display
-"/home/j/bin/audctl toggle"
-    XF86AudioMute
+"/home/j/bin/nonspecific/audctl down"
+    Control + Shift + comma
+    #XF86AudioLowerVolume
+"/home/j/bin/nonspecific/audctl up"
+    Control + Shift + period
+    #XF86AudioRaiseVolume
+"/home/j/bin/nonspecific/audctl toggle"
+    Control + Shift + slash
+    #XF86AudioMute
 
 # utils
-"/home/j/bin/lock"
+"/home/j/bin/specific/lock"
     Mod4 + l
 "spacefm"
     Mod4 + h
-"/home/j/bin/gmrun-smart"
+"/home/j/bin/specific/gmrun-smart"
     Mod4 + r
 
 # programs
@@ -39,9 +36,7 @@
     Control + Alt + f
 "gedit"
     Control + Alt + g
-#"/home/j/bin/irc-urxvt"
-#    Control + Alt + i
-"/home/j/bin/irc-remote-urxvt"
+"/home/j/bin/specific/irc-remote-urxvt"
     Control + Alt + i
 "kate"
     Control + Alt + k
