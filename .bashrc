@@ -38,6 +38,7 @@ alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/nu
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stoptv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
+alias toggle-redshift='killall -USR1 redshift'
 
 show () {
     declare -f "$1" || alias "$1"

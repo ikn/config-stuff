@@ -13,7 +13,7 @@ use_spacer none
 
 use_xft yes
 xftfont Sans:pixelsize=11
-default_color ddd
+default_color 141
 no_buffers yes
 
 TEXT

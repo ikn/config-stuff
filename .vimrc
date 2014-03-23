@@ -39,7 +39,7 @@ nnoremap 0 g0
 nnoremap $ g$
 " shortcuts
 "" d/ cancels search highlight
-nnoremap d/ :noh<cr>
+nnoremap <silent> d/ :noh<cr>
 " fixes
 "" no visual
 map Q <Nop>

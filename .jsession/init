@@ -5,4 +5,4 @@ xbindkeys
 urxvtd
 kupfer --no-splash
 xfce4-panel
-#redshift -l 52.4:0
+redshift -l 52.2:0.1
