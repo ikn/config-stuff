@@ -1,0 +1,48 @@
+# screenshot
+Print
+    scrot ~/'ss-%H:%M:%S-$wx$h.png'
+alt + Print
+    alltray -nt 'urxvt -e scrot -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
+alt + shift + Print
+    alltray -nt 'urxvt -e scrot -sb "/home/j/ss-%H:%M:%S-$wx$h.png"'
+ctrl + Print
+    scrot -d5 ~/'ss-%H:%M:%S-$wx$h.png'
+ctrl + alt + Print
+    alltray -nt 'urxvt -e scrot -d5 -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
+
+# power/media
+XF86Sleep
+    (slock &) && jsession-quit suspend
+ctrl + shift + comma
+#XF86AudioLowerVolume
+    /home/j/bin/nonspecific/audctl down
+ctrl + shift + period
+#XF86AudioRaiseVolume
+    /home/j/bin/nonspecific/audctl up
+ctrl + shift + slash
+#XF86AudioMute
+    /home/j/bin/nonspecific/audctl toggle
+
+# utils
+super + l
+    /home/j/bin/specific/lock
+super + h
+    spacefm
+super + r
+    /home/j/bin/specific/gmrun-smart
+
+# programs
+ctrl + alt + f
+    firefox
+ctrl + alt + g
+    gedit
+ctrl + alt + i
+    /home/j/bin/specific/irc-remote-urxvt
+ctrl + alt + k
+    kate
+ctrl + alt + m
+    mythfrontend
+ctrl + alt + t
+    urxvtc || urxvt
+ctrl + alt + z
+    zb-fetcher gui

@@ -8,6 +8,9 @@
 !/bin/specific/run-game-real
 !/bin/specific/temp
 !/mm.cfg
+!/.config/
+!/.config/sxhkd
+!/.config/sxhkd/sxhkdrc
 !/.jsession/
 !/.jsession/*
 /.jsession/running
@@ -20,7 +23,6 @@
 !/.startup
 !/.vimrc
 !/.Xdefaults
-!/.xbindkeysrc
 !/.xinitrc
 !/.xsessions/
 !/.xsessions/*
