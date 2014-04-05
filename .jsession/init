@@ -1,8 +1,9 @@
 xset r rate 250 60
 setxkbmap gb dvorakukp -option -option caps:none -option terminate:ctrl_alt_bksp
 compiz ccp
-sxhkd -c ~/.sxhkd
+sxhkd
 urxvtd
 kupfer --no-splash
 xfce4-panel
 redshift -l 52.2:0.1
+/home/j/.startup

@@ -21,6 +21,7 @@
 !/.gitignore_global
 !/.profile
 !/.startup
+!/.startup-full
 !/.vimrc
 !/.Xdefaults
 !/.xinitrc

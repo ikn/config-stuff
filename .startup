@@ -3,10 +3,5 @@
 sleep 2
 feh --no-fehbg --bg-center "`cat /home/j/.wallpaper`"
 conky &
-optirun true # stops the GPU fan
-
-if [ "$1" != light ]; then
-    sleep 3
-    alltray -nt -k VoidSymbol firefox &
-    alltray -nt -k Pause thunderbird &
-fi
+sleep 60
+urxvt -e optirun true # stops the GPU fan

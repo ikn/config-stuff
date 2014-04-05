@@ -1,0 +1,5 @@
+#! /bin/bash
+
+sleep 5
+alltray -nt -k VoidSymbol firefox &
+alltray -nt -k Pause thunderbird &
