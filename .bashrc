@@ -3,6 +3,10 @@ export HISTSIZE=1000000
 export HISTCONTROL=ignoredups
 shopt -s histappend
 
+export CC=clang
+export CXX=clang++
+export MAKEFLAGS=-j8
+
 alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
@@ -58,7 +62,9 @@ aur-sync-git () {
            || echo ${pkg[0]} | grep -q -- '-git$' \
            || echo ${pkg[0]} | grep -q -- '-hg$' \
            || echo ${pkg[0]} | grep -q -- '-bzr$'; then
-            if [ ${pkg[0]} != supermeatboy ]; then
+            if [ ${pkg[0]} != supermeatboy -a \
+                ${pkg[0]} != vessel -a \
+                ${pkg[0]} != sokobond ]; then
                 echo ${pkg[0]}
             fi
         fi
@@ -104,25 +110,39 @@ gitar () {
 
 fl () {
     if [ -z "$1" ]; then
-        n=`flash`
+        n=$(flash)
         if [ -z "$n" ]; then
             # nothing to play
             return
         else
             # play first video
-            n=`echo $n | head -n1 | cut -d" " -f1`
+            n=$(echo "$n" | head -n1 | cut -d" " -f1)
         fi
     else
         # got video to play
-        n=$1
+        n="$1"
     fi
-    flash $n vlc
+    flash "$n" vlc
 }
 
 flcp () {
-    flash | cut -d" " -f1 | while read num; do
-        flash "$num" "cp -t ."
-    done
+    if [ "$#" -ge 2 ]; then
+        dest="$2"
+        tmp="$(mktemp -d)"
+        flash "$1" cp -t "$tmp"
+        mv "$tmp/$1" "$dest"
+        rm -rf "$tmp"
+    else
+        if [ -n "$1" ]; then
+            dest="$1"
+        else
+            dest=.
+        fi
+
+        flash | cut -d" " -f1 | while read num; do
+            flash "$num" cp -t "$dest"
+        done
+    fi
 }
 
 man () {

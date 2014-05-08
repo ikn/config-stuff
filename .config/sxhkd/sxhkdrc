@@ -35,7 +35,7 @@ super + r
 ctrl + alt + f
     firefox
 ctrl + alt + g
-    gedit
+    pluma
 ctrl + alt + i
     /home/j/bin/specific/irc-remote-urxvt
 ctrl + alt + k
@@ -44,5 +44,3 @@ ctrl + alt + m
     mythfrontend
 ctrl + alt + t
     urxvtc || urxvt
-ctrl + alt + z
-    zb-fetcher gui
