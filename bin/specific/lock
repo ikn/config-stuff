@@ -9,3 +9,4 @@ sleep .5
 xset dpms force off
 wait "$local_pid"
 kill "$remote_pid"
+xset -dpms

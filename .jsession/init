@@ -1,4 +1,6 @@
 xset r rate 250 60
+xset -dpms
+xset s off
 setxkbmap gb dvorakukp -option -option caps:none -option terminate:ctrl_alt_bksp
 compiz ccp
 sxhkd
