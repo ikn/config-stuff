@@ -9,8 +9,15 @@
 !/bin/specific/temp
 !/mm.cfg
 !/.config/
-!/.config/sxhkd
+!/.config/sxhkd/
 !/.config/sxhkd/sxhkdrc
+!/.config/uzbl/
+!/.config/uzbl/config
+!/.local/
+!/.local/share/
+!/.local/share/uzbl/
+!/.local/share/uzbl/scripts/
+!/.local/share/uzbl/scripts/*
 !/.jsession/
 !/.jsession/*
 /.jsession/running
