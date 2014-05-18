@@ -82,10 +82,11 @@ set download_handler    = sync_spawn @scripts_dir/download.sh
 
 # Load finish handlers
 @on_event   LOAD_FINISH    @set_status <span foreground="gold">done</span>
-@on_event   LOAD_FINISH    spawn @scripts_dir/history.sh
+# append to history
+@on_event   LOAD_FINISH    sh '[ "$UZBL_URI" != about:blank ] && echo $(date +%"s") $UZBL_URI $UZBL_TITLE >> @data_home/uzbl/history'
 
 # Switch to insert mode if a (editable) html form is clicked
-@on_event   FOCUS_ELEMENT  sh 'if [ "$1" = INPUT -o "$1" = TEXTAREA -o "$1" = SELECT ]; then echo "@set_mode insert" > $UZBL_FIFO; fi' %s
+#@on_event   FOCUS_ELEMENT  sh 'if [ "$1" = INPUT -o "$1" = TEXTAREA -o "$1" = SELECT ]; then echo "@set_mode insert" > $UZBL_FIFO; fi' %s
 # Switch to command mode if anything else is clicked
 @on_event   ROOT_ACTIVE    @set_mode command
 
@@ -329,9 +330,6 @@ set ebind     = @mode_bind global,-insert
 @cbind  i        = @set_mode insert
 @bind   <Ctrl>i  = @set_mode insert
 
-# Hard-bound bookmarks
-@cbind  gh  = uri https://www.duckduckgo.com
-
 # SSL-ify bindings
 @cbind  zs  = uri \@(echo "$UZBL_URI" | sed -e 's/^http:/https:/')\@
 @cbind  zS  = event REQ_NEW_WINDOW \@(echo "$UZBL_URI" | sed -e 's/^http:/https:/')\@
@@ -341,8 +339,6 @@ set ebind     = @mode_bind global,-insert
 
 # Clone current window
 @cbind  c   = event NEW_TAB_NEXT \@uri
-# Go the page from primary selection
-#@cbind  P   = sh 'echo "uri $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
 # Go to the page in clipboard
 @cbind  p   = sh 'echo "uri $(xclip -selection clipboard -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
 # Start a new uzbl instance from the page in primary selection
@@ -356,7 +352,8 @@ set ebind     = @mode_bind global,-insert
 #@cbind  M  = spawn @scripts_dir/insert_bookmark.sh
 
 # Bookmark/history loading
-@cbind  h  = spawn @scripts_dir/load_url_from_history.sh
+@cbind  h  = spawn @scripts_dir:load_url_from_history.sh uri
+@cbind  H  = spawn @scripts_dir:load_url_from_history.sh event NEW_TAB
 @cbind  b  = spawn @scripts_dir/load_url_from_bookmarks.sh
 
 # Temporary bookmarks
@@ -400,6 +397,7 @@ set formfiller = spawn @scripts_dir/formfiller.sh
 # Tab opening
 @cbind  t              = event NEW_TAB about:blank
 @cbind u = spawn @scripts_dir:undo_pop.sh
+@cbind U = spawn @scripts_dir:undo_choose.sh
 
 # Closing
 @cbind  d              = event REQ_CLOSE_TAB
