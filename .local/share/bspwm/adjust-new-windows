@@ -1,0 +1,23 @@
+#! /bin/bash
+
+ids=()
+# filter to tiled windows
+for id in "$@"; do
+    [ -n "$id" ] && [ -n "$(bspc query -W -w "$id".tiled)" ] && ids+=("$id")
+done
+
+# only do something if there's more than one tiled window
+if [ -n "$(bspc query -W -w last.tiled)" ]; then
+    # make all new windows floating
+    for id in "${ids[@]}"; do
+        bspc window "$id" -t floating
+    done
+    
+    # place each window in turn by transplanting into the biggest window
+    for id in "${ids[@]}"; do
+        "$BSPWM_SCRIPTS_DIR/auto-presel" br biggest
+        dest_id="$(bspc query -W -w biggest)"
+        bspc window "$id" -t floating
+        bspc window "$id" -w "$dest_id"
+    done
+fi

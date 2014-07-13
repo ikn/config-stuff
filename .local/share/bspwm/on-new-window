@@ -1,0 +1,121 @@
+#! /usr/bin/env python3
+
+import os
+import sys
+from subprocess import check_call, check_output
+import functools
+
+
+INDENT_CHAR = '\t'
+
+
+def get_raw_tree ():
+    return check_output(['bspc', 'query', '-T']).decode()
+
+
+def get_indentation (line):
+    i = 0
+    while line[i] == INDENT_CHAR:
+        i += 1
+    return i
+
+
+def tree_from_indentation (lines):
+    if not lines:
+        return []
+
+    base_indentation = get_indentation(lines[0])
+    remaining_lines = list(lines)
+    lines = []
+    current_line = None
+    children = None
+
+    def cleanup ():
+        if current_line is not None:
+            lines.append((current_line, tree_from_indentation(children)))
+
+    while remaining_lines:
+        line = remaining_lines.pop(0)
+        indentation = get_indentation(line)
+
+        if indentation < base_indentation:
+            raise ValueError('invalid base_indentation: found a less indented '
+                             'line')
+        elif indentation == base_indentation:
+            cleanup()
+            current_line = line[indentation:]
+            children = []
+        else:
+            if current_line is None:
+                raise ValueError(
+                    'invalid base_indentation: first line is more indented '
+                    '({} > {})'.format(indentation, base_indentation)
+                )
+            else:
+                children.append(line)
+
+    cleanup()
+    return lines
+
+
+def monitor_name (line):
+    return line.split()[0]
+
+
+def desktop_name (line):
+    return line.split()[0]
+
+
+def window_id (line):
+    words = line.split()
+    return None if words[0] in ('V', 'H') else words[3]
+
+
+def parse_windows (tree):
+    for line, sub_tree in tree:
+        w_id = window_id(line)
+        if w_id is not None:
+            yield w_id
+
+        for w_id in parse_windows(sub_tree):
+            yield w_id
+
+
+def parse_tree (raw_tree):
+    tree = {}
+    for m_line, new_ds in tree_from_indentation(raw_tree.splitlines()):
+        ds = tree.setdefault(monitor_name(m_line), {})
+        for d_line, ws in new_ds:
+            ds.setdefault(desktop_name(d_line), []).extend(parse_windows(ws))
+    return tree
+
+
+def watch_tree ():
+    while True:
+        sys.stdin.readline()
+        yield parse_tree(get_raw_tree())
+
+
+def get_new_windows (old_tree, new_tree):
+    for m_name in old_tree.keys() | new_tree.keys():
+        old_m = old_tree.get(m_name, {})
+        new_m = new_tree.get(m_name, {})
+        for d_name in old_m.keys() | new_m.keys():
+            old_d = old_m.get(d_name, [])
+            new_d = new_m.get(d_name, [])
+            for w_id in set(new_d) - set(old_d):
+                yield w_id
+
+
+def adjust_windows (w_ids_iter):
+    w_ids = list(w_ids_iter)
+    if w_ids:
+        check_call(sys.argv[1:] + w_ids)
+
+
+def handle_changes (old_tree, new_tree):
+    adjust_windows(get_new_windows(old_tree, new_tree))
+    return new_tree
+
+
+functools.reduce(handle_changes, watch_tree())
