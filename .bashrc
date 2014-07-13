@@ -1,15 +1,15 @@
+. ~/.profile
+
 export HISTFILESIZE=1000000
 export HISTSIZE=1000000
 export HISTCONTROL=ignoredups
 shopt -s histappend
-
-export CC=clang
-export CXX=clang++
-export MAKEFLAGS=-j8
+PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
 alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
+alias nethogs='sudo nethogs enp3s0'
 alias ssh='ssh -t'
 alias ag='ag -i'
 alias free='free -m'
@@ -25,6 +25,7 @@ alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
 alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
 
+alias v='vim'
 alias l='ls'
 alias sedr='sed -r'
 alias py='python'
@@ -71,32 +72,25 @@ aur-sync-git () {
     done)
 }
 
-ytdl () {
+alias youtube-dl='youtube-dl --prefer-free-formats --max-quality 22'
+
+_ytdl () {
     pushd ~/media/videos &> /dev/null
-    youtube-dl -t --max-quality 22 --prefer-free-formats "$@"
+    until-success 10 youtube-dl -t "$@"
     popd &> /dev/null
 }
 
-ytdl-low () {
-    pushd ~/media/videos &> /dev/null
-    youtube-dl -t --max-quality 18 --prefer-free-formats "$@"
-    popd &> /dev/null
-}
+alias ytdl='_ytdl --no-playlist'
+alias ytdl-low='ytdl --max-quality 18'
+alias ytdl-playlist='_ytdl -A'
+alias ytdl-low-playlist='_ytdl-playlist --max-quality 18'
 
 ytvlc () {
-    vlc "$(youtube-dl -g --max-quality 22 --prefer-free-formats "$@")" --meta-title="$(youtube-dl -e "$1")"
+    vlc "$(youtube-dl -g --max-quality 22 --prefer-free-formats "$@")" \
+        --meta-title="$(youtube-dl -e "$1")"
 }
 
-ytvlc-low () {
-    url="$1"
-    shift
-    ytvlc "$url" --max-quality 18 "$@"
-}
-
-nethogs () {
-    [ "`tail /sys/class/net/wlan0/operstate`" = "up" ] && device=wlan0
-    sudo nethogs $device
-}
+alias ytvlc-low='ytvlc --max-quality 18'
 
 gitar () {
     name=$(basename "$(readlink -f ..)")
@@ -197,17 +191,6 @@ if os.path.exists(hist):
     readline.read_history_file(hist)
 readline.parse_and_bind(\"tab: complete\")
 del os, atexit, readline, rlcompleter"'
-
-export PYTHONPATH=$PYTHONPATH:"$HOME/Documents/Coding/Python modules"
-
-export EDITOR=/usr/bin/vim
-export GREP_OPTIONS='--color=auto'
-export JAR=fastjar
-export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
-
-export PATH="$HOME/bin/specific:$HOME/bin/nonspecific:$PATH"
-
-PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
 if [ "$STARTIRCREMOTE" = "y" ]; then
     irc () {
