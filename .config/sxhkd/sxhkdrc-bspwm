@@ -1,4 +1,31 @@
+## screenshot
+Print
+    scrot ~/'ss-%H:%M:%S-$wx$h.png'
+alt + Print
+    alltray -nt 'urxvt -e scrot -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
+alt + shift + Print
+    alltray -nt 'urxvt -e scrot -sb "/home/j/ss-%H:%M:%S-$wx$h.png"'
+ctrl + Print
+    scrot -d5 ~/'ss-%H:%M:%S-$wx$h.png'
+ctrl + alt + Print
+    alltray -nt 'urxvt -e scrot -d5 -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
+
+## power/media
+XF86Sleep
+    (slock &) && jsession-quit suspend
+ctrl + shift + comma
+#XF86AudioLowerVolume
+    /home/j/bin/nonspecific/audctl down
+ctrl + shift + period
+#XF86AudioRaiseVolume
+    /home/j/bin/nonspecific/audctl up
+ctrl + shift + slash
+#XF86AudioMute
+    /home/j/bin/nonspecific/audctl toggle
+
 ## utils
+super + l
+    /home/j/bin/specific/lock
 super + h
     spacefm
 super + r
@@ -23,7 +50,9 @@ ctrl + alt + t
 super + {Left,Up,Right,Down}
     bspc window -f {left,up,right,down}
 super + Tab
-    bspc window -f last.local
+    [ -n "$(bspc query -W -w last.local)" ] && \
+        bspc window -f last.local || \
+        bspc window -f last
 super + u
     bspc window -f last.urgent
 # close
@@ -74,6 +103,7 @@ super + n
     bspc pointer -g focus
 # mouse: manipulate window
 alt + button{1,2}
+    bspc pointer -g focus; \
     bspc pointer -g {move,resize_corner}
 alt + !button{1-3}
     bspc pointer -t %i %i
