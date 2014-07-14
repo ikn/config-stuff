@@ -6,7 +6,10 @@ DMENU_OPTIONS="xmms vertical resize"
 . "/usr/share/uzbl/examples/data/scripts/util/dmenu.sh"
 . "$(dirname "$0")"/undo_pop_util.sh
 
+tmp_ifs="$IFS"
+# not sure why this changes $IFS
 IFS=$'\n' fs=($("$(dirname "$0")"/undo_sources.sh))
+IFS="$tmp_ifs"
 lengths=()
 for f in "${fs[@]}"; do
     length="$({ wc -l "$f" 2> /dev/null || echo 0; } | cut -d " " -f 1)"
@@ -19,7 +22,7 @@ choice="$(
         tac "${fs[i]}" 2> /dev/null | nl -v "$line" -s " " -w 1 -b a -n ln
         length="${lengths[i]}"
         line=$((line+length))
-    done | dmenu
+    done | $DMENU
 )"
 
 chosenline="$(echo "$choice" | cut -d " " -f 1)"

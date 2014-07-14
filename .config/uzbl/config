@@ -69,6 +69,12 @@ set download_handler    = sync_spawn @scripts_dir/download.sh
 # Reset the keycmd on navigation
 @on_event   LOAD_START     @set_mode
 
+# tab history management
+#@on_event LOAD_COMMIT spawn @scripts_dir:tabhist/add.sh
+#@on_event LOAD_ERROR spawn @scripts_dir:tabhist/add.sh
+#@on_event REQ_BACK spawn @scripts_dir:tabhist/offset.sh - %s
+#@on_event REQ_FORWARDS spawn @scripts_dir:tabhist/offset.sh + %s
+
 # Load commit handlers
 @on_event   LOAD_COMMIT    @set_status <span foreground="green">recv</span>
 
@@ -273,7 +279,9 @@ set ebind     = @mode_bind global,-insert
 @cbind  $            = scroll horizontal end
 
 # Navigation binds
+#@cbind  a   = event REQ_BACK
 @cbind  a   = back
+#@cbind  e   = event REQ_FORWARDS
 @cbind  e   = forward
 @cbind  x   = stop
 @cbind  r   = reload
@@ -336,6 +344,9 @@ set ebind     = @mode_bind global,-insert
 
 # Yanking & pasting binds
 @cbind  y  = sh 'if [ -z "\@SELECTED_URI" ]; then echo -n "$UZBL_URI"; else echo -n \@SELECTED_URI; fi | xclip -selection clipboard'
+set cp_text = sh 'echo "js getSelection().toString()" | socat - unix-connect:$UZBL_SOCKET | tail -n+2 | head -c -1 | xclip -selection clipboard'
+@cbind Y = @cp_text
+@cbind <Ctrl>c = @cp_text
 
 # Clone current window
 @cbind  c   = event NEW_TAB_NEXT \@uri
@@ -415,13 +426,13 @@ set formfiller = spawn @scripts_dir/formfiller.sh
 # === Context menu items =====================================================
 
 # Default context menu
-menu_add Google = set uri = http://google.com
-menu_add Go Home = set uri = http://uzbl.org
-menu_separator separator_1
-menu_add Quit uzbl = event REQ_CLOSE_TAB
+#menu_add Google = set uri = http://google.com
+#menu_add Go Home = set uri = http://uzbl.org
+#menu_separator separator_1
+#menu_add Quit uzbl = event REQ_CLOSE_TAB
 
 # Link context menu
-menu_link_add Print Link = print \@SELECTED_URI
+#menu_link_add Print Link = print \@SELECTED_URI
 
 # === Mode configuration =====================================================
 

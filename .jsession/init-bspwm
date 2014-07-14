@@ -1,0 +1,15 @@
+xset r rate 250 60
+setxkbmap gb dvorakukp -option -option caps:none -option terminate:ctrl_alt_bksp
+xset -dpms
+xset s off
+xsetroot -cursor_name left_ptr
+redshift -l 52.2:0.1
+
+sxhkd -c /home/j/.config/sxhkd/sxhkdrc-bspwm
+bspwm-monitor
+bspwm
+
+urxvtd
+kupfer --no-splash
+xfce4-panel --disable-wm-check
+/home/j/.jsession/startup-bspwm

@@ -9,12 +9,16 @@
 !/bin/specific/temp
 !/mm.cfg
 !/.config/
+!/.config/bspwm/
+!/.config/bspwm/*
 !/.config/sxhkd/
-!/.config/sxhkd/sxhkdrc
+!/.config/sxhkd/*
 !/.config/uzbl/
 !/.config/uzbl/config
 !/.local/
 !/.local/share/
+!/.local/share/bspwm/
+!/.local/share/bspwm/*
 !/.local/share/uzbl/
 !/.local/share/uzbl/scripts/
 !/.local/share/uzbl/scripts/*
@@ -27,8 +31,6 @@
 !/.gitignore
 !/.gitignore_global
 !/.profile
-!/.startup
-!/.startup-full
 !/.vimrc
 !/.Xdefaults
 !/.xinitrc

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=bspwm-light
+Comment=jsession bspwm light configuration
+Exec=jsession /home/j/.jsession/conf-bspwm-light
+Type=XSession

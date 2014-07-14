@@ -1,2 +1,2 @@
-/home/j/.startup-full
-#transmission-gtk -m
+transmission-gtk -m
+/home/j/.jsession/startup-full

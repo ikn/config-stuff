@@ -8,4 +8,4 @@ urxvtd
 kupfer --no-splash
 xfce4-panel
 redshift -l 52.2:0.1
-/home/j/.startup
+/home/j/.jsession/startup

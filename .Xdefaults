@@ -1,10 +1,11 @@
 *multiClickTime: 200
 !! urxvt
 URxvt.perl-ext-common: default,selection,url-select,clipboard,keyboard-select
-! transparency
-URxvt.depth: 32
+! colours
+!URxvt.depth: 32
+!URxvt.background: rgba:0000/0000/0000/cccc
 URxvt.foreground: white
-URxvt.background: rgba:0000/0000/0000/cccc
+URxvt.background: rgb:04/04/04
 ! scroll rules
 URxvt.scrollTtyOutput: False
 URxvt.scrollWithBuffer: True
@@ -19,7 +20,7 @@ URxvt.keysym.M-a: perl:keyboard-select:activate
 URxvt.keysym.M-u: perl:url-select:select_next
 URxvt.url-select.underline: true
 URxvt.url-select.button: 3
-URxvt.url-select.launcher: firefox
+URxvt.url-select.launcher: /home/j/bin/specific/uzbl-tabbed
 ! disable picture insert thing on ctrl-shift
 URxvt.iso14755: False
 ! appearance

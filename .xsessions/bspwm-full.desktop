@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=bspwm-full
+Comment=jsession bspwm full configuration
+Exec=jsession /home/j/.jsession/conf-bspwm-full
+Type=XSession

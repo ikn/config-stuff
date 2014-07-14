@@ -3,7 +3,13 @@
 ids=()
 # filter to tiled windows
 for id in "$@"; do
-    [ -n "$id" ] && [ -n "$(bspc query -W -w "$id".tiled)" ] && ids+=("$id")
+    if [ -n "$id" ]; then
+        # can't filter by .tiled if querying by $id, so use focus
+        [ "$(bspc query -W -w focused)" != "$id" ] && focus=y
+        [ -n "$focus" ] && bspc window -f "$id"
+        [ -n "$(bspc query -W -w focused.tiled)" ] && ids+=("$id")
+        [ -n "$focus" ] && bspc window -f last
+    fi
 done
 
 # only do something if there's more than one tiled window

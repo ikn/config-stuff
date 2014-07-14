@@ -1,0 +1,36 @@
+#! /usr/bin/env python3
+
+import sys
+
+from bspwmpython.querytree import (
+    get_raw_tree, tree_from_indentation, window_id
+)
+
+
+def respond_with (parent, is_split, index):
+    if is_split:
+        axis = parent.split()[0] == 'H'
+        print(('right', 'down', 'left', 'up')[2 * index + axis])
+    sys.exit(0)
+
+
+if len(sys.argv) != 2:
+    print('expected exactly one argument (window ID)')
+    sys.exit(1)
+
+tree = tree_from_indentation(get_raw_tree().splitlines())
+w_id = sys.argv[1]
+nearest_parent = None
+
+for m, ds in tree:
+    for d, ws in ds:
+        parents = [(d, list(enumerate(ws)))]
+        while parents:
+            parent, ws = parents.pop()
+            if ws:
+                i, (w, children) = ws.pop()
+                if window_id(w) == w_id:
+                    respond_with(parent, bool(parents), i)
+
+                parents.append((parent, ws))
+                parents.append((w, list(enumerate(children))))

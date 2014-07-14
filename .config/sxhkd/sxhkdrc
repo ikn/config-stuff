@@ -35,7 +35,7 @@ super + r
 ctrl + alt + f
     firefox
 ctrl + alt + u
-    uzbl-tabbed
+    /home/j/bin/specific/uzbl-tabbed
 ctrl + alt + g
     pluma
 ctrl + alt + i
