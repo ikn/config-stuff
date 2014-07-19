@@ -1,0 +1,13 @@
+#! /bin/bash
+
+# only do something if there's already a tiled window on this desktop
+if [ -n "$(bspc query -W -w biggest.tiled)" ]; then
+    if [ -n "$(bspc query -W -w biggest.tiled.manual)" ]; then
+        # we have a presel: use it by choosing the 'target' window
+        echo window=biggest.tiled.manual
+    else
+        # no presel exists: transplant into the biggest window
+        dir="$("$BSPWM_SCRIPTS_DIR/get-auto-presel" br biggest.tiled)"
+        echo window=biggest.tiled split_dir="$dir"
+    fi
+fi

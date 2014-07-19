@@ -6,7 +6,6 @@ xsetroot -cursor_name left_ptr
 redshift -l 52.2:0.1
 
 sxhkd -c /home/j/.config/sxhkd/sxhkdrc-bspwm
-bspwm-monitor
 bspwm
 
 urxvtd

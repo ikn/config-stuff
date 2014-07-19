@@ -5,7 +5,7 @@ URxvt.perl-ext-common: default,selection,url-select,clipboard,keyboard-select
 !URxvt.depth: 32
 !URxvt.background: rgba:0000/0000/0000/cccc
 URxvt.foreground: white
-URxvt.background: rgb:04/04/04
+URxvt.background: rgb:08/08/08
 ! scroll rules
 URxvt.scrollTtyOutput: False
 URxvt.scrollWithBuffer: True

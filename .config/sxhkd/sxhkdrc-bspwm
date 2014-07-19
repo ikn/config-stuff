@@ -44,15 +44,16 @@ ctrl + alt + k
     kate
 ctrl + alt + t
     urxvtc || urxvt
+# toggle Thunderbird
+Pause
+    ~/bin/nonspecific/toggle-window Mail
 
 ## bspwm
 # focus window
 super + {Left,Up,Right,Down}
     bspc window -f {left,up,right,down}
 super + Tab
-    [ -n "$(bspc query -W -w last.local)" ] && \
-        bspc window -f last.local || \
-        bspc window -f last
+    bspc window -f last
 super + u
     bspc window -f last.urgent
 # close

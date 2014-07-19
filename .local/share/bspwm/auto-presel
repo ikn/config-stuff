@@ -1,12 +1,5 @@
-#! /bin/bash
+#! /bin/sh
 
-dir="${1:br}"
 target="${2:-focused}"
-
-orientation="$("$BSPWM_SCRIPTS_DIR"/get-window-alignment "$target")"
-if [ "$orientation" = vertical ]; then
-    [ "$dir" = tl ] && d=up || d=down
-else
-    [ "$dir" = tl ] && d=left || d=right
-fi
-bspc window "$target" -p "$d"
+bspc window "$target" -p \
+    "$("$BSPWM_SCRIPTS_DIR"/get-auto-presel "$1" "$target")"
