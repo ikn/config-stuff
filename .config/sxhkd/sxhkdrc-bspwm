@@ -21,7 +21,7 @@ ctrl + shift + period
     /home/j/bin/nonspecific/audctl up
 ctrl + shift + slash
 #XF86AudioMute
-    /home/j/bin/nonspecific/audctl toggle
+    /home/j/bin/specific/audctl toggle
 
 ## utils
 super + l
@@ -46,7 +46,7 @@ ctrl + alt + t
     urxvtc || urxvt
 # toggle Thunderbird
 Pause
-    ~/bin/nonspecific/toggle-window Mail
+    ~/bin/specific/toggle-window Mail
 
 ## bspwm
 # focus window
@@ -65,6 +65,9 @@ super + alt + {Left,Up,Right,Down}
 # resize TL
 super + shift + {Left,Up,Right,Down}
     bspc window -e {left -50,up -50,left +50,up +50}
+# toggle floating
+super + f
+    bspc window focused -t floating
 
 # presel
 super + space
@@ -73,20 +76,20 @@ super + space
 super + ctrl + {Left,Up,Right,Down}
     bspc window -s {left,up,right,down}
 super + s
-    if [ -z "$(bspc query -W -w last.manual)" ]; then \
+    if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
         bspc window -s biggest; \
     else \
-        bspc window -f last.manual; \
+        bspc window -f last.manual.local; \
         bspc window -p cancel; \
         bspc window -s last; \
     fi 
 super + t
-    if [ -z "$(bspc query -W -w last.manual)" ]; then \
+    if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
         "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest; \
         bspc window -w biggest; \
     else \
         "$BSPWM_SCRIPTS_DIR"/auto-presel; \
-        bspc window -f last.manual; \
+        bspc window -f last.manual.local; \
         bspc window -p cancel; \
         bspc window -w last; \
     fi; \

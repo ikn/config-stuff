@@ -3,7 +3,7 @@
 import sys
 
 from bspwmpython.querytree import (
-    get_raw_tree, tree_from_indentation, window_id
+    get_raw_tree, parse_tree, SPLIT_VERTICAL, SPLIT_HORIZONTAL, path_to_window
 )
 
 
@@ -18,19 +18,11 @@ if len(sys.argv) != 2:
     print('expected exactly one argument (window ID)')
     sys.exit(1)
 
-tree = tree_from_indentation(get_raw_tree().splitlines())
+tree = parse_tree(get_raw_tree())
 w_id = sys.argv[1]
-nearest_parent = None
-
-for m, ds in tree:
-    for d, ws in ds:
-        parents = [(d, list(enumerate(ws)))]
-        while parents:
-            parent, ws = parents.pop()
-            if ws:
-                i, (w, children) = ws.pop()
-                if window_id(w) == w_id:
-                    respond_with(parent, bool(parents), i)
-
-                parents.append((parent, ws))
-                parents.append((w, list(enumerate(children))))
+path = path_to_window(tree, w_id)
+if path is not None:
+    if len(path) >= 4:
+        axis = path[-2][1]['type'] == SPLIT_HORIZONTAL
+        index = path[-1][0]
+        print(('right', 'down', 'left', 'up')[2 * index + axis])

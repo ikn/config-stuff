@@ -412,7 +412,6 @@ set formfiller = spawn @scripts_dir/formfiller.sh
 
 # Closing
 @cbind  d              = event REQ_CLOSE_TAB
-@cbind q<confirm quit (y/N):>_ = chain 'set save_session = 0' 'sh "if [ \"%s\" = y ]; then echo event EXIT_ALL_TABS > \"$UZBL_FIFO\"; fi"'
 
 # Tab navigating
 @cbind  <              = event FIRST_TAB

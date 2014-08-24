@@ -3,6 +3,7 @@ export BSPWM_SCRIPTS_DIR="$HOME/.local/share/bspwm"
 export PYTHONPATH="$PYTHONPATH:$HOME/Documents/Coding/Python modules:$BSPWM_SCRIPTS_DIR"
 
 export EDITOR=/usr/bin/vim
+export VISUAL="urxvt -e $EDITOR"
 export GREP_OPTIONS='--color=auto'
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0

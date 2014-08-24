@@ -1,8 +1,9 @@
 . ~/.profile
 
-export HISTFILESIZE=1000000
-export HISTSIZE=1000000
+export HISTFILESIZE=
+export HISTSIZE=
 export HISTCONTROL=ignoredups
+export HISTFILE=~/.bash_history_real
 shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
@@ -17,6 +18,7 @@ alias info='info --vi-keys'
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias pactree='pactree -c'
+alias transmission-daemon='transmission-daemon -g ~/.config/transmission/'
 
 alias pac='pacman'
 alias paclog='less /var/log/pacman.log'
@@ -42,6 +44,9 @@ alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias stoptv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 alias toggle-redshift='killall -USR1 redshift'
+
+# Java GUI fix
+wmname LG3D
 
 show () {
     declare -f "$1" || alias "$1"
@@ -154,8 +159,7 @@ search () {
 }
 
 sumfs () {
-    search "$1" -type f -print0 | grep -zZv /$ | xargs -0 ls -l | \
-        awk '{print $5}' | paste -sd+ - | bc
+   ls -l "$@" | awk '{print $5}' | paste -sd+ - | bc
 }
 
 vidmem () {
