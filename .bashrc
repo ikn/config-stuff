@@ -45,9 +45,6 @@ alias stoptv='sudo systemctl stop mythbackend.service'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 alias toggle-redshift='killall -USR1 redshift'
 
-# Java GUI fix
-wmname LG3D
-
 show () {
     declare -f "$1" || alias "$1"
 }

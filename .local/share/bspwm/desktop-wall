@@ -55,12 +55,12 @@ elif cmd in ('switch', 'switchwithwindow'):
             w_id = check_output(['bspc', 'query', '-W', '-w', 'focused']) \
                 .decode().strip()
             if w_id:
-                check_call(['bspc', 'window', '-d', target])
+                check_call(['xdotool', 'windowunmap', str(w_id)])
             else:
                 with_window = False
         check_call(['bspc', 'desktop', '-f', target])
         if with_window:
-            check_call(['bspc', 'window', '-f', w_id])
+            check_call(['xdotool', 'windowmap', str(w_id)])
 
 else:
     fail('no such command:', cmd)
