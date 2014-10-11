@@ -13,7 +13,7 @@ alias iotop='sudo iotop -o'
 alias nethogs='sudo nethogs enp3s0'
 alias ssh='ssh -t'
 alias ag='ag -i'
-alias free='free -m'
+alias free='free -h'
 alias info='info --vi-keys'
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
@@ -76,13 +76,14 @@ alias youtube-dl='youtube-dl --prefer-free-formats --max-quality 22'
 
 _ytdl () {
     pushd ~/media/videos &> /dev/null
-    until-success 10 youtube-dl -t "$@"
+    format='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
+    until-success 10 youtube-dl -o "$format" "$@"
     popd &> /dev/null
 }
 
 alias ytdl='_ytdl --no-playlist'
 alias ytdl-low='ytdl --max-quality 18'
-alias ytdl-playlist='_ytdl -A'
+alias ytdl-playlist='_ytdl'
 alias ytdl-low-playlist='_ytdl-playlist --max-quality 18'
 
 ytvlc () {
@@ -137,6 +138,12 @@ flcp () {
             flash "$num" cp -t "$dest"
         done
     fi
+}
+
+flcpto () {
+    n="$(flash | head -n1 | cut -d" " -f1)"
+    echo "$n"
+    flcp "$n" "$1"
 }
 
 man () {

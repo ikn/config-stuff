@@ -20,7 +20,7 @@ URxvt.keysym.M-a: perl:keyboard-select:activate
 URxvt.keysym.M-u: perl:url-select:select_next
 URxvt.url-select.underline: true
 URxvt.url-select.button: 3
-URxvt.url-select.launcher: /home/j/bin/specific/uzbl-tabbed
+URxvt.url-select.launcher: /home/j/bin/nonspecific/uzbl-tabbed-open
 ! disable picture insert thing on ctrl-shift
 URxvt.iso14755: False
 ! appearance

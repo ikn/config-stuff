@@ -2,13 +2,11 @@
 Print
     scrot ~/'ss-%H:%M:%S-$wx$h.png'
 alt + Print
-    alltray -nt 'urxvt -e scrot -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
-alt + shift + Print
-    alltray -nt 'urxvt -e scrot -sb "/home/j/ss-%H:%M:%S-$wx$h.png"'
+    urxvt -e scrot -s ~/'ss-%H:%M:%S-$wx$h.png'
 ctrl + Print
     scrot -d5 ~/'ss-%H:%M:%S-$wx$h.png'
 ctrl + alt + Print
-    alltray -nt 'urxvt -e scrot -d5 -s "/home/j/ss-%H:%M:%S-$wx$h.png"'
+    urxvt -e scrot -d5 -s ~/'ss-%H:%M:%S-$wx$h.png'
 
 ## power/media
 XF86Sleep

@@ -4,3 +4,7 @@ sleep 2
 feh --no-fehbg --bg-scale ~/.wallpaper.png
 sleep 60
 urxvt -e optirun true # stops the GPU fan
+sleep 60
+urxvt -e optirun true # stops the GPU fan
+sleep 60
+urxvt -e optirun true # stops the GPU fan

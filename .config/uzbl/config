@@ -157,6 +157,11 @@ set progress.format     = [%d>%p]%c
 set progress.done       = =
 set progress.pending    =
 
+set enable_webgl = 1
+set enable_webaudio = 1
+set enable_3d_acceleration = 1
+set enable_2d_acceleration = 1
+
 # === Useragent setup ========================================================
 
 set useragent         = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname -sm)@ [@ARCH_UZBL])
