@@ -74,16 +74,16 @@ aur-sync-git () {
 
 alias youtube-dl='youtube-dl --prefer-free-formats --max-quality 22'
 
+export YTDL_OUTPUT_DIR=~/media/videos
+
 _ytdl () {
-    pushd ~/media/videos &> /dev/null
     format='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
-    until-success 10 youtube-dl -o "$format" "$@"
-    popd &> /dev/null
+    until-success 10 youtube-dl -o "$YTDL_OUTPUT_DIR/$format" "$@"
 }
 
 alias ytdl='_ytdl --no-playlist'
 alias ytdl-low='ytdl --max-quality 18'
-alias ytdl-playlist='_ytdl'
+alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
 alias ytdl-low-playlist='_ytdl-playlist --max-quality 18'
 
 ytvlc () {
