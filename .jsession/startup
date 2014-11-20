@@ -1,6 +1,0 @@
-#! /bin/bash
-
-sleep 2
-conky &
-sleep 60
-urxvt -e optirun true # stops the GPU fan

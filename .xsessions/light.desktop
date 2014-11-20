@@ -1,6 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=light
-Comment=jsession light configuration
-Exec=jsession /home/j/.jsession/conf-light
-Type=XSession

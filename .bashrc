@@ -7,6 +7,7 @@ export HISTFILE=~/.bash_history_real
 shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
+alias locate='locate -i'
 alias less='less -i'
 alias ls='ls --color=auto'
 alias iotop='sudo iotop -o'
@@ -32,9 +33,10 @@ alias l='ls'
 alias sedr='sed -r'
 alias py='python'
 alias py2='python2'
-alias lock='echo try vlock'
+alias lock='vlock'
 alias :q='exit'
 alias crontab='fcrontab'
+alias nvmon='nvidia-smi'
 
 alias aoeu='setxkbmap gb'
 alias asdf='setxkbmap gb dvorakukp'

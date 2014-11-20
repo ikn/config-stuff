@@ -317,8 +317,8 @@ set ebind     = @mode_bind global,-insert
 @cbind  <Ctrl>p = hardcopy
 
 # Web searching binds
-@cbind  S<Google:>_        = uri https://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
-@cbind  s<DuckDuckGo:>_    = uri https://duckduckgo.com/?q=%s
+@cbind  s<Google:>_        = uri https://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
+@cbind  S<DuckDuckGo:>_    = uri https://duckduckgo.com/?q=%s
 @cbind  l<Search site:>_    = uri https://duckduckgo.com/?q=!%s
 
 # Handy binds
@@ -371,10 +371,6 @@ set cp_text = sh 'echo "js getSelection().toString()" | socat - unix-connect:$UZ
 @cbind  h  = spawn @scripts_dir:load_url_from_history.sh uri
 @cbind  H  = spawn @scripts_dir:load_url_from_history.sh event NEW_TAB
 @cbind  b  = spawn @scripts_dir/load_url_from_bookmarks.sh
-
-# Temporary bookmarks
-@cbind  <Ctrl>d  = spawn @scripts_dir/insert_temp.sh
-@cbind  D        = spawn @scripts_dir/load_url_from_temps.sh
 
 # Link following (similar to vimperator and konqueror)
 # keys to use for navigation
