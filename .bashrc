@@ -7,6 +7,9 @@ export HISTFILE=~/.bash_history_real
 shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
+source ~/bin/specific/ftpmnt
+
+alias grep='grep --color=auto'
 alias locate='locate -i'
 alias less='less -i'
 alias ls='ls --color=auto'
@@ -174,6 +177,20 @@ vidmem () {
             echo $((`tail -n1 "$f" | cut -d" " -f4`/1024/1024))
         done
     '
+}
+
+enc-recording () {
+    ffmpeg -i "$3" -ss "$1" -t "$2" -c:a copy -c:v libx264 -preset slow "out-$3"
+}
+
+scanimg () {
+    local f=~/scan-"$RANDOM.tiff"
+    local n=1
+    while [ ! -f "$f" ] || [ -z "$(head -c1 "$f")" ]; do
+        echo 1>&2 "attempt $n"
+        scanimage --format tiff > "$f"
+        n="$((n+1))"
+    done
 }
 
 alias p='python -ic "

@@ -1,0 +1,8 @@
+#! /bin/bash
+
+ls "$FTP_DIR" | while read d; do
+    fusermount -u "$FTP_DIR/$d"
+    rmdir "$FTP_DIR/$d" || exit 1
+done
+
+rmdir "$FTP_DIR"

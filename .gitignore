@@ -1,6 +1,8 @@
 *
 !/bin/
 !/bin/specific/
+!/bin/specific/ftpmnt
+!/bin/specific/ftpumnt
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
