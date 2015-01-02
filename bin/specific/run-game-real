@@ -1,6 +1,0 @@
-#! /bin/bash
-
-xset r rate 250 60
-setxkbmap gb dvorakukp
-redshift -l 52.4:0 &
-exec ${@:1}

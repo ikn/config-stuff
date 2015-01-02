@@ -1,13 +1,13 @@
 *
 !/bin/
 !/bin/specific/
+!/bin/specific/bspwm-panel
 !/bin/specific/ftpmnt
 !/bin/specific/ftpumnt
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
-!/bin/specific/run-game
-!/bin/specific/run-game-real
+!/bin/specific/runpanel
 !/bin/specific/temp
 !/bin/specific/toggle-window
 !/mm.cfg

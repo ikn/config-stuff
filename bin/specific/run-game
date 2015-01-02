@@ -1,3 +1,0 @@
-#! /bin/bash
-
-xinit /home/j/bin/run-game-real $@ -- :2
