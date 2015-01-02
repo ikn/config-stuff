@@ -12,6 +12,10 @@ def fail (*args):
     sys.exit(2)
 
 
+def mkname (col, row):
+    return '{}-{}'.format(col + 1, row + 1)
+
+
 try:
     w = int(os.environ.get('BSPWM_DESKTOP_WALL_WIDTH', 3))
     h = int(os.environ.get('BSPWM_DESKTOP_WALL_HEIGHT', 2))
@@ -24,7 +28,8 @@ if len(sys.argv) < 2:
 cmd = sys.argv[1]
 
 if cmd == 'init':
-    check_call(['bspc', 'monitor', '-d'] + [str(x) for x in range(w * h)])
+    check_call(['bspc', 'monitor', '-d'] +
+        [mkname(i % w, i // w) for i in range(w * h)])
     pass
 
 elif cmd in ('switch', 'switchwithwindow'):
@@ -38,18 +43,17 @@ elif cmd in ('switch', 'switchwithwindow'):
     else:
         fail('invalid direction argument:', dirn)
 
-    current = check_output(['bspc', 'query', '-D', '-d', 'focused'])
+    current = check_output(['bspc', 'query', '-D', '-d', 'focused']).split(b'-')
     try:
-        current = int(current)
-    except ValueError:
+        x = int(current[0]) - 1
+        y = int(current[1]) - 1
+    except (ValueError, IndexError):
         fail('unexpected desktop name:', current, '(call `desktop-wall init`)')
-    x = current % w
-    y = current // w
 
     if (x > 0, y > 0, x < w - 1, y < h - 1)[dirn]:
         pos = [x, y]
         pos[dirn % 2] += -1 if dirn < 2 else 1
-        target = str(pos[1] * w + pos[0])
+        target = mkname(*pos)
 
         if with_window:
             w_id = check_output(['bspc', 'query', '-W', '-w', 'focused']) \

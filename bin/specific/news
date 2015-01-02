@@ -1,0 +1,3 @@
+#! /bin/sh
+
+newsbeuter -x print-unread | cut -d" " -f1

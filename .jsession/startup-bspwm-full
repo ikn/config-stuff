@@ -1,5 +1,4 @@
 #! /bin/bash
 
-sleep 5
 thunderbird &
 xdotool search --sync --onlyvisible --classname Mail windowunmap

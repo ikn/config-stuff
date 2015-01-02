@@ -1,0 +1,26 @@
+#! /bin/bash
+
+colour=yellow
+max_title_length=40
+truncated_title_suffix='[...]'
+truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
+
+bspc control --subscribe | while read; do
+    prefix="desktop: <fc=$colour>$(bspc query -D -d focused)</fc>"
+
+    id="$(bspc query -W -w last.urgent)"
+    if [ -n "$id" ]; then
+        desktop="$(bspc query -D -w "$id")"
+
+        title="$(xwininfo -id "$id" -wm | \
+            head -n2 | tail -n1 | sed 's/^.*"\(.*\)"$/\1/')"
+        [ "${#title}" -gt "$max_title_length" ] && \
+            title="$(
+                echo "$title" | head -c"$truncate_title_size"
+            )$truncated_title_suffix"
+
+        echo "$prefix || urgent: [<fc=$colour>$desktop</fc>] <raw=${#title}:$title/>"
+    else
+        echo "$prefix"
+    fi
+done

@@ -10,5 +10,6 @@ bspwm
 
 urxvtd
 kupfer --no-splash
-xfce4-panel --disable-wm-check
+runpanel
+stalonetray -c /home/j/.config/stalonetray
 /home/j/.jsession/startup-bspwm

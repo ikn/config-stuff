@@ -12,14 +12,11 @@ ctrl + alt + Print
 XF86Sleep
     (slock &) && jsession-quit suspend
 ctrl + shift + comma
-#XF86AudioLowerVolume
     /home/j/bin/nonspecific/audctl down
 ctrl + shift + period
-#XF86AudioRaiseVolume
     /home/j/bin/nonspecific/audctl up
 ctrl + shift + slash
-#XF86AudioMute
-    /home/j/bin/specific/audctl toggle
+    /home/j/bin/nonspecific/audctl toggle
 
 ## utils
 super + l
@@ -30,18 +27,20 @@ super + r
     /home/j/bin/specific/gmrun-smart
 
 ## programs
-ctrl + alt + f
-    firefox
-ctrl + alt + u
-    /home/j/bin/specific/uzbl-tabbed
-ctrl + alt + g
-    pluma
-ctrl + alt + i
-    /home/j/bin/specific/irc-remote-urxvt
-ctrl + alt + k
-    kate
 ctrl + alt + t
     urxvtc || urxvt
+ctrl + alt + u
+    /home/j/bin/specific/uzbl-tabbed
+ctrl + alt + i
+    /home/j/bin/specific/irc-remote-urxvt
+ctrl + alt + n
+    urxvtc -e newsbeuter || urxvt -e newsbeuter
+ctrl + alt + g
+    pluma
+ctrl + alt + k
+    kate
+ctrl + alt + f
+    firefox
 # toggle Thunderbird
 Pause
     ~/bin/specific/toggle-window Mail
