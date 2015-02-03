@@ -1,0 +1,48 @@
+Config {
+    font = "xft:Monospace:pixelsize=13",
+    bgColor = "#222", fgColor = "#ddd",
+    position = BottomP 152 0,
+    lowerOnStart = True, persistent = False, hideOnStart = False,
+    commands = [
+        Run Network "enp3s0" [
+            "-S", "true", "-t", "↓<rx>↑<tx>",
+            "-H", "900000", "-l", "#5d5", "-n", "#5d5", "-h", "#d55"
+        ] 50,
+        Run Cpu [
+            "-t", "<total>%",
+            "-H", "50", "-l", "#5d5", "-n", "#5d5", "-h", "#d55"
+        ] 20,
+        Run ThermalZone 2 [
+            "-t", "<temp>C",
+            "-H", "75", "-l", "#5d5", "-n", "#5d5", "-h", "#d55"
+        ] 50,
+        Run Memory [
+            "-t", "<available>M",
+            "-L", "500", "-l", "#d55", "-n", "#5d5", "-h", "#5d5"
+        ] 50,
+        Run DiskU [
+            ("/", "/ <free>"),
+            ("/home", "/home <free>"),
+            ("/media/Data", "data <free>")
+        ] [
+            "-L", "2", "-l", "#d55", "-n", "#5d5", "-h", "#5d5"
+        ] 100,
+        Run Date "%H:%M %a %d %b" "date" 50,
+        Run UnsafeStdinReader,
+        Run Com "news" [] "news" 3600
+    ],
+    sepChar = "%", alignSep = "}{",
+    template = " || <action=`urxvtc -e newsbeuter || urxvt -e newsbeuter`>\
+            \news: <fc=yellow>%news%</fc>\
+        \</action> \
+        \|| %UnsafeStdinReader% | } \
+        \{ | <action=`urxvtc -e htop || urxvt -e htop`>\
+            \%cpu% %thermal2% %memory%\
+        \</action> <action=`urxvtc -e sudo nethogs enp3s0 || urxvt -e sudo nethogs enp3s0`>\
+            \%enp3s0%\
+        \</action>\
+        \|| <action=`urxvtc -e sudo iotop || urxvt -e sudo iotop`>\
+            \%disku%\
+        \</action> \
+        \|| <action=`gsimplecal`>%date%</action> "
+}

@@ -2,6 +2,7 @@
 !/bin/
 !/bin/specific/
 !/bin/specific/bspwm-panel
+!/bin/specific/dftimes
 !/bin/specific/ftpmnt
 !/bin/specific/ftpumnt
 !/bin/specific/gmrun-smart
@@ -19,6 +20,9 @@
 !/.config/sxhkd/*
 !/.config/uzbl/
 !/.config/uzbl/config
+!/.config/xmobar/
+!/.config/xmobar/xmobarrc
+!/.config/stalonetray
 !/.local/
 !/.local/share/
 !/.local/share/bspwm/
