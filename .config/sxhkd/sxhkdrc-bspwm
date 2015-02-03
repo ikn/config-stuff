@@ -74,7 +74,7 @@ super + ctrl + {Left,Up,Right,Down}
     bspc window -s {left,up,right,down}
 super + s
     if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
-        bspc window -s biggest; \
+        bspc window -s biggest.unfocused; \
     else \
         bspc window -f last.manual.local; \
         bspc window -p cancel; \
@@ -83,7 +83,7 @@ super + s
 super + t
     if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
         "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest; \
-        bspc window -w biggest; \
+        bspc window -w biggest.unfocused; \
     else \
         "$BSPWM_SCRIPTS_DIR"/auto-presel; \
         bspc window -f last.manual.local; \
