@@ -8,4 +8,3 @@ export VISUAL="urxvt -e $EDITOR"
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export MAKEFLAGS=-j8
-export MANWIDTH=100

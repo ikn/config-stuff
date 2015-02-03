@@ -23,6 +23,8 @@ alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias pactree='pactree -c'
 alias transmission-daemon='transmission-daemon -g ~/.config/transmission/'
+alias dmesg='dmesg -H -w'
+alias df='df -h'
 
 alias pac='pacman'
 alias paclog='less /var/log/pacman.log'
@@ -90,6 +92,7 @@ alias ytdl='_ytdl --no-playlist'
 alias ytdl-low='ytdl --max-quality 18'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
 alias ytdl-low-playlist='_ytdl-playlist --max-quality 18'
+alias ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 ytvlc () {
     vlc "$(youtube-dl -g --max-quality 22 --prefer-free-formats "$@")" \
@@ -152,7 +155,9 @@ flcpto () {
 }
 
 man () {
-    env \
+    local w=100
+    [ "$COLUMNS" -lt "$w" ] && w="$COLUMNS"
+    env MANWIDTH="$w" \
     LESS_TERMCAP_mb=$(printf "\e[1;31m") \
     LESS_TERMCAP_md=$(printf "\e[1;31m") \
     LESS_TERMCAP_me=$(printf "\e[0m") \
@@ -160,7 +165,7 @@ man () {
     LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
     LESS_TERMCAP_ue=$(printf "\e[0m") \
     LESS_TERMCAP_us=$(printf "\e[1;32m") \
-    man "$@"
+        man "$@"
 }
 
 search () {
@@ -191,6 +196,13 @@ scanimg () {
         scanimage --format tiff > "$f"
         n="$((n+1))"
     done
+}
+
+mkurgent () {
+    title="$1"
+    [ -z "$title" ] && title="urgent window"
+    urxvt -title "$title" -xrm "URxvt*urgentOnBell: True" \
+        -e bash -c 'sleep 2; echo -ne "\a"; sleep 600'
 }
 
 alias p='python -ic "
