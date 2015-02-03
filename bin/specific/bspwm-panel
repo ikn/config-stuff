@@ -1,12 +1,18 @@
 #! /bin/bash
 
-colour=yellow
-max_title_length=40
+highlight_colour=yellow
+empty_colour='#ddd'
+urgent_colour='#f64'
+max_title_length=30
 truncated_title_suffix='[...]'
 truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
 
 bspc control --subscribe | while read; do
-    prefix="desktop: <fc=$colour>$(bspc query -D -d focused)</fc>"
+    desktop_colour="$highlight_colour"
+    [ -z "$(bspc query -W -w last)" ] && \
+        [ -z "$(bspc query -W -w focused)" ] && desktop_colour="$empty_colour"
+    echo -n "<action=\`bspc desktop -f next\`>\
+desktop: <fc=$desktop_colour>$(bspc query -D -d focused)</fc></action>"
 
     id="$(bspc query -W -w last.urgent)"
     if [ -n "$id" ]; then
@@ -19,8 +25,10 @@ bspc control --subscribe | while read; do
                 echo "$title" | head -c"$truncate_title_size"
             )$truncated_title_suffix"
 
-        echo "$prefix || urgent: [<fc=$colour>$desktop</fc>] <raw=${#title}:$title/>"
+        echo " || <action=\`bspc window -f last.urgent\`>\
+[<fc=$highlight_colour>$desktop</fc>] \
+<fc=$urgent_colour><raw=${#title}:$title/></fc></action>"
     else
-        echo "$prefix"
+        echo
     fi
 done
