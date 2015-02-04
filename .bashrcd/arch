@@ -1,0 +1,18 @@
+alias pac='pacman'
+alias paclog='less /var/log/pacman.log'
+alias inst='sudo pacman -S'
+alias uninst='sudo pacman -Rs'
+alias up='sudo pacman -Syu'
+alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
+
+aur-sync-git () {
+    aur-sync -f $(pacman -Qm | while read line; do
+        pkg=($line)
+        if echo ${pkg[1]} | egrep -q '^[[:digit:]]{8}-[[:digit:]]+$' \
+           || echo ${pkg[0]} | grep -q -- '-git$' \
+           || echo ${pkg[0]} | grep -q -- '-hg$' \
+           || echo ${pkg[0]} | grep -q -- '-bzr$'; then
+            echo ${pkg[0]}
+        fi
+    done)
+}

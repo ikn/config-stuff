@@ -1,0 +1,108 @@
+source ~/.profile
+
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTCONTROL=ignoredups
+export HISTFILE=~/.bash_history_real
+shopt -s histappend
+PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
+
+alias grep='grep --color=auto'
+alias locate='locate -i'
+alias less='less -i'
+alias ls='ls --color=auto'
+alias iotop='sudo iotop -o'
+alias nethogs='sudo nethogs enp3s0'
+alias ssh='ssh -t'
+alias ag='ag -i'
+alias free='free -h'
+alias info='info --vi-keys'
+alias pactree='pactree -c'
+alias dmesg='dmesg -H -w'
+alias df='df -h'
+
+alias v='vim'
+alias l='ls'
+alias sedr='sed -r'
+alias py='python'
+alias py2='python2'
+alias :q='exit'
+alias crontab='fcrontab'
+alias pb="curl -F 'sprunge=<-' http://sprunge.us"
+
+alias aoeu='setxkbmap gb'
+alias asdf='setxkbmap gb dvorakukp'
+
+show () {
+    declare -f "$1" || alias "$1"
+}
+
+fix-perms () {
+    for dir in "$@"; do
+        find "$dir" -type d | xargs chmod 755 2> /dev/null
+        find "$dir" -type f | xargs chmod 644 2> /dev/null
+    done
+}
+
+gitar () {
+    name=$(basename "$(readlink -f ..)")
+    if [ -z "$2" ]; then
+        ext=tar.gz
+    else
+        ext=$2
+    fi
+    git archive HEAD --prefix="$name-$1/" -o"../$name-$1.$ext"
+}
+
+man () {
+    local w=100
+    [ "$COLUMNS" -lt "$w" ] && w="$COLUMNS"
+    env MANWIDTH="$w" \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+        man "$@"
+}
+
+search () {
+    ag -ug "$@"
+}
+
+sumfs () {
+   ls -l "$@" | awk '{print $5}' | paste -sd+ - | bc
+}
+
+mkurgent () {
+    title="$1"
+    [ -z "$title" ] && title="urgent window"
+    urxvt -title "$title" -xrm "URxvt*urgentOnBell: True" \
+        -e bash -c 'sleep 2; echo -ne "\a"; sleep 600'
+}
+
+alias p='python -ic "
+import os, atexit, readline, rlcompleter
+hist = \"/home/j/.pyhistory\"
+def save_history(historyPath = hist):
+    import readline
+    readline.write_history_file(hist)
+atexit.register(save_history)
+if os.path.exists(hist):
+    readline.read_history_file(hist)
+readline.parse_and_bind(\"tab: complete\")
+del os, atexit, readline, rlcompleter"'
+
+alias p2='python2 -ic "
+import os, atexit, readline, rlcompleter
+hist = \"/home/j/.pyhistory\"
+def save_history(historyPath = hist):
+    import readline
+    readline.write_history_file(hist)
+atexit.register(save_history)
+if os.path.exists(hist):
+    readline.read_history_file(hist)
+readline.parse_and_bind(\"tab: complete\")
+del os, atexit, readline, rlcompleter"'

@@ -1,0 +1,13 @@
+export PYTHONPATH="$PYTHONPATH:$HOME/Documents/Coding/Python modules"
+
+alias nvmon='nvidia-smi'
+
+scanimg () {
+    local f=~/scan-"$RANDOM.tiff"
+    local n=1
+    while [ ! -f "$f" ] || [ -z "$(head -c1 "$f")" ]; do
+        echo 1>&2 "attempt $n"
+        scanimage --format tiff > "$f"
+        n="$((n+1))"
+    done
+}
