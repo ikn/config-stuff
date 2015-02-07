@@ -1,3 +1,5 @@
+#! /bin/bash
+
 source ~/.profile
 
 export HISTFILESIZE=
@@ -23,6 +25,7 @@ alias df='df -h'
 
 alias v='vim'
 alias l='ls'
+alias aw='ag -sw'
 alias sedr='sed -r'
 alias py='python'
 alias py2='python2'
@@ -42,6 +45,79 @@ fix-perms () {
         find "$dir" -type d | xargs chmod 755 2> /dev/null
         find "$dir" -type f | xargs chmod 644 2> /dev/null
     done
+}
+
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
+
+nhardlinks () {
+    if [ -f "$1" ]; then
+        ls -l "$1" | awk '{ print $2 }'
+    else
+        echo 1>&2 "not a file: $1"
+        return 1
+    fi
+}
+
+gitag () {
+    git diff --relative -z --name-only HEAD | xargs -0 ag "$@" 2> /dev/null
+}
+
+alias gitaw='gitag -sw'
+
+alias gitbranch='git rev-parse --abbrev-ref HEAD'
+
+logorigin () {
+    git log "origin/$(git rev-parse --abbrev-ref HEAD)" "$@"
+}
+
+gitnew () {
+    if [ -z "$1" ]; then
+        remote="origin/$(gitbranch)"
+    else
+        remote="$1"
+    fi
+    shift
+    git cherry "$(gitbranch)" "$remote" "$@"
+}
+
+# update another branch and merge it in
+# returns 1 on invalid branch, 2 on stash pop failure, 3 on merge failure
+gitmerge () {
+    local branch="$1"
+    local rtn=0
+    local stash=$(gitchanged)
+    local origbranch=$(gitbranch)
+
+    [ -n "$stash" ] && git stash
+    gitup "$branch"
+    rtn="$?"
+    git checkout "$origbranch"
+
+    # only merge if pull succeeded
+    if [ "$rtn" -eq 0 ]; then
+        if git merge "$origbranch"; then
+            [ -n "$stash" ] && { git stash pop || rtn=2; }
+        else
+            [ -n "$stash" ] && {
+                echo 1>&2 "WARNING: local changes are still stashed"
+            }
+            rtn=3
+        fi
+    else
+        [ -n "$stash" ] && { git stash pop || rtn=2; }
+    fi
+
+    return "$rtn"
+}
+
+gitfirst () {
+    git log --reverse --oneline | cut -d" " -f1 | head -n1
 }
 
 gitar () {

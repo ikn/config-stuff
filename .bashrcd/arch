@@ -1,3 +1,5 @@
+#! /bin/bash
+
 alias pac='pacman'
 alias paclog='less /var/log/pacman.log'
 alias inst='sudo pacman -S'

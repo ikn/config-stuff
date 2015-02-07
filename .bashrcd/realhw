@@ -1,3 +1,5 @@
+#! /bin/bash
+
 export MAKEFLAGS="-j$(cat /proc/cpuinfo | grep ^processor | wc -l)"
 
 alias freq='grep MHz /proc/cpuinfo'

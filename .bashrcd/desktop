@@ -1,3 +1,5 @@
+#! /bin/bash
+
 export PYTHONPATH="$PYTHONPATH:$HOME/Documents/Coding/Python modules"
 
 alias nvmon='nvidia-smi'
