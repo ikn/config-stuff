@@ -10,18 +10,10 @@ shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 
 alias grep='grep --color=auto'
-alias locate='locate -i'
 alias less='less -i'
 alias ls='ls --color=auto'
-alias iotop='sudo iotop -o'
-alias nethogs='sudo nethogs enp3s0'
 alias ssh='ssh -t'
 alias ag='ag -i'
-alias free='free -h'
-alias info='info --vi-keys'
-alias pactree='pactree -c'
-alias dmesg='dmesg -H -w'
-alias df='df -h'
 
 alias v='vim'
 alias l='ls'
@@ -30,11 +22,7 @@ alias sedr='sed -r'
 alias py='python'
 alias py2='python2'
 alias :q='exit'
-alias crontab='fcrontab'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
-
-alias aoeu='setxkbmap gb'
-alias asdf='setxkbmap gb dvorakukp'
 
 show () {
     declare -f "$1" || alias "$1"
@@ -64,6 +52,27 @@ nhardlinks () {
     fi
 }
 
+search () {
+    ag -ug "$@"
+}
+
+sumfs () {
+   ls -l "$@" | awk '{print $5}' | paste -sd+ - | bc
+}
+
+# git
+
+git () {
+    case "$1" in
+    fetch)
+        command git fetch -t "${@:1}"
+        ;;
+    *)
+        command git "$@"
+        ;;
+    esac
+}
+
 gitag () {
     git diff --relative -z --name-only HEAD | xargs -0 ag "$@" 2> /dev/null
 }
@@ -90,26 +99,36 @@ gitnew () {
 # returns 1 on invalid branch, 2 on stash pop failure, 3 on merge failure
 gitmerge () {
     local branch="$1"
+    [ -z "$branch" ] && {
+        echo 1>&2 "[gitmerge] expected branch to merge as argument"
+        return 2
+    }
     local rtn=0
     local stash=$(gitchanged)
     local origbranch=$(gitbranch)
 
+    echo 1>&2 "[gitmerge] stash"
     [ -n "$stash" ] && git stash
+    echo 1>&2 "[gitmerge] update $branch"
     gitup "$branch"
     rtn="$?"
     git checkout "$origbranch"
 
     # only merge if pull succeeded
     if [ "$rtn" -eq 0 ]; then
-        if git merge "$origbranch"; then
+        echo 1>&2 "[gitmerge] merge $branch into $origbranch"
+        if git merge "$branch"; then
+            echo 1>&2 "[gitmerge] merge succeeded; unstash"
             [ -n "$stash" ] && { git stash pop || rtn=2; }
         else
+            echo 1>&2 "[gitmerge] merge failed"
             [ -n "$stash" ] && {
-                echo 1>&2 "WARNING: local changes are still stashed"
+                echo 1>&2 "[gitmerge] WARNING: local changes are still stashed"
             }
             rtn=3
         fi
     else
+        echo 1>&2 "[gitmerge] update failed; unstash"
         [ -n "$stash" ] && { git stash pop || rtn=2; }
     fi
 
@@ -129,56 +148,3 @@ gitar () {
     fi
     git archive HEAD --prefix="$name-$1/" -o"../$name-$1.$ext"
 }
-
-man () {
-    local w=100
-    [ "$COLUMNS" -lt "$w" ] && w="$COLUMNS"
-    env MANWIDTH="$w" \
-    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-    LESS_TERMCAP_md=$(printf "\e[1;31m") \
-    LESS_TERMCAP_me=$(printf "\e[0m") \
-    LESS_TERMCAP_se=$(printf "\e[0m") \
-    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-    LESS_TERMCAP_ue=$(printf "\e[0m") \
-    LESS_TERMCAP_us=$(printf "\e[1;32m") \
-        man "$@"
-}
-
-search () {
-    ag -ug "$@"
-}
-
-sumfs () {
-   ls -l "$@" | awk '{print $5}' | paste -sd+ - | bc
-}
-
-mkurgent () {
-    title="$1"
-    [ -z "$title" ] && title="urgent window"
-    urxvt -title "$title" -xrm "URxvt*urgentOnBell: True" \
-        -e bash -c 'sleep 2; echo -ne "\a"; sleep 600'
-}
-
-alias p='python -ic "
-import os, atexit, readline, rlcompleter
-hist = \"/home/j/.pyhistory\"
-def save_history(historyPath = hist):
-    import readline
-    readline.write_history_file(hist)
-atexit.register(save_history)
-if os.path.exists(hist):
-    readline.read_history_file(hist)
-readline.parse_and_bind(\"tab: complete\")
-del os, atexit, readline, rlcompleter"'
-
-alias p2='python2 -ic "
-import os, atexit, readline, rlcompleter
-hist = \"/home/j/.pyhistory\"
-def save_history(historyPath = hist):
-    import readline
-    readline.write_history_file(hist)
-atexit.register(save_history)
-if os.path.exists(hist):
-    readline.read_history_file(hist)
-readline.parse_and_bind(\"tab: complete\")
-del os, atexit, readline, rlcompleter"'

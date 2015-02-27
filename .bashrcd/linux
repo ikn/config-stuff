@@ -1,0 +1,60 @@
+#! /bin/bash
+
+alias locate='locate -i'
+alias iotop='sudo iotop -o'
+alias nethogs='sudo nethogs enp3s0'
+alias free='free -h'
+alias info='info --vi-keys'
+alias pactree='pactree -c'
+alias dmesg='dmesg -H -w'
+alias df='df -h'
+
+alias crontab='fcrontab'
+
+alias aoeu='setxkbmap gb'
+alias asdf='setxkbmap gb dvorakukp'
+
+man () {
+    local w=100
+    [ "$COLUMNS" -lt "$w" ] && w="$COLUMNS"
+    env MANWIDTH="$w" \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+        man "$@"
+}
+
+mkurgent () {
+    title="$1"
+    [ -z "$title" ] && title="urgent window"
+    urxvt -title "$title" -xrm "URxvt*urgentOnBell: True" \
+        -e bash -c 'sleep 2; echo -ne "\a"; sleep 600'
+}
+
+alias p='python -ic "
+import os, atexit, readline, rlcompleter
+hist = \"/home/j/.pyhistory\"
+def save_history(historyPath = hist):
+    import readline
+    readline.write_history_file(hist)
+atexit.register(save_history)
+if os.path.exists(hist):
+    readline.read_history_file(hist)
+readline.parse_and_bind(\"tab: complete\")
+del os, atexit, readline, rlcompleter"'
+
+alias p2='python2 -ic "
+import os, atexit, readline, rlcompleter
+hist = \"/home/j/.pyhistory\"
+def save_history(historyPath = hist):
+    import readline
+    readline.write_history_file(hist)
+atexit.register(save_history)
+if os.path.exists(hist):
+    readline.read_history_file(hist)
+readline.parse_and_bind(\"tab: complete\")
+del os, atexit, readline, rlcompleter"'
