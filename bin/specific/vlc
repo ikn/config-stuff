@@ -1,0 +1,92 @@
+#! /bin/bash
+
+# VLC wrapper to open in an instance on the current desktop, if any, else in a
+# new instance
+# only opens in an existing instance when started from the file manager
+
+pname="vlc"
+wclass="vlc"
+dbusname="org.mpris.MediaPlayer2.vlc"
+cmd="/usr/bin/vlc"
+current_desktop="$(bspc query -D -d focused)"
+
+# get window ID for any window of the given class on the given desktop
+getwid () {
+    local wclass="$1"
+    local current_desktop="$2"
+    xdotool search --class "^${wclass}$" | while read wid; do
+        [ "$(bspc query -D -w "$wid")" = "$current_desktop" ] && {
+            echo "$wid"
+            break
+        }
+    done
+}
+
+# get names for dbus connections that might match the given exclusive dbus name
+getcons () {
+    echo "$1"
+    dbus-send --print-reply --session --dest=org.freedesktop.DBus \
+        /org/freedesktop/DBus org.freedesktop.DBus.ListNames \
+        | grep '^ *string ":' \
+        | sed 's/.*"\(.*\)"$/\1/'
+}
+
+# get process IDs for the dbus connection names on stdin
+# each line printed to stdout is "$connection_name $pid"
+getconpids () {
+    while read con; do
+        reply="$(dbus-send --print-reply=literal --session \
+            --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+            org.freedesktop.DBus.GetConnectionUnixProcessID string:"$con")"
+        [ -n "$reply" ] && echo "$con" "$(echo "$reply" | awk '{ print $2 }')"
+    done
+}
+
+# filter process IDs on stdin to those with the given process name
+# copies lines from stdin, where the second word in each line is the process ID
+filterpidname () {
+    local pname="$1"
+    while read line; do
+        local pid="$(echo "$line" | cut -d" " -f2)"
+        [ "$(ps -p "$pid" -o comm=)" = "$pname" ] && echo "$line"
+    done
+}
+
+# find the first process ID on stdin which matches the given process ID
+# copies lines from stdin, where the second word in each line is the process ID
+cmppid () {
+    local target="$1"
+    while read line; do
+        local pid="$(echo "$line" | cut -d" " -f2)"
+        [ "$target" = "$pid" ] && {
+            echo "$line"
+            break
+        }
+    done
+}
+
+# only open in existing instance for calls like "vlc --started-from-file $uri"
+uri=
+[ "$#" -eq 2 ] && [ "$1" = "--started-from-file" ] && [ -n "$2" ] && uri="$2"
+[ "${uri:0:1}" = "/" ] && uri="file://$uri"
+
+wid=
+[ -n "$uri" ] && wid="$(getwid "$wclass" "$current_desktop")"
+pid=
+[ -n "$wid" ] && pid="$(xprop -id "$wid" _NET_WM_PID | awk '{ print $NF }')"
+con=
+[ -n "$pid" ] && con="$(
+    getcons "$dbusname" \
+        | getconpids \
+        | filterpidname "$pname" \
+        | cmppid "$pid" \
+        | cut -d" " -f1
+)"
+
+done=
+[ -n "$con" ] && \
+    dbus-send --print-reply --session --dest="$con" \
+        /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri \
+        string:"$uri" && \
+    done=y
+[ -z "$done" ] && exec "$cmd" "$@"
