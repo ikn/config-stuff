@@ -55,6 +55,8 @@ super + Tab
     bspc window -f last
 super + u
     bspc window -f last.urgent
+super+ ctrl + Tab
+    bspc desktop -f last.occupied
 # close
 super + d
     bspc window -c

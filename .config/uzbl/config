@@ -177,7 +177,7 @@ set useragent         = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname 
 # === SSL related configuration ==============================================
 
 # Set it to certificates store of your distribution, or your own CAfile.
-set ssl_ca_file = /etc/ssl/certs/ca-certificates.crt
+set ssl_ca_file = /etc/ca-certificates/extracted/tls-ca-bundle.pem
 set ssl_verify = 1
 # Command to toggle ssl_verify value:
 @cbind  !ssl = chain 'toggle ssl_verify' 'reload'
@@ -374,7 +374,7 @@ set cp_text = sh 'echo "js getSelection().toString()" | socat - unix-connect:$UZ
 
 # Link following (similar to vimperator and konqueror)
 # keys to use for navigation
-set follow_hint_keys = aoeuhtnsidpcrqjbm
+set follow_hint_keys = aoeuhtnsid
 @cbind  f*  = spawn @scripts_dir/follow.sh \@< uzbl.follow("\@follow_hint_keys", "%s", 'click') >\@
 @cbind  F*  = spawn @scripts_dir/follow.sh \@< uzbl.follow("\@follow_hint_keys", "%s", 'newwindow') >\@
 

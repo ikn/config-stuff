@@ -25,7 +25,7 @@ _ytdl () {
 alias ytdl='_ytdl --no-playlist'
 alias ytdl-low='ytdl --max-quality 18'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
-alias ytdl-low-playlist='_ytdl-playlist --max-quality 18'
+alias ytdl-low-playlist='ytdl-playlist --max-quality 18'
 alias ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 ytvlc () {

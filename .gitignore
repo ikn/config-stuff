@@ -12,7 +12,9 @@
 !/bin/specific/runpanel
 !/bin/specific/temp
 !/bin/specific/toggle-window
+!/bin/specific/vlc
 !/mm.cfg
+!/.ansible.cfg
 !/.config/
 !/.config/bspwm/
 !/.config/bspwm/*

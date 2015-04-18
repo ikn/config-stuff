@@ -88,5 +88,6 @@ done=
     dbus-send --print-reply --session --dest="$con" \
         /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri \
         string:"$uri" && \
+    bspc window -f "$wid" && \
     done=y
 [ -z "$done" ] && exec "$cmd" "$@"
