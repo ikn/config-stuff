@@ -1,2 +1,2 @@
-transmission-gtk -m &
+#transmission-gtk -m
 /home/j/.jsession/startup-bspwm-full

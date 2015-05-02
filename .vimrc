@@ -13,6 +13,10 @@ syntax on
 set background=dark
 set linebreak
 set colorcolumn=80
+set wrap
+set linebreak
+set list
+set listchars=tab:▸\ ,trail:·
 " editing: settings
 set expandtab
 set tabstop=4
@@ -20,7 +24,6 @@ set shiftwidth=4
 set softtabstop=4
 set autoindent
 set smartindent
-"set mouse=a
 " editing: keys
 function! SmartHome()
   let s:col = col(".")
