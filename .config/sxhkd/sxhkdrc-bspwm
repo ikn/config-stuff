@@ -92,7 +92,7 @@ super + s
     fi 
 super + t
     if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
-        "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest; \
+        "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.unfocused; \
         bspc window -w biggest.unfocused; \
     else \
         "$BSPWM_SCRIPTS_DIR"/auto-presel; \
