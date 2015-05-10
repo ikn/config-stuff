@@ -13,19 +13,23 @@ alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/nu
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias toggle-redshift='killall -USR1 redshift'
 
-alias youtube-dl='youtube-dl --prefer-free-formats --max-quality 22'
+_ytdl-limit-res () {
+    echo "best[height<=$1]/bestvideo[height<=$1]+bestaudio"
+}
+
+alias youtube-dl='youtube-dl --prefer-free-formats -f "$(_ytdl-limit-res 720)"'
 
 export YTDL_OUTPUT_DIR=~/media/videos
 
 _ytdl () {
-    format='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
-    until-success 10 youtube-dl -o "$YTDL_OUTPUT_DIR/$format" "$@"
+    local format='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
+    youtube-dl -o "$YTDL_OUTPUT_DIR/$format" "$@"
 }
 
 alias ytdl='_ytdl --no-playlist'
-alias ytdl-low='ytdl --max-quality 18'
+alias ytdl-low='ytdl -f "$(_ytdl-limit-res 360)"'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
-alias ytdl-low-playlist='ytdl-playlist --max-quality 18'
+alias ytdl-low-playlist='ytdl-playlist -f "$(_ytdl-limit-res 360)"'
 alias ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 ytvlc () {
