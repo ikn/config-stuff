@@ -65,7 +65,7 @@ sumfs () {
 git () {
     case "$1" in
     fetch)
-        command git fetch -t "${@:1}"
+        command git fetch -t "${@:2}"
         ;;
     *)
         command git "$@"
@@ -86,13 +86,22 @@ logorigin () {
 }
 
 gitnew () {
-    if [ -z "$1" ]; then
+    args=()
+    opts=()
+    for arg in "$@"; do
+       if [[ "$arg" == -* ]]; then
+            opts+=("$arg")
+        else
+            args+=("$arg")
+        fi
+    done
+
+    if [ "${#args[@]}" -eq 0 ]; then
         remote="origin/$(gitbranch)"
     else
-        remote="$1"
+        remote="${args[0]}"
     fi
-    shift
-    git cherry "$(gitbranch)" "$remote" "$@"
+    git cherry "${opts[@]}" "$(gitbranch)" "$remote"
 }
 
 # update another branch and merge it in
@@ -136,7 +145,7 @@ gitmerge () {
 }
 
 gitfirst () {
-    git log --reverse --oneline | cut -d" " -f1 | head -n1
+    git log --reverse --format=format:%H | head -n1
 }
 
 gitar () {
