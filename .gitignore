@@ -29,6 +29,7 @@
 !/.local/share/
 !/.local/share/bspwm/
 !/.local/share/bspwm/*
+!/.local/share/bspwm/bspwmpython/*
 !/.local/share/uzbl/
 !/.local/share/uzbl/scripts/
 !/.local/share/uzbl/scripts/*
@@ -44,6 +45,7 @@
 !/.gitignore_global
 !/.profile
 !/.vimrc
+!/.wallpaperd.cfg
 !/.Xdefaults
 !/.xinitrc
 !/.xsessions/

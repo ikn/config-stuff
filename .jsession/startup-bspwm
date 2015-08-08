@@ -1,12 +1,15 @@
 #! /bin/bash
 
-sleep 2
-feh --no-fehbg --bg-scale ~/.wallpaper.png
-sleep 3
+sleep 5
 runpanel &
+
+# stops the GPU fan
 sleep 55
-urxvt -e optirun true # stops the GPU fan
+#urxvt -e optirun true
+nvidia-smi
 sleep 60
-urxvt -e optirun true # stops the GPU fan
+#urxvt -e optirun true
+nvidia-smi
 sleep 60
-urxvt -e optirun true # stops the GPU fan
+#urxvt -e optirun true
+nvidia-smi

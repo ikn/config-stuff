@@ -3,7 +3,7 @@
 highlight_colour=yellow
 empty_colour='#ddd'
 urgent_colour='#f64'
-max_title_length=30
+max_title_length=25
 truncated_title_suffix='[...]'
 truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
 

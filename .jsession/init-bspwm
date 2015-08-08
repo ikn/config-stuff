@@ -10,5 +10,6 @@ bspwm
 
 urxvtd
 kupfer --no-splash
+wallpaperd
 stalonetray -c /home/j/.config/stalonetray
 /home/j/.jsession/startup-bspwm

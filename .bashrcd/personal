@@ -31,13 +31,13 @@ alias ytdl-low='ytdl -f "$(_ytdl-limit-res 360)"'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
 alias ytdl-low-playlist='ytdl-playlist -f "$(_ytdl-limit-res 360)"'
 alias ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
+alias ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 ytvlc () {
-    vlc "$(youtube-dl -g --max-quality 22 --prefer-free-formats "$@")" \
-        --meta-title="$(youtube-dl -e "$1")"
+    vlc "$(youtube-dl -g "$@")" --meta-title="$(youtube-dl -e "$1")"
 }
 
-alias ytvlc-low='ytvlc --max-quality 18'
+alias ytvlc-low='ytvlc -f "$(_ytdl-limit-res 360)"'
 
 fl () {
     if [ -z "$1" ]; then

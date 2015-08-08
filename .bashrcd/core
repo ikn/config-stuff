@@ -145,7 +145,7 @@ gitmerge () {
 }
 
 gitfirst () {
-    git log --reverse --format=format:%H | head -n1
+    git hash-object -t tree /dev/null
 }
 
 gitar () {
