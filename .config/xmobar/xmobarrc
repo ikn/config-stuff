@@ -40,7 +40,7 @@ Config {
             \%cpu% %thermal2% %memory%\
         \</action> <action=`urxvtc -e sudo nethogs enp3s0 || urxvt -e sudo nethogs enp3s0`>\
             \%enp3s0%\
-        \</action>\
+        \</action> \
         \|| <action=`urxvtc -e sudo iotop || urxvt -e sudo iotop`>\
             \%disku%\
         \</action> \

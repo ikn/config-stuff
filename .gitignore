@@ -3,8 +3,8 @@
 !/bin/specific/
 !/bin/specific/bspwm-panel
 !/bin/specific/dftimes
-!/bin/specific/ftpmnt
-!/bin/specific/ftpumnt
+/bin/specific/ftpmnt
+/bin/specific/ftpumnt
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
