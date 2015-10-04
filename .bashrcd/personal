@@ -20,18 +20,29 @@ _ytdl-limit-res () {
 alias youtube-dl='youtube-dl --prefer-free-formats -f "$(_ytdl-limit-res 720)"'
 
 export YTDL_OUTPUT_DIR=~/media/videos
+export YTDL_OUTPUT_FORMAT='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
 
+# function so vars are evaluated at runtime
 _ytdl () {
-    local format='[%(uploader)s] [%(upload_date)s] %(title)s [%(id)s].%(ext)s'
-    youtube-dl -o "$YTDL_OUTPUT_DIR/$format" "$@"
+    youtube-dl -o "$YTDL_OUTPUT_DIR/$YTDL_OUTPUT_FORMAT" "$@"
 }
 
 alias ytdl='_ytdl --no-playlist'
 alias ytdl-low='ytdl -f "$(_ytdl-limit-res 360)"'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
 alias ytdl-low-playlist='ytdl-playlist -f "$(_ytdl-limit-res 360)"'
-alias ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
-alias ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
+alias _ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
+alias _ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
+
+_ytdl-new-aud () {
+    youtube-dl --no-playlist -f bestaudio \
+        -o ~/media/podcasts/yt/"$YTDL_OUTPUT_FORMAT" \
+        `cat ~/media/dl-list-aud` && \
+        rm ~/media/dl-list-aud
+}
+
+alias ytdl-new='_ytdl-new-aud; _ytdl-new'
+alias ytdl-new-low='_ytdl-new-aud; _ytdl-new-low'
 
 ytvlc () {
     vlc "$(youtube-dl -g "$@")" --meta-title="$(youtube-dl -e "$1")"
