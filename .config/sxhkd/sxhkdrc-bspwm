@@ -73,6 +73,9 @@ super + shift + {a,comma,e,o}
 # toggle floating
 super + f
     bspc window focused -t floating
+# toggle monocle
+super + m
+    bspc desktop -l next
 
 # presel
 super + space
