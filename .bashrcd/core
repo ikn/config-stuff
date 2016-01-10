@@ -24,9 +24,35 @@ alias py2='python2'
 alias :q='exit'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 
-show () {
-    declare -f "$1" || alias "$1"
+syntax-highlight () {
+    if type -p pygmentize > /dev/null; then
+        local args=()
+        [ -n "$1" ] && args=(-l "$1")
+        pygmentize -f terminal "${args[@]}"
+    else
+        cat
+    fi
 }
+
+show () {
+    if declare -f "$1" > /dev/null; then
+        declare -f "$1" | syntax-highlight bash
+    elif alias "$1" &> /dev/null; then
+        alias "$1" 2> /dev/null | syntax-highlight bash
+    elif [ -n "$(type -p "$1")" ]; then
+        local path="$(type -p "$1")"
+        if file -bi "$path" | grep -q "^application/"; then
+            echo "$path"
+        else
+            syntax-highlight < "$path"
+        fi
+    else
+        echo >&2 "cannot find '$1'"
+        return 1
+    fi
+}
+
+complete -A alias -A function -A command show
 
 fix-perms () {
     for dir in "$@"; do
