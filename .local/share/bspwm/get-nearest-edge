@@ -2,27 +2,16 @@
 
 import sys
 
-from bspwmpython.querytree import (
-    get_raw_tree, parse_tree, SPLIT_VERTICAL, SPLIT_HORIZONTAL, path_to_window
-)
-
-
-def respond_with (parent, is_split, index):
-    if is_split:
-        axis = parent.split()[0] == 'H'
-        print(('right', 'down', 'left', 'up')[2 * index + axis])
-    sys.exit(0)
-
+from bspwmpython.querytree import get_tree, path_to_window, follow_path
 
 if len(sys.argv) != 2:
     print('expected exactly one argument (window ID)')
     sys.exit(1)
 
-tree = parse_tree(get_raw_tree())
-w_id = sys.argv[1]
+tree = get_tree()
+w_id = int(sys.argv[1], 16)
 path = path_to_window(tree, w_id)
 if path is not None:
-    if len(path) >= 4:
-        axis = path[-2][1]['type'] == SPLIT_HORIZONTAL
-        index = path[-1][0]
-        print(('right', 'down', 'left', 'up')[2 * index + axis])
+    axis = follow_path(tree, path[:-1])['splitType'] == 'horizontal'
+    index = path[-1] == 'secondChild'
+    print(('east', 'south', 'west', 'north')[2 * index + axis])

@@ -7,16 +7,15 @@ max_title_length=25
 truncated_title_suffix='[...]'
 truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
 
-bspc control --subscribe | while read; do
+bspc subscribe | while read; do
     desktop_colour="$highlight_colour"
-    [ -z "$(bspc query -W -w last)" ] && \
-        [ -z "$(bspc query -W -w focused)" ] && desktop_colour="$empty_colour"
+    [ -z "$(bspc query -N -n last)" ] && \
+        [ -z "$(bspc query -N -n focused)" ] && desktop_colour="$empty_colour"
     echo -n "<action=\`bspc desktop -f next\`>\
 desktop: <fc=$desktop_colour>$(bspc query -D -d focused)</fc></action>"
 
-    id="$(bspc query -W -w last.urgent)"
-    if [ -n "$id" ]; then
-        desktop="$(bspc query -D -w "$id")"
+    bspc query -N -n .urgent | while read -r id; do
+        desktop="$(bspc query -D -n "$id")"
 
         title="$(xwininfo -id "$id" -wm | \
             head -n2 | tail -n1 | sed 's/^.*"\(.*\)"$/\1/')"
@@ -25,10 +24,10 @@ desktop: <fc=$desktop_colour>$(bspc query -D -d focused)</fc></action>"
                 echo "$title" | head -c"$truncate_title_size"
             )$truncated_title_suffix"
 
-        echo " || <action=\`bspc window -f last.urgent\`>\
+        echo -n " || <action=\`bspc node -f last.urgent\`>\
 [<fc=$highlight_colour>$desktop</fc>] \
 <fc=$urgent_colour><raw=${#title}:$title/></fc></action>"
-    else
-        echo
-    fi
+    done
+
+    echo
 done

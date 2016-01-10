@@ -5,7 +5,7 @@ target="${2:-focused}"
 
 orientation="$("$BSPWM_SCRIPTS_DIR"/get-window-alignment "$target")"
 if [ "$orientation" = vertical ]; then
-    [ "$dir" = tl ] && echo up || echo down
+    [ "$dir" = tl ] && echo north || echo south
 else
-    [ "$dir" = tl ] && echo left || echo right
+    [ "$dir" = tl ] && echo west || echo east
 fi

@@ -1,5 +1,5 @@
 #! /bin/sh
 
 target="${2:-focused}"
-bspc window "$target" -p \
-    "$("$BSPWM_SCRIPTS_DIR"/get-auto-presel "$1" "$target")"
+bspc node "$target" -p \
+    "~$("$BSPWM_SCRIPTS_DIR"/get-auto-presel "$1" "$target")"

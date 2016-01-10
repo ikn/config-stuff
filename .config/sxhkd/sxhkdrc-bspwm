@@ -48,31 +48,31 @@ Pause
 ## bspwm
 # focus window
 super + {Left,Up,Right,Down}
-    bspc window -f {left,up,right,down}
+    bspc node -f {west,north,east,south}
 super + {a,comma,e,o}
-    bspc window -f {left,up,right,down}
+    bspc node -f {west,north,east,south}
 super + Tab
-    bspc window -f last
+    bspc node -f last
 super + u
-    bspc window -f last.urgent
-super+ ctrl + Tab
+    bspc node -f last.urgent
+super + ctrl + Tab
     bspc desktop -f last.occupied
 # close
 super + d
-    bspc window -c
+    bspc node -c
 # resize BR
 super + alt + {Left,Up,Right,Down}
-    bspc window -e {right -50,down -50,right +50,down +50}
+    bspc node @{east -r -50,south -r -50,east -r +50,south -r +50}
 super + alt + {a,comma,e,o}
-    bspc window -e {right -50,down -50,right +50,down +50}
+    bspc node @{east -r -50,south -r -50,east -r +50,south -r +50}
 # resize TL
 super + shift + {Left,Up,Right,Down}
-    bspc window -e {left -50,up -50,left +50,up +50}
+    bspc node @{west -r -50,north -r -50,west -r +50,north -r +50}
 super + shift + {a,comma,e,o}
-    bspc window -e {left -50,up -50,left +50,up +50}
+    bspc node @{west -r -50,north -r -50,west -r +50,north -r +50}
 # toggle floating
 super + f
-    bspc window focused -t floating
+    bspc node focused -t "~floating"
 # toggle monocle
 super + m
     bspc desktop -l next
@@ -82,28 +82,27 @@ super + space
     "$BSPWM_SCRIPTS_DIR"/auto-presel
 # swap
 super + ctrl + {Left,Up,Right,Down}
-    bspc window -s {left,up,right,down}
+    bspc node -s {west,north,east,south}
 super + ctrl + {a,comma,e,o}
-    bspc window -s {left,up,right,down}
+    bspc node -s {west,north,east,south}
 super + s
-    if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
-        bspc window -s biggest.unfocused; \
+    if [ -z "$(bspc query -N -n last.\!automatic.local)" ]; then \
+        bspc node -s biggest.\!focused; \
     else \
-        bspc window -f last.manual.local; \
-        bspc window -p cancel; \
-        bspc window -s last; \
-    fi 
+        bspc node -f last.\!automatic.local; \
+        bspc node -p cancel; \
+        bspc node -s last; \
+    fi
 super + t
-    if [ -z "$(bspc query -W -w last.manual.local)" ]; then \
-        "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.unfocused; \
-        bspc window -w biggest.unfocused; \
+    if [ -z "$(bspc query -N -n last.\!automatic.local)" ]; then \
+        "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.\!focused; \
+        bspc node -n biggest.\!focused; \
     else \
         "$BSPWM_SCRIPTS_DIR"/auto-presel; \
-        bspc window -f last.manual.local; \
-        bspc window -p cancel; \
-        bspc window -w last; \
-    fi; \
-    bspc desktop -c
+        bspc node -f last.\!automatic.local; \
+        bspc node -p cancel; \
+        bspc node -n last; \
+    fi
 # rotate
 super + n
     "$BSPWM_SCRIPTS_DIR"/rotate-split
@@ -123,10 +122,10 @@ alt + @button{1-3}
 # switch desktop
 ctrl + alt + {_,shift + }{Left,Up,Right,Down}
     "$BSPWM_SCRIPTS_DIR"/desktop-wall {switch,switchwithwindow} \
-        {left,up,right,down}
+        {west,north,east,south}
 ctrl + alt + {_,shift + }{a,comma,e,o}
     "$BSPWM_SCRIPTS_DIR"/desktop-wall {switch,switchwithwindow} \
-        {left,up,right,down}
+        {west,north,east,south}
 
 # reload sxhkd
 super + Escape

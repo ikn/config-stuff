@@ -4,7 +4,7 @@ import os
 import sys
 from subprocess import check_call, check_output
 
-dirns = ['left', 'up', 'right', 'down']
+dirns = ['west', 'north', 'east', 'south']
 
 
 def fail (*args):
@@ -56,7 +56,7 @@ elif cmd in ('switch', 'switchwithwindow'):
         target = mkname(*pos)
 
         if with_window:
-            w_id = check_output(['bspc', 'query', '-W', '-w', 'focused']) \
+            w_id = check_output(['bspc', 'query', '-N', '-n', 'focused']) \
                 .decode().strip()
             if w_id:
                 check_call(['xdotool', 'windowunmap', str(w_id)])
