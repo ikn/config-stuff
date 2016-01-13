@@ -15,7 +15,7 @@ getwid () {
     local wclass="$1"
     local current_desktop="$2"
     xdotool search --class "^${wclass}$" | while read wid; do
-        [ "$(bspc query -D -w "$wid")" = "$current_desktop" ] && {
+        [ "$(bspc query -D -n "$wid")" = "$current_desktop" ] && {
             echo "$wid"
             break
         }
@@ -88,6 +88,6 @@ done=
     dbus-send --print-reply --session --dest="$con" \
         /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri \
         string:"$uri" && \
-    bspc window -f "$wid" && \
+    bspc node -f "$wid" && \
     done=y
 [ -z "$done" ] && exec "$cmd" "$@"
