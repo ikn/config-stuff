@@ -3,6 +3,9 @@
 sleep 5
 runpanel &
 
+# hack for invisible cursor
+lxappearance &
+
 # stops the GPU fan
 sleep 55
 #urxvt -e optirun true

@@ -36,7 +36,7 @@ alias _ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 _ytdl-new-aud () {
     youtube-dl --no-playlist -f bestaudio \
-        -o ~/media/podcasts/yt/"$YTDL_OUTPUT_FORMAT" \
+        -o ~/media/podcasts/"$YTDL_OUTPUT_FORMAT" \
         `cat ~/media/dl-list-aud` && \
         rm ~/media/dl-list-aud
 }
