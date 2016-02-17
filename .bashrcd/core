@@ -41,7 +41,7 @@ show () {
         alias "$1" 2> /dev/null | syntax-highlight bash
     elif [ -n "$(type -p "$1")" ]; then
         local path="$(type -p "$1")"
-        if file -bi "$path" | grep -q "^application/"; then
+        if file -biL "$path" | grep -q "^application/"; then
             echo "$path"
         else
             syntax-highlight < "$path"
