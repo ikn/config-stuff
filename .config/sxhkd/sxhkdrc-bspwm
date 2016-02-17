@@ -72,7 +72,11 @@ super + shift + {a,comma,e,o}
     bspc node @{west -r -50,north -r -50,west -r +50,north -r +50}
 # toggle floating
 super + f
-    bspc node focused -t "~floating"
+    if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+        bspc node focused -t floating; \
+    else \
+        bspc node focused -t tiled; \
+    fi
 # toggle monocle
 super + m
     bspc desktop -l next
