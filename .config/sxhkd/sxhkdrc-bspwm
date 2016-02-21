@@ -57,6 +57,8 @@ super + u
     bspc node -f last.urgent
 super + ctrl + Tab
     bspc desktop -f last.occupied
+super + space
+    bspc node -f "$(xorg-choose-window aoeuhtns)"
 # close
 super + d
     bspc node -c
@@ -81,32 +83,22 @@ super + f
 super + m
     bspc desktop -l next
 
-# presel
-super + space
-    "$BSPWM_SCRIPTS_DIR"/auto-presel
 # swap
 super + ctrl + {Left,Up,Right,Down}
     bspc node -s {west,north,east,south}
 super + ctrl + {a,comma,e,o}
     bspc node -s {west,north,east,south}
 super + s
-    if [ -z "$(bspc query -N -n last.\!automatic.local)" ]; then \
-        bspc node -s biggest.\!focused; \
-    else \
-        bspc node -f last.\!automatic.local; \
-        bspc node -p cancel; \
-        bspc node -s last; \
-    fi
+    bspc node -s biggest.\!focused
+super + alt + s
+    bspc node -s "$(xorg-choose-window aoeuhtns)"
 super + t
-    if [ -z "$(bspc query -N -n last.\!automatic.local)" ]; then \
-        "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.\!focused; \
-        bspc node -n biggest.\!focused; \
-    else \
-        "$BSPWM_SCRIPTS_DIR"/auto-presel; \
-        bspc node -f last.\!automatic.local; \
-        bspc node -p cancel; \
-        bspc node -n last; \
-    fi
+    "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.\!focused; \
+    bspc node -n biggest.\!focused
+super + alt + t
+    wid="$(xorg-choose-window aoeuhtns)"; \
+    "$BSPWM_SCRIPTS_DIR"/auto-presel br "$wid"; \
+    bspc node -n "$wid"
 # rotate
 super + n
     "$BSPWM_SCRIPTS_DIR"/rotate-split
