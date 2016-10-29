@@ -12,7 +12,7 @@ set smartcase
 syntax on
 set background=dark
 set linebreak
-set colorcolumn=80
+set colorcolumn=81
 set wrap
 set linebreak
 set list

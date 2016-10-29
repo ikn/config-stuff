@@ -1,12 +1,12 @@
 ## screenshot
 Print
-    scrot ~/'ss-%H:%M:%S-$wx$h.png'
+    scrot ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 alt + Print
-    urxvt -e scrot -s ~/'ss-%H:%M:%S-$wx$h.png'
+    urxvt -e scrot -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 ctrl + Print
-    scrot -d5 ~/'ss-%H:%M:%S-$wx$h.png'
+    scrot -d5 ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 ctrl + alt + Print
-    urxvt -e scrot -d5 -s ~/'ss-%H:%M:%S-$wx$h.png'
+    urxvt -e scrot -d5 -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 
 ## power/media
 XF86Sleep
@@ -41,6 +41,8 @@ ctrl + alt + k
     kate
 ctrl + alt + f
     firefox
+ctrl + alt + y
+    bash -ic "ytvlc \"$(xclip -selection clipboard -o)\""
 # toggle Thunderbird
 Pause
     ~/bin/specific/toggle-window Mail
