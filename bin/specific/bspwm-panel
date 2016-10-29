@@ -7,12 +7,16 @@ max_title_length=25
 truncated_title_suffix='[...]'
 truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
 
+render_desktop () {
+    bspc query -T -d "$1" | jshon -e name -u
+}
+
 bspc subscribe | while read; do
     desktop_colour="$highlight_colour"
-    [ -z "$(bspc query -N -n last)" ] && \
-        [ -z "$(bspc query -N -n focused)" ] && desktop_colour="$empty_colour"
+    desktop="$(bspc query -D -d focused)"
+    [ -z "$(bspc query -N)" ] && desktop_colour="$empty_colour"
     echo -n "<action=\`bspc desktop -f next\`>\
-desktop: <fc=$desktop_colour>$(bspc query -D -d focused)</fc></action>"
+desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc></action>"
 
     bspc query -N -n .urgent | while read -r id; do
         desktop="$(bspc query -D -n "$id")"
@@ -25,7 +29,7 @@ desktop: <fc=$desktop_colour>$(bspc query -D -d focused)</fc></action>"
             )$truncated_title_suffix"
 
         echo -n " || <action=\`bspc node -f last.urgent\`>\
-[<fc=$highlight_colour>$desktop</fc>] \
+[<fc=$highlight_colour>$(render_desktop "$desktop")</fc>] \
 <fc=$urgent_colour><raw=${#title}:$title/></fc></action>"
     done
 

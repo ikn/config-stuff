@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 from subprocess import check_call, check_output
 
 dirns = ['west', 'north', 'east', 'south']
@@ -43,7 +44,8 @@ elif cmd in ('switch', 'switchwithwindow'):
     else:
         fail('invalid direction argument:', dirn)
 
-    current = check_output(['bspc', 'query', '-D', '-d', 'focused']).split(b'-')
+    tree = check_output(['bspc', 'query', '-T', '-d', 'focused'])
+    current = json.loads(tree.decode())['name'].split('-')
     try:
         x = int(current[0]) - 1
         y = int(current[1]) - 1
