@@ -97,6 +97,24 @@ enc-recording () {
     ffmpeg -i "$3" -ss "$1" -t "$2" -c:a copy -c:v libx264 -preset slow "out-$3"
 }
 
+tmw () {
+    local args=()
+    for arg in "$@"; do
+        args+=(~/.config/tellmewhen/"$arg".json)
+    done
+    tellmewhend -d 1 --min-event-separation 2 -- "${args[@]}"
+}
+
+_complete_tmw () {
+    IFS=$'\n' COMPREPLY=($(IFS=$'\n' compgen -W "$(
+        ls ~/.config/tellmewhen |
+            while read -r f; do
+                [[ "$f" == *.json ]] && echo "${f%.json}"
+            done
+    )" "$2"))
+}
+complete -F _complete_tmw tmw
+
 if [ "$STARTIRCREMOTE" = "y" ]; then
     irc () {
         TERM=xterm-256color ssh $host "bash -l -c 'tmux attach'" && exit
