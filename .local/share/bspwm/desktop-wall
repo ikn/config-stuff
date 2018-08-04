@@ -13,8 +13,8 @@ def fail (*args):
     sys.exit(2)
 
 
-def mkname (col, row):
-    return '{}-{}'.format(col + 1, row + 1)
+def mkname (m, col, row):
+    return '{}-{}-{}'.format(m, col + 1, row + 1)
 
 
 try:
@@ -29,9 +29,10 @@ if len(sys.argv) < 2:
 cmd = sys.argv[1]
 
 if cmd == 'init':
-    check_call(['bspc', 'monitor', '-d'] +
-        [mkname(i % w, i // w) for i in range(w * h)])
-    pass
+    ms = check_output(['bspc', 'query', '-M']).decode().splitlines()
+    for i, m in enumerate(ms):
+        check_call(['bspc', 'monitor', m, '-d'] +
+            [mkname(i + 1, j % w, j // w) for j in range(w * h)])
 
 elif cmd in ('switch', 'switchwithwindow'):
     with_window = cmd == 'switchwithwindow'
@@ -47,15 +48,16 @@ elif cmd in ('switch', 'switchwithwindow'):
     tree = check_output(['bspc', 'query', '-T', '-d', 'focused'])
     current = json.loads(tree.decode())['name'].split('-')
     try:
-        x = int(current[0]) - 1
-        y = int(current[1]) - 1
+        m = '-'.join(current[:-2])
+        x = int(current[-2]) - 1
+        y = int(current[-1]) - 1
     except (ValueError, IndexError):
         fail('unexpected desktop name:', current, '(call `desktop-wall init`)')
 
     if (x > 0, y > 0, x < w - 1, y < h - 1)[dirn]:
         pos = [x, y]
         pos[dirn % 2] += -1 if dirn < 2 else 1
-        target = mkname(*pos)
+        target = mkname(m, *pos)
 
         if with_window:
             w_id = check_output(['bspc', 'query', '-N', '-n', 'focused']) \

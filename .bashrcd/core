@@ -99,13 +99,12 @@ git () {
     esac
 }
 
-gitag () {
-    git diff --relative -z --name-only HEAD | xargs -0 ag "$@" 2> /dev/null
-}
-
-alias gitaw='gitag -sw'
-
+# get the current git branch name
 alias gitbranch='git rev-parse --abbrev-ref HEAD'
+
+gitfirst () {
+    git hash-object -t tree /dev/null
+}
 
 logorigin () {
     git log "origin/$(git rev-parse --abbrev-ref HEAD)" "$@"
@@ -121,13 +120,44 @@ gitnew () {
             args+=("$arg")
         fi
     done
+    [ "${#opts[@]}" -eq 0 ] && opts+=('--oneline')
 
     if [ "${#args[@]}" -eq 0 ]; then
         remote="origin/$(gitbranch)"
     else
         remote="${args[0]}"
     fi
-    git cherry "${opts[@]}" "$(gitbranch)" "$remote"
+    git log "${opts[@]}" .."$remote"
+}
+
+gitfetchnew () {
+    git fetch && gitnew && gitnew --stat
+}
+
+# get files changed since the last git commit
+gitchanged () {
+    git diff --name-only HEAD
+}
+
+gitag () {
+    git diff --relative -z --name-only HEAD | xargs -0 ag "$@" 2> /dev/null
+}
+
+alias gitaw='gitag -sw'
+
+# shows the root directory of the git repository you are in
+gitroot () {
+    git rev-parse --show-toplevel
+}
+
+gitar () {
+    name=$(basename "$(readlink -f ..)")
+    if [ -z "$2" ]; then
+        ext=tar.gz
+    else
+        ext=$2
+    fi
+    git archive HEAD --prefix="$name-$1/" -o"../$name-$1.$ext"
 }
 
 # update another branch and merge it in
@@ -170,16 +200,77 @@ gitmerge () {
     return "$rtn"
 }
 
-gitfirst () {
-    git hash-object -t tree /dev/null
+gitresethard () {
+    if [ "$#" -eq 0 ]; then
+        gitresethard .
+    else
+        git reset HEAD -- "$@"
+        git checkout HEAD -- "$@"
+        git clean -fd -- "$@"
+    fi
 }
 
-gitar () {
-    name=$(basename "$(readlink -f ..)")
-    if [ -z "$2" ]; then
-        ext=tar.gz
+# run before pulling to determine whether a rebase or merge is necessary
+gitrebase () {
+    local merge=
+    local local_changes=
+    local remote_changes=
+    local current="$(gitbranch)"
+
+    git fetch || return 1
+
+    # check for changes on remote but not local branch
+    [ -n "$(git log --oneline "$current"..origin/"$current")" ] && remote_changes=y
+
+    # for each change on local but not remote branch
+    for rev in $(git log --format=format:%H origin/"$current".."$current"); do
+        local_changes=y
+        # branches containing the change, excluding the current local branch
+        branches="$(git branch -a --contains "$rev" | grep -v "^*")"
+        # should merge if there are any
+        if [ -n "$branches" ]; then
+            echo 1>&2 "new local commit $rev is contained in branches:"
+            echo 1>&2 "$branches"
+            echo 1>&2
+            merge=y
+            break
+        fi
+    done
+
+    if [ -z "$local_changes" ]; then
+        echo "no local changes"
+    elif [ -z "$remote_changes" ]; then
+        echo "no remote changes"
+    elif [ -n "$merge" ]; then
+        echo "merge"
     else
-        ext=$2
+        echo "rebase"
     fi
-    git archive HEAD --prefix="$name-$1/" -o"../$name-$1.$ext"
+}
+
+# switch to another branch and pull, preserving uncommitted changes
+# returns 1 on checkout failure, 2 on stash pop failure
+gitup () {
+    local rtn=0
+    local stash=$(gitchanged)
+    [ -n "$stash" ] && git stash
+    [ -n "$1" ] && {
+        git checkout "$1" || {
+            git fetch
+            git checkout "$1" || rtn=1
+        }
+    }
+    [ "$rtn" = 0 ] && {
+        local action="$(gitrebase)" || rtn=1
+        case "$action" in
+            "no local changes"|merge)
+                git pull || rtn=1
+                ;;
+            rebase)
+                git pull --rebase || rtn=1
+                ;;
+        esac
+    }
+    [ -n "$stash" ] && { git stash pop || rtn="${rtn:-2}"; }
+    return "$rtn"
 }

@@ -1,6 +1,5 @@
 #! /bin/bash
 
-
 # appearance
 
 gap=2
@@ -9,16 +8,17 @@ bspc config window_gap $gap
 for border in left top right; do
     bspc config ${border}_padding -$gap
 done
-bspc config bottom_padding $((19-gap))
+bspc config bottom_padding $((20-gap))
 
 bspc config normal_border_color '#563f64'
+bspc config active_border_color '#563f64'
 bspc config focused_border_color '#ff9a00'
 bspc config presel_feedback_color '#ff9a00'
 
 # input
 
 bspc config pointer_modifier mod1
-bspc config click_to_focus true
+bspc config click_to_focus any
 bspc config pointer_action1 focus
 bspc config pointer_action1 move
 bspc config pointer_action2 resize_corner
@@ -32,6 +32,9 @@ bspc config auto_cancel true
 bspc rule -a orage state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Pyroom state=floating
+bspc rule -a dustmod.bin.x86_64 state=fullscreen
+bspc rule -a Zathura state=tiled
+bspc rule -a jetbrains-idea state=tiled
 
 # set up desktops - need to do this after some settings above, since they're
 # global and get applied to desktops when they're created/reset

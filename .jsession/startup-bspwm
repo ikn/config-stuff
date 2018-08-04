@@ -1,15 +1,6 @@
 #! /bin/bash
 
-sleep 5
+sleep 2
 runpanel &
-
-# stops the GPU fan
-sleep 55
-#urxvt -e optirun true
-nvidia-smi
-sleep 60
-#urxvt -e optirun true
-nvidia-smi
-sleep 60
-#urxvt -e optirun true
-nvidia-smi
+stalonetray -c ~/.config/stalonetray &
+maintain-fullscreen &

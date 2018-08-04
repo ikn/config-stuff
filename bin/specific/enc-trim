@@ -1,0 +1,79 @@
+#! /usr/bin/env python
+
+from sys import argv
+import os
+import shutil
+from subprocess import call
+
+# easy video trimming that reads timing info from filenames
+# log file is written to the output dir
+# enc-trim 'part 1 (0:24-1:30).mkv' 'part 2 (5:00-6:00, 6:30-6:36).mkv' out.mkv
+
+FFMPEG_ARGS = ('-c:v', 'libx264', '-preset', 'slow',
+               '-c:a', 'libvorbis', '-ab', '128k')
+SEGMENT_EXT = '.mkv'
+
+def gen_fns (dir_path, n, ext, c='A'):
+    fns = []
+    fn = ext
+    while len(fns) < n:
+        fn = c + fn
+        while os.path.exists(fn):
+            fn = c + fn
+        fns.append(os.path.join(dir_path, fn))
+    return fns
+
+in_fns = []
+timings = []
+final_out_fn = argv[-1]
+out_dir = os.path.dirname(final_out_fn)
+
+for in_fn in argv[1:-1]:
+    in_fns.append(in_fn)
+    i = in_fn.rfind(' (')
+    j = in_fn.rfind(')')
+    t_data = in_fn[i + 2:j].split(', ')
+
+    for ts in t_data:
+        timing = [in_fn]
+        timings.append(timing)
+        for t in ts.split('-'):
+            i = t.find(':')
+            timing.append(60 * int(t) if i == -1
+                        else (60 * int(t[:i]) + int(t[i + 1:])))
+
+seg_fns = gen_fns(out_dir, len(timings), SEGMENT_EXT)
+seg_fn = gen_fns(out_dir, 1, '')[0]
+with open(seg_fn, 'w') as f:
+    for fn in seg_fns:
+        print('segment', fn)
+        f.write('file \'{0}\'\n'.format(fn))
+
+failed = False
+for (in_fn, start, end), fn in zip(timings, seg_fns):
+    cmd = (('ffmpeg', '-i', in_fn, '-map', '0') + FFMPEG_ARGS +
+           ('-ss', str(start), '-t', str(end - start), fn))
+    print(cmd)
+    code = call(cmd)
+    if code != 0:
+        print('ffmpeg error', code)
+        failed = True
+        break
+
+if not failed:
+    cmd = ('ffmpeg', '-y', '-f', 'concat', '-i', seg_fn, '-map', '0',
+           '-c', 'copy', final_out_fn)
+    print(cmd)
+    code = call(cmd)
+    if code != 0:
+        failed = True
+        print('ffmpeg error', code)
+
+for fn in seg_fns + [seg_fn]:
+    try:
+        os.unlink(fn)
+    except FileNotFoundError:
+        pass
+
+if failed:
+    exit(1)

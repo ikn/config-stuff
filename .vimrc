@@ -17,6 +17,9 @@ set wrap
 set linebreak
 set list
 set listchars=tab:▸\ ,trail:·
+set cursorline
+set cursorcolumn
+highlight CursorColumn ctermbg=Black
 " editing: settings
 set expandtab
 set tabstop=4

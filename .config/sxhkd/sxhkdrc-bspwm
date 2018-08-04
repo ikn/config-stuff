@@ -1,12 +1,14 @@
 ## screenshot
 Print
     scrot ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
+# without sleep, the key release causes scrot to exit
 alt + Print
-    urxvt -e scrot -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
+    sleep .2; scrot -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 ctrl + Print
     scrot -d5 ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
+# without sleep, the key release causes scrot to exit
 ctrl + alt + Print
-    urxvt -e scrot -d5 -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
+    sleep .2; scrot -d5 -s ~/'ss-%H:%M:%S-$wx$h-'"$RANDOM"'.png'
 
 ## power/media
 XF86Sleep
@@ -29,18 +31,20 @@ super + r
 ## programs
 ctrl + alt + t
     urxvtc || urxvt
-ctrl + alt + u
-    uzbl-tabbed-open
+ctrl + alt + b
+    qutebrowser
 ctrl + alt + i
     /home/j/bin/specific/irc-remote-urxvt
 ctrl + alt + n
-    urxvtc -e newsbeuter || urxvt -e newsbeuter
+    urxvtc -e newsboat || urxvt -e newsboat
 ctrl + alt + g
     pluma
 ctrl + alt + k
     kate
 ctrl + alt + f
     firefox
+ctrl + alt + c
+    gsimplecal
 ctrl + alt + y
     bash -ic "ytvlc \"$(xclip -selection clipboard -o)\""
 # toggle Thunderbird
@@ -50,17 +54,29 @@ Pause
 ## bspwm
 # focus window
 super + {Left,Up,Right,Down}
-    bspc node -f {west,north,east,south}
+    dir={west,north,east,south}; \
+    if [ -z "$(bspc query -N -n focused)" ] || [ -z "$(bspc query -N -n "$dir")" ]; then \
+        bspc monitor -f "$dir"; \
+    else \
+        bspc node -f "$dir"; \
+    fi
 super + {a,comma,e,o}
-    bspc node -f {west,north,east,south}
-super + Tab
+    dir={west,north,east,south}; \
+    if [ -z "$(bspc query -N -n focused)" ] || [ -z "$(bspc query -N -n "$dir")" ]; then \
+        bspc monitor -f "$dir"; \
+    else \
+        bspc node -f "$dir"; \
+    fi
     bspc node -f last
+super + Tab
+    bspc node -f last.active
 super + u
     bspc node -f last.urgent
 super + ctrl + Tab
-    bspc desktop -f last.occupied
+    bspc desktop -f last.occupied.local
 super + space
-    bspc node -f "$(xorg-choose-window aoeuhtns)"
+    bspc node -f "$(xorg-choose-window aoeuhtns \
+        -b "$(bspc query -N -n focused)")"
 # close
 super + d
     bspc node -c
@@ -87,20 +103,32 @@ super + m
 
 # swap
 super + ctrl + {Left,Up,Right,Down}
-    bspc node -s {west,north,east,south}
+    wid="$(bspc query -N -n focused)"; \
+    bspc node -s {west,north,east,south}; \
+    bspc node -f "$wid"; \
+    bspc monitor -f "$(bspc query -M -n "$wid")"
 super + ctrl + {a,comma,e,o}
-    bspc node -s {west,north,east,south}
+    wid="$(bspc query -N -n focused)"; \
+    bspc node -s {west,north,east,south}; \
+    bspc node -f "$wid"; \
+    bspc monitor -f "$(bspc query -M -n "$wid")"
 super + s
     bspc node -s biggest.local.\!focused
 super + alt + s
-    bspc node -s "$(xorg-choose-window aoeuhtns)"
+    wid="$(bspc query -N -n focused)"; \
+    bspc node -s "$(xorg-choose-window aoeuhtns)"; \
+    bspc node -f "$wid"; \
+    bspc monitor -f "$(bspc query -M -n "$wid")"
 super + t
     "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.local.\!focused; \
     bspc node -n biggest.local.\!focused
 super + alt + t
-    wid="$(xorg-choose-window aoeuhtns)"; \
-    "$BSPWM_SCRIPTS_DIR"/auto-presel br "$wid"; \
-    bspc node -n "$wid"
+    wid="$(bspc query -N -n focused)"; \
+    target_wid="$(xorg-choose-window aoeuhtns)"; \
+    "$BSPWM_SCRIPTS_DIR"/auto-presel br "$target_wid"; \
+    bspc node -n "$target_wid"; \
+    bspc node -f "$wid"; \
+    bspc monitor -f "$(bspc query -M -n "$wid")"
 # rotate
 super + n
     "$BSPWM_SCRIPTS_DIR"/rotate-split

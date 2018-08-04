@@ -18,3 +18,5 @@ aur-sync-git () {
         fi
     done)
 }
+
+alias npm='npm --python=python2'

@@ -1,9 +1,11 @@
 .gitignore
 *.py[co]
-__pycache__
+__pycache__/
 *.kate-swp
 .*.swp
 *~
 .nfs*
 .kateconfig
 .FW.*
+*.iml
+.idea/

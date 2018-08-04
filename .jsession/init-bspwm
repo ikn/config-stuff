@@ -2,7 +2,6 @@ xset r rate 250 60
 setxkbmap gb dvorakukp -option -option caps:escape -option terminate:ctrl_alt_bksp
 xset -dpms
 xset s off
-xsetroot -cursor_name left_ptr
 redshift -l 52.2:0.1
 
 sxhkd -c /home/j/.config/sxhkd/sxhkdrc-bspwm -t 0.2
@@ -11,5 +10,4 @@ bspwm
 urxvtd
 kupfer --no-splash
 wallpaperd
-stalonetray -c /home/j/.config/stalonetray
 /home/j/.jsession/startup-bspwm

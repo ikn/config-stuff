@@ -3,11 +3,13 @@
 !/bin/specific/
 !/bin/specific/bspwm-panel
 !/bin/specific/dftimes
+!/bin/specific/enc-trim
 /bin/specific/ftpmnt
 /bin/specific/ftpumnt
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
+!/bin/specific/maintain-fullscreen
 !/bin/specific/news
 !/bin/specific/runpanel
 !/bin/specific/temp
@@ -18,10 +20,10 @@
 !/.config/
 !/.config/bspwm/
 !/.config/bspwm/*
+!/.config/qutebrowser/
+!/.config/qutebrowser/config.py
 !/.config/sxhkd/
 !/.config/sxhkd/*
-!/.config/uzbl/
-!/.config/uzbl/config
 !/.config/xmobar/
 !/.config/xmobar/xmobarrc
 !/.config/stalonetray
@@ -30,9 +32,6 @@
 !/.local/share/bspwm/
 !/.local/share/bspwm/*
 !/.local/share/bspwm/bspwmpython/*
-!/.local/share/uzbl/
-!/.local/share/uzbl/scripts/
-!/.local/share/uzbl/scripts/*
 !/.jsession/
 !/.jsession/*
 /.jsession/running

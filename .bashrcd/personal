@@ -3,6 +3,7 @@
 export FTP_DIR="$HOME/ftp"
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
+export DUSTFORCE_INSTALL_DIR=/opt/dustforce-dustmod
 
 source ~/bin/specific/ftpmnt
 
@@ -35,9 +36,9 @@ alias _ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
 alias _ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 _ytdl-new-aud () {
-    youtube-dl --no-playlist -f bestaudio \
+    xargs -r youtube-dl --no-playlist -f bestaudio \
         -o ~/media/podcasts/"$YTDL_OUTPUT_FORMAT" \
-        `cat ~/media/dl-list-aud` && \
+        < ~/media/dl-list-aud && \
         rm ~/media/dl-list-aud
 }
 
@@ -49,6 +50,17 @@ ytvlc () {
 }
 
 alias ytvlc-low='ytvlc -f "$(_ytdl-limit-res 360)"'
+
+twitchdl () {
+    local id="$(date +%s)-$RANDOM"
+    local attempt=1
+    while true; do
+        echo "stream [$id-$attempt]".mp4
+        streamlink -o "stream [$id-$attempt]".mp4 "$1" best \
+            --http-header Client-ID=jzkbprff40iqj646a697cyrvl0zt2m6
+        attempt="$((attempt+1))"
+    done
+}
 
 fl () {
     if [ -z "$1" ]; then
@@ -93,10 +105,6 @@ flcpto () {
     flcp "$n" "$1"
 }
 
-enc-recording () {
-    ffmpeg -i "$3" -ss "$1" -t "$2" -c:a copy -c:v libx264 -preset slow "out-$3"
-}
-
 tmw () {
     local args=()
     for arg in "$@"; do
@@ -122,3 +130,28 @@ if [ "$STARTIRCREMOTE" = "y" ]; then
 
     host=rpi irc || host=home irc
 fi
+
+
+enc-recording-quick () {
+    mkdir -p out
+    for f in "$@"; do
+        ffmpeg -i "$f" -c:v libx264 -preset superfast -c:a copy out/"$f"
+    done
+}
+
+enc-recording-gw2yt () {
+    mkdir -p out
+    for f in "$@"; do
+        ffmpeg -i "$f" -map 0:0 -map 0:2 \
+            -c:v copy -c:a libvorbis -ab 128k -af 'volume=+20dB' out/"$f"
+    done
+}
+
+enc-trim-all () {
+    local f;
+    mkdir -p out
+    for f in "$@"; do
+        echo "$f"
+        enc-trim "$f" out/"$(basename "$f")" || echo ERROR
+    done 2> out/log
+}

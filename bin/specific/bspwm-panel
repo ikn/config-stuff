@@ -11,12 +11,14 @@ render_desktop () {
     bspc query -T -d "$1" | jshon -e name -u
 }
 
-bspc subscribe | while read; do
+update () {
     desktop_colour="$highlight_colour"
     desktop="$(bspc query -D -d focused)"
+    flags=
     [ -z "$(bspc query -N)" ] && desktop_colour="$empty_colour"
+    [ "$(bspc query -T -d "$desktop" | jshon -e layout -u)" = monocle ] && flags=" [<fc=$urgent_colour>M</fc>]"
     echo -n "<action=\`bspc desktop -f next\`>\
-desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc></action>"
+desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc>$flags</action>"
 
     bspc query -N -n .urgent | while read -r id; do
         desktop="$(bspc query -D -n "$id")"
@@ -34,4 +36,9 @@ desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc></action>"
     done
 
     echo
-done
+}
+
+update
+bspc subscribe \
+    node_focus node_flag node_remove desktop_focus desktop_layout | \
+    while read; do update; done

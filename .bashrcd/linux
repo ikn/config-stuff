@@ -2,7 +2,7 @@
 
 alias locate='locate -i'
 alias iotop='sudo iotop -o'
-alias nethogs='sudo nethogs enp3s0'
+alias nethogs='sudo nethogs enp4s0'
 alias free='free -h'
 alias info='info --vi-keys'
 alias pactree='pactree -c'
@@ -58,3 +58,13 @@ if os.path.exists(hist):
     readline.read_history_file(hist)
 readline.parse_and_bind(\"tab: complete\")
 del os, atexit, readline, rlcompleter"'
+
+mount-encrypted () {
+    sudo cryptsetup --type luks open "$1" "$2"
+    udisksctl mount -b /dev/mapper/"$2"
+}
+
+umount-encrypted () {
+    udisksctl unmount -b /dev/mapper/"$1"
+    sudo cryptsetup close "$1"
+}
