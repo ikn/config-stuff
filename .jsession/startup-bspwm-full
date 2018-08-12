@@ -2,7 +2,5 @@
 
 sleep 5
 transmission-gtk -m &
-thunderbird &
-xdotool search --sync --onlyvisible --classname Mail windowunmap
-discord &
-xdotool search --sync --onlyvisible --classname discord windowunmap
+thunderbird-min &
+discord-min &

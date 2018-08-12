@@ -1,0 +1,7 @@
+#! /usr/bin/env sh
+
+discord &
+xdotool search --sync --onlyvisible --class discord windowunmap --sync
+desktop_name="$(bspc query -D -d)"
+desktop_number="$(bspc query -D | nl -v 0 -n rz | grep "$desktop_name" | cut -f1)"
+xdotool search --sync --onlyvisible --desktop "$desktop_number" --class discord windowunmap

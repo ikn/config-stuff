@@ -3,6 +3,7 @@
 !/bin/specific/
 !/bin/specific/bspwm-panel
 !/bin/specific/dftimes
+!/bin/specific/discord-min
 !/bin/specific/enc-trim
 /bin/specific/ftpmnt
 /bin/specific/ftpumnt
@@ -13,6 +14,7 @@
 !/bin/specific/news
 !/bin/specific/runpanel
 !/bin/specific/temp
+!/bin/specific/thunderbird-min
 !/bin/specific/toggle-window
 !/bin/specific/vlc
 !/mm.cfg

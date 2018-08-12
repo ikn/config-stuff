@@ -49,7 +49,7 @@ ctrl + alt + y
     bash -ic "ytvlc \"$(xclip -selection clipboard -o)\""
 # toggle Thunderbird
 Pause
-    ~/bin/specific/toggle-window Mail
+    ~/bin/specific/toggle-window Thunderbird
 
 ## bspwm
 # focus window

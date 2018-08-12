@@ -1,0 +1,4 @@
+#! /usr/bin/env sh
+
+command thunderbird &
+xdotool search --sync --onlyvisible --class Thunderbird windowunmap
