@@ -42,6 +42,7 @@
 !/.bashrcd/*
 !/.conkyrc
 !/.ghci
+!/.gitconfig
 !/.gitignore
 !/.gitignore_global
 !/.profile

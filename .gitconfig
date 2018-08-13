@@ -1,0 +1,13 @@
+[user]
+	email = J49137@gmail.com
+	name = Joseph Lansdowne
+[github]
+	user = ikn
+[core]
+	excludesfile = /home/j/.gitignore_global
+[color]
+	ui = true
+[push]
+	default = upstream
+[merge]
+	tool = meld
