@@ -5,8 +5,7 @@
 !/bin/specific/dftimes
 !/bin/specific/discord-min
 !/bin/specific/enc-trim
-/bin/specific/ftpmnt
-/bin/specific/ftpumnt
+/bin/specific/mount-ftp
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock

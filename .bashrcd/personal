@@ -1,11 +1,10 @@
 #! /bin/bash
 
-export FTP_DIR="$HOME/ftp"
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export DUSTFORCE_INSTALL_DIR=/opt/dustforce-dustmod
 
-source ~/bin/specific/ftpmnt
+source ~/bin/specific/mount-ftp
 
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'

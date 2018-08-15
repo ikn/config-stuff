@@ -68,3 +68,22 @@ umount-encrypted () {
     udisksctl unmount -b /dev/mapper/"$1"
     sudo cryptsetup close "$1"
 }
+
+mount-mtp () {
+    local d="$MNT_DIR"/mtp
+    mkdir -p "$d"
+    simple-mtpfs "$d" || {
+        rm -rf "$d"
+        rmdir mnt 2> /dev/null
+        return 1
+    }
+}
+
+umount-user () {
+    ls "$MNT_DIR" | while read d; do
+        fusermount -u "$MNT_DIR/$d"
+        rmdir "$MNT_DIR/$d" || exit 1
+    done
+
+    rmdir "$MNT_DIR"
+}
