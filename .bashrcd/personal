@@ -56,7 +56,7 @@ twitchdl () {
     while true; do
         echo "stream [$id-$attempt]".mp4
         streamlink -o "stream [$id-$attempt]".mp4 "$1" best \
-            --http-header Client-ID=jzkbprff40iqj646a697cyrvl0zt2m6
+            --http-header Client-ID=jzkbprff40iqj646a697cyrvl0zt2m6 && break
         attempt="$((attempt+1))"
     done
 }
