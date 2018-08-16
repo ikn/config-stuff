@@ -1,6 +1,8 @@
 *multiClickTime: 200
+
 !! urxvt
-URxvt.perl-ext-common: default,selection,url-select,clipboard,keyboard-select
+
+URxvt.perl-ext-common: default,matcher,keyboard-select
 ! colours
 !URxvt.depth: 32
 !URxvt.background: rgba:0000/0000/0000/cccc
@@ -12,15 +14,18 @@ URxvt.scrollWithBuffer: True
 URxvt.scrollTtyKeypress: True
 URxvt.saveLines: 5000
 ! clipboard
-URxvt.keysym.M-c: perl:clipboard:copy
-URxvt.keysym.M-v: perl:clipboard:paste
+URxvt.keysym.C-M-c: builtin-string:
+URxvt.keysym.C-M-v: builtin-string:
+URxvt.keysym.M-c: eval:selection_to_clipboard
+URxvt.keysym.M-v: eval:paste_clipboard
 ! keyboard select
 URxvt.keysym.M-a: perl:keyboard-select:activate
+URxvt.keyboard-select.clipboard: true
 ! clickable, keyboardable URLs
-URxvt.keysym.M-u: perl:url-select:select_next
-URxvt.url-select.underline: true
-URxvt.url-select.button: 3
-URxvt.url-select.launcher: qutebrowser
+URxvt.keysym.M-u: matcher:select
+URxvt.matcher.rend.0: Uline
+URxvt.matcher.button: 3
+URxvt.url-launcher: qutebrowser
 ! disable picture insert thing on ctrl-shift
 URxvt.iso14755: False
 ! appearance
