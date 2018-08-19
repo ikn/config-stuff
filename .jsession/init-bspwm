@@ -8,6 +8,6 @@ sxhkd -c /home/j/.config/sxhkd/sxhkdrc-bspwm -t 0.2
 bspwm
 
 urxvtd
+/home/j/bin/specific/set-wallpaper
 kupfer --no-splash
-wallpaperd
 /home/j/.jsession/startup-bspwm
