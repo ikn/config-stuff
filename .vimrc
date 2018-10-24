@@ -1,3 +1,4 @@
+set mouse=
 " files
 set nobackup
 set nowritebackup

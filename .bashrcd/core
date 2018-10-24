@@ -274,3 +274,12 @@ gitup () {
     [ -n "$stash" ] && { git stash pop || rtn="${rtn:-2}"; }
     return "$rtn"
 }
+
+links () {
+    local http_proxy_args=()
+    [ -n "$http_proxy" ] && http_proxy_args=(-http-proxy "${http_proxy##*/}")
+    local https_proxy_args=()
+    [ -n "$https_proxy" ] && \
+        https_proxy_args=(-https-proxy "${https_proxy##*/}")
+    command links "${http_proxy_args[@]}" "${https_proxy_args[@]}" "$@"
+}

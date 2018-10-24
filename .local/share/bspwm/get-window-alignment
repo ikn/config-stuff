@@ -7,7 +7,8 @@ eval $(xwininfo -id "$id" | sed -nr \
     -e "s/^ +Width: +([0-9]+).*/w=\1/p" \
     -e "s/^ +Height: +([0-9]+).*/h=\1/p")
 
-if [ "$w" -gt "$h" ]; then
+r="$(bc -l <<< "$w / $h > 1.2")"
+if [ "$r" -gt 0 ]; then
     echo horizontal
 else
     echo vertical
