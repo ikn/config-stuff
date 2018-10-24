@@ -22,6 +22,8 @@
 !/.config/
 !/.config/bspwm/
 !/.config/bspwm/*
+!/.config/git/
+!/.config/git/ignore
 !/.config/qutebrowser/
 !/.config/qutebrowser/config.py
 !/.config/sxhkd/
@@ -44,7 +46,6 @@
 !/.ghci
 !/.gitconfig
 !/.gitignore
-!/.gitignore_global
 !/.profile
 !/.vimrc
 !/.wallpaperd.cfg
