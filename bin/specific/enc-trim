@@ -47,7 +47,7 @@ seg_fn = gen_fns(out_dir, 1, '')[0]
 with open(seg_fn, 'w') as f:
     for fn in seg_fns:
         print('segment', fn)
-        f.write('file \'{0}\'\n'.format(fn))
+        f.write('file \'{0}\'\n'.format(os.path.basename(fn)))
 
 failed = False
 for (in_fn, start, end), fn in zip(timings, seg_fns):
