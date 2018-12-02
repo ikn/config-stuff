@@ -12,6 +12,7 @@ c.content.host_blocking.enabled = False
 c.content.host_blocking.lists = []
 c.content.host_blocking.whitelist = []
 c.content.media_capture = False
+c.content.proxy = 'http://localhost:8118'
 c.downloads.location.directory = '/home/j'
 c.downloads.location.prompt = False
 c.downloads.location.remember = False
@@ -43,7 +44,7 @@ c.url.searchengines['ddg'] = 'https://duckduckgo.com/?q={}'
 c.url.searchengines['site'] = 'https://duckduckgo.com/?q=!{}'
 c.url.start_pages = ['about:blank']
 c.url.yank_ignored_parameters = []
-c.window.title_format = 'qutebrowser {title}'
+c.window.title_format = 'qutebrowser - {title}'
 
 # normal mode
 config.bind('i', 'enter-mode insert')
