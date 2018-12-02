@@ -148,9 +148,17 @@ enc-recording-gw2yt () {
 
 enc-trim-all () {
     local f;
-    mkdir -p out
+    mkdir -p out/source
     for f in "$@"; do
         echo "$f"
-        enc-trim "$f" out/"$(basename "$f")" || echo ERROR
+        if enc-trim "$f" out/"$(basename "$f")"; then
+            mv "$f" out/source/"$(basename "$f")"
+        else
+            echo ERROR
+        fi
     done 2> out/log
+}
+
+gw2-repair() {
+    wine "$WINE_PREFIX/drive_c/Program Files/Guild Wars 2/Gw2-64.exe" --repair
 }
