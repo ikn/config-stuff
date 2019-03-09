@@ -4,6 +4,7 @@ c.colors.tabs.indicator.start = 'white'
 c.colors.tabs.indicator.stop = 'black'
 c.completion.cmd_history_max_items = 1000
 c.completion.height = 300
+c.completion.open_categories = ['history']
 c.completion.shrink = True
 c.confirm_quit = ['downloads']
 c.content.cache.maximum_pages = 15
@@ -24,6 +25,7 @@ c.hints.auto_follow_timeout = 300
 c.hints.chars = 'aoeuhtns'
 c.input.forward_unbound_keys = 'none'
 c.input.insert_mode.auto_leave = False
+c.input.insert_mode.leave_on_load = False
 c.input.links_included_in_focus_chain = False
 c.input.partial_timeout = 60000
 c.new_instance_open_target = 'tab-silent'
@@ -184,5 +186,12 @@ config.bind('<Return>', 'prompt-accept', mode='prompt')
 config.bind('<Shift-Tab>', 'prompt-item-focus prev', mode='prompt')
 config.bind('<Tab>', 'prompt-item-focus next', mode='prompt')
 config.bind('<Up>', 'prompt-item-focus prev', mode='prompt')
-config.bind('n', 'prompt-accept no', mode='prompt')
-config.bind('y', 'prompt-accept yes', mode='prompt')
+
+# yesno mode
+
+config.bind('<Alt-Shift-Y>', 'prompt-yank --sel', mode='yesno')
+config.bind('<Alt-Y>', 'prompt-yank', mode='yesno')
+config.bind('<Escape>', 'leave-mode', mode='yesno')
+config.bind('<Return>', 'prompt-accept', mode='yesno')
+config.bind('n', 'prompt-accept no', mode='yesno')
+config.bind('y', 'prompt-accept yes', mode='yesno')
