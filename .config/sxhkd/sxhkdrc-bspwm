@@ -53,13 +53,6 @@ Pause
 
 ## bspwm
 # focus window
-super + {Left,Up,Right,Down}
-    dir={west,north,east,south}; \
-    if [ -z "$(bspc query -N -n focused)" ] || [ -z "$(bspc query -N -n "$dir")" ]; then \
-        bspc monitor -f "$dir"; \
-    else \
-        bspc node -f "$dir"; \
-    fi
 super + {a,comma,e,o}
     dir={west,north,east,south}; \
     if [ -z "$(bspc query -N -n focused)" ] || [ -z "$(bspc query -N -n "$dir")" ]; then \
@@ -69,7 +62,7 @@ super + {a,comma,e,o}
     fi
     bspc node -f last
 super + Tab
-    bspc node -f last.active
+    bspc node -f last.local
 super + u
     bspc node -f last.urgent
 super + ctrl + Tab
@@ -81,13 +74,9 @@ super + space
 super + d
     bspc node -c
 # resize BR
-super + alt + {Left,Up,Right,Down}
-    bspc node @{east -r -50,south -r -50,east -r +50,south -r +50}
 super + alt + {a,comma,e,o}
     bspc node @{east -r -50,south -r -50,east -r +50,south -r +50}
 # resize TL
-super + shift + {Left,Up,Right,Down}
-    bspc node @{west -r -50,north -r -50,west -r +50,north -r +50}
 super + shift + {a,comma,e,o}
     bspc node @{west -r -50,north -r -50,west -r +50,north -r +50}
 # toggle floating
@@ -102,41 +91,32 @@ super + m
     bspc desktop -l next
 
 # swap
-super + ctrl + {Left,Up,Right,Down}
-    wid="$(bspc query -N -n focused)"; \
-    bspc node -s {west,north,east,south}; \
-    bspc node -f "$wid"; \
-    bspc monitor -f "$(bspc query -M -n "$wid")"
 super + ctrl + {a,comma,e,o}
-    wid="$(bspc query -N -n focused)"; \
-    bspc node -s {west,north,east,south}; \
-    bspc node -f "$wid"; \
-    bspc monitor -f "$(bspc query -M -n "$wid")"
+    dir={west,north,east,south}; \
+    bspc node -s "$dir" --follow || \
+    bspc node -m "$dir" --follow
 super + s
     bspc node -s biggest.local.\!focused
 super + alt + s
-    wid="$(bspc query -N -n focused)"; \
-    bspc node -s "$(xorg-choose-window aoeuhtns)"; \
-    bspc node -f "$wid"; \
-    bspc monitor -f "$(bspc query -M -n "$wid")"
+    bspc node -s "$(xorg-choose-window aoeuhtns)" --follow
+super + ctrl + shift + {a,comma,e,o}
+    dir={west,north,east,south}; \
+    "$BSPWM_SCRIPTS_DIR"/auto-presel br "$dir"; \
+    bspc node -n "$dir" --follow || \
+    bspc node -m "$dir" --follow
 super + t
     "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.local.\!focused; \
     bspc node -n biggest.local.\!focused
 super + alt + t
-    wid="$(bspc query -N -n focused)"; \
     target_wid="$(xorg-choose-window aoeuhtns)"; \
+    [ -z "$target_wid" ] && exit; \
     "$BSPWM_SCRIPTS_DIR"/auto-presel br "$target_wid"; \
-    bspc node -n "$target_wid"; \
-    bspc node -f "$wid"; \
-    bspc monitor -f "$(bspc query -M -n "$wid")"
+    bspc node -n "$target_wid" --follow
 # rotate
 super + n
     "$BSPWM_SCRIPTS_DIR"/rotate-split
 
 # switch desktop
-ctrl + alt + {_,shift + }{Left,Up,Right,Down}
-    "$BSPWM_SCRIPTS_DIR"/desktop-wall {switch,switchwithwindow} \
-        {west,north,east,south}
 ctrl + alt + {_,shift + }{a,comma,e,o}
     "$BSPWM_SCRIPTS_DIR"/desktop-wall {switch,switchwithwindow} \
         {west,north,east,south}

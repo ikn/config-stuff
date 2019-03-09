@@ -27,8 +27,7 @@ bspc config pointer_action3 none
 # behaviour
 
 bspc config external_rules_command "$BSPWM_SCRIPTS_DIR"/adjust-new-window
-bspc config focus_by_distance false
-bspc config auto_cancel true
+bspc config removal_adjustment false
 bspc rule -a orage state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Pyroom state=floating
