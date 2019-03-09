@@ -3,8 +3,10 @@
 highlight_colour=yellow
 empty_colour='#ddd'
 urgent_colour='#f64'
-max_title_length=25
+max_urgent_title_length=25
+max_title_length=80
 truncated_title_suffix='[...]'
+truncate_urgent_title_size="$((max_urgent_title_length-${#truncated_title_suffix}))"
 truncate_title_size="$((max_title_length-${#truncated_title_suffix}))"
 
 render_desktop () {
@@ -20,14 +22,22 @@ update () {
     echo -n "<action=\`bspc desktop -f next\`>\
 desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc>$flags</action>"
 
-    bspc query -N -n .urgent | while read -r id; do
-        desktop="$(bspc query -D -n "$id")"
-
-        title="$(xwininfo -id "$id" -wm | \
-            head -n2 | tail -n1 | sed 's/^.*"\(.*\)"$/\1/')"
+    title="$(xtitle)"
+    if [ -n "$title" ]; then
         [ "${#title}" -gt "$max_title_length" ] && \
             title="$(
                 echo "$title" | head -c"$truncate_title_size"
+            )$truncated_title_suffix"
+        echo -n " || <raw=${#title}:$title/>"
+    fi
+
+    bspc query -N -n .urgent | while read -r id; do
+        desktop="$(bspc query -D -n "$id")"
+
+        title="$(xtitle "$id")"
+        [ "${#title}" -gt "$max_urgent_title_length" ] && \
+            title="$(
+                echo "$title" | head -c"$truncate_urgent_title_size"
             )$truncated_title_suffix"
 
         echo -n " || <action=\`bspc node -f last.urgent\`>\
@@ -39,6 +49,9 @@ desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc>$flags</action>"
 }
 
 update
-bspc subscribe \
-    node_focus node_flag node_remove desktop_focus desktop_layout | \
+fdlinecombine \
+    <(bspc subscribe \
+        node_focus node_flag node_remove desktop_focus desktop_layout) \
+    <(xtitle -s) \
+|
     while read; do update; done
