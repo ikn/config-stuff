@@ -1,2 +1,4 @@
 transmission-gtk -m
-/home/j/.jsession/startup-bspwm-full
+pluma tmp/daily
+sleep 2 && thunderbird-min
+discord-min

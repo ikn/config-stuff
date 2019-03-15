@@ -1,13 +1,16 @@
+xrdb .Xresources
 xset r rate 250 60
 setxkbmap gb dvorakukp -option -option caps:escape -option terminate:ctrl_alt_bksp
 xset -dpms
 xset s off
 redshift -l 52.2:0.1
 
-sxhkd -c /home/j/.config/sxhkd/sxhkdrc-bspwm -t 0.2
+sxhkd -c .config/sxhkd/sxhkdrc-bspwm -t 0.2
 bspwm
 
 urxvtd
-/home/j/bin/specific/set-wallpaper
+bin/specific/set-wallpaper
 kupfer --no-splash
-/home/j/.jsession/startup-bspwm
+sleep 2 && runpanel
+stalonetray -c .config/stalonetray
+maintain-fullscreen

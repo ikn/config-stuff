@@ -33,8 +33,6 @@ ctrl + alt + t
     urxvtc || urxvt
 ctrl + alt + b
     qutebrowser
-#ctrl + alt + i
-#    /home/j/bin/specific/irc-remote-urxvt
 ctrl + alt + n
     urxvtc -e newsboat || urxvt -e newsboat
 ctrl + alt + g
@@ -55,12 +53,11 @@ Pause
 # focus window
 super + {a,comma,e,o}
     dir={west,north,east,south}; \
-    if [ -z "$(bspc query -N -n focused)" ] || [ -z "$(bspc query -N -n "$dir")" ]; then \
-        bspc monitor -f "$dir"; \
-    else \
+    if "$BSPWM_SCRIPTS_DIR"/node-in-direction "$dir"; then \
         bspc node -f "$dir"; \
+    else \
+        bspc monitor -f "$dir"; \
     fi
-    bspc node -f last
 super + Tab
     bspc node -f last.local
 super + u
@@ -93,17 +90,23 @@ super + m
 # swap
 super + ctrl + {a,comma,e,o}
     dir={west,north,east,south}; \
-    bspc node -s "$dir" --follow || \
-    bspc node -m "$dir" --follow
+    if "$BSPWM_SCRIPTS_DIR"/node-in-direction "$dir"; then \
+        bspc node -s "$dir" --follow; \
+    else \
+        bspc node -m "$dir" --follow; \
+    fi
 super + s
     bspc node -s biggest.local.\!focused
 super + alt + s
     bspc node -s "$(xorg-choose-window aoeuhtns)" --follow
 super + ctrl + shift + {a,comma,e,o}
     dir={west,north,east,south}; \
-    "$BSPWM_SCRIPTS_DIR"/auto-presel br "$dir"; \
-    bspc node -n "$dir" --follow || \
-    bspc node -m "$dir" --follow
+    if "$BSPWM_SCRIPTS_DIR"/node-in-direction "$dir"; then \
+        "$BSPWM_SCRIPTS_DIR"/auto-presel br "$dir"; \
+        bspc node -n "$dir" --follow; \
+    else \
+        bspc node -m "$dir" --follow; \
+    fi
 super + t
     "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.local.\!focused; \
     bspc node -n biggest.local.\!focused

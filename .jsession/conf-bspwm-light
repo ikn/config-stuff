@@ -1,2 +1,1 @@
-init=~/.jsession/init-bspwm
-noinit=
+init=init-bspwm
