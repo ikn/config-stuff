@@ -1,3 +1,43 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
-bspwm-panel | xmobar
+TRAY_MONITOR="${TRAY_MONITOR:-0}"
+TRAY_SIZE=125
+pids=()
+temp_dir="$(mktemp -d)"
+
+cleanup () {
+    echo CLEANUP
+    local pid
+    for pid in "${pids[@]}"; do
+        kill "$pid"
+    done
+    rm -rf "$temp_dir"
+}
+
+trap cleanup SIGINT SIGTERM
+
+fifos=()
+num_monitors="$(bspc query -M | wc -l)"
+for (( monitor = 0; monitor < num_monitors; monitor += 1 )); do
+    fifo="$temp_dir/$monitor"
+    fifos+=("$fifo")
+    mkfifo "$fifo"
+
+    # trayer can only show on 1 monitor
+    if [ "$monitor" = "$TRAY_MONITOR" ]; then
+        # tint is argb; transparency needed for tint to work
+        trayer --align left --widthtype pixel --width "$TRAY_SIZE" --height 21 \
+            --transparent true --alpha 0 --tint '0xFF222222' \
+            --monitor "$monitor" &
+        pids+=("$!")
+        xmobar --position "BottomP $TRAY_SIZE 0" --screen "$monitor" < "$fifo" &
+        pids+=("$!")
+    else
+        xmobar --screen "$monitor" < "$fifo" &
+        pids+=("$!")
+    fi
+done
+
+bspwm-panel > >(tee > /dev/null "${fifos[@]}") &
+pids+=("$!")
+wait

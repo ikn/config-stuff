@@ -8,7 +8,7 @@ bspc config window_gap $gap
 for border in left top right; do
     bspc config ${border}_padding -$gap
 done
-bspc config bottom_padding $((20-gap))
+bspc config bottom_padding $((21-gap))
 
 bspc config normal_border_color '#563f64'
 bspc config active_border_color '#563f64'

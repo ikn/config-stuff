@@ -1,7 +1,7 @@
 Config {
     font = "xft:Monospace:pixelsize=13",
     bgColor = "#222", fgColor = "#ddd",
-    position = BottomP 147 0,
+    position = BottomP 0 0,
     lowerOnStart = True, persistent = False, hideOnStart = False,
     commands = [
         Run Network "enp4s0" [
@@ -29,14 +29,10 @@ Config {
             "-L", "2", "-l", "#d55", "-n", "#5d5", "-h", "#5d5"
         ] 100,
         Run Date "%H:%M %a %d %b" "date" 50,
-        Run UnsafeStdinReader,
-        Run Com "news" [] "news" 3600
+        Run UnsafeStdinReader
     ],
     sepChar = "%", alignSep = "}{",
-    template = " || <action=`urxvtc -e newsboat || urxvt -e newsboat`>\
-            \news: <fc=yellow>%news%</fc>\
-        \</action> \
-        \|| %UnsafeStdinReader% | } \
+    template = " || %UnsafeStdinReader% | } \
         \{ | <action=`urxvtc -e htop || urxvt -e htop`>\
             \%cpu% %thermal2% %memory%\
         \</action> <action=`urxvtc -e sudo nethogs enp4s0 || urxvt -e sudo nethogs enp4s0`>\

@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+dir="$1"
+node="$(bspc query -N -n "$dir")"
+[ -z "$node" ] && exit 1
+node_mon="$(bspc query -M -n "$node")"
+local_mon="$(bspc query -M -m focused)"
+mon_in_dir="$(bspc query -M -m "$dir")"
+[ "$node_mon" = "$local_mon" ] || [ "$node_mon" = "$mon_in_dir" ]
