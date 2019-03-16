@@ -1,6 +1,0 @@
-#! /bin/bash
-
-sleep 2
-runpanel &
-stalonetray -c ~/.config/stalonetray &
-maintain-fullscreen &

@@ -1,6 +1,0 @@
-#! /bin/bash
-
-sleep 5
-transmission-gtk -m &
-thunderbird-min &
-discord-min &
