@@ -33,11 +33,8 @@ _ytdl () {
 }
 
 alias ytdl='_ytdl --no-playlist'
-alias ytdl-low='ytdl -f "$(_ytdl-limit-res 360)"'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
-alias ytdl-low-playlist='ytdl-playlist -f "$(_ytdl-limit-res 360)"'
-alias _ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
-alias _ytdl-new-low='ytdl-low `cat ~/media/dl-list` && rm ~/media/dl-list'
+alias _ytdl-new='xargs -r ytdl < ~/media/dl-list && rm ~/media/dl-list'
 
 _ytdl-new-aud () {
     xargs -r youtube-dl --no-playlist -f bestaudio \
@@ -46,14 +43,18 @@ _ytdl-new-aud () {
         rm ~/media/dl-list-aud
 }
 
-alias ytdl-new='_ytdl-new-aud; _ytdl-new'
-alias ytdl-new-low='_ytdl-new-aud; _ytdl-new-low'
+_podcastdl-new () {
+    cut -d" " -f1 ~/.local/share/newsboat/queue |
+        xargs --no-run-if-empty wget --continue \
+            --directory-prefix ~/media/podcasts && \
+        rm ~/.local/share/newsboat/queue
+}
+
+alias mediadl-new='_ytdl-new-aud; _ytdl-new; _podcastdl-new'
 
 ytvlc () {
     vlc "$(youtube-dl -g "$@")" --meta-title="$(youtube-dl -e "$1")"
 }
-
-alias ytvlc-low='ytvlc -f "$(_ytdl-limit-res 360)"'
 
 twitchdl () {
     local id="$(date +%s)-$RANDOM"

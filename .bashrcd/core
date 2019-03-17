@@ -14,6 +14,7 @@ alias less='less -i'
 alias ls='ls --color=auto'
 alias ssh='ssh -t'
 alias ag='ag -i'
+alias tree='tree -FC'
 
 alias v='vim'
 alias l='ls'
