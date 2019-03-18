@@ -34,7 +34,7 @@ _ytdl () {
 
 alias ytdl='_ytdl --no-playlist'
 alias ytdl-playlist='YTDL_OUTPUT_DIR="$YTDL_OUTPUT_DIR/%(playlist)s" _ytdl'
-alias _ytdl-new='xargs -r ytdl < ~/media/dl-list && rm ~/media/dl-list'
+alias _ytdl-new='ytdl `cat ~/media/dl-list` && rm ~/media/dl-list'
 
 _ytdl-new-aud () {
     xargs -r youtube-dl --no-playlist -f bestaudio \
@@ -167,4 +167,23 @@ enc-trim-all () {
 
 gw2-repair () {
     wine "$WINEPREFIX/drive_c/Program Files/Guild Wars 2/Gw2-64.exe" --repair
+}
+
+transfer-podcasts () {
+    local src_dir=~/media/podcasts
+    local backup_dir="$src_dir"/tablet
+    local dest_dir=~/mnt/mtp/Podcasts
+    local rtn=
+
+    mount-mtp && {
+        rm -r "$backup_dir" &&
+            mkdir -p "$backup_dir" &&
+            mv "$src_dir"/*.* "$backup_dir" &&
+            rm -r "$dest_dir" &&
+            mkdir -p "$dest_dir" &&
+            cp "$backup_dir"/* "$dest_dir"
+        rtn="$?"
+        umount-user
+    }
+    return "${rtn:-$?}"
 }
