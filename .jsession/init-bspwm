@@ -1,5 +1,6 @@
 xrdb .Xresources
 xset r rate 250 60
+xsetroot -cursor_name left_ptr
 setxkbmap gb dvorakukp -option -option caps:escape -option terminate:ctrl_alt_bksp
 xset -dpms
 xset s off
