@@ -183,7 +183,41 @@ transfer-podcasts () {
             mkdir -p "$dest_dir" &&
             cp "$backup_dir"/* "$dest_dir"
         rtn="$?"
-        umount-user
+        umount-user mtp
     }
     return "${rtn:-$?}"
+}
+
+push-ikn () {
+    mount-ftp ikn || return 1
+    rsync -vr --protect-args --update --delete --temp-dir=/tmp \
+        ~/Documents/Coding/web/ikn/ikn/ ~/mnt/ikn/public_html/
+    rtn="$?"
+    [ -z "$ftp" ] && umount-user ikn
+    return "$rtn"
+}
+
+push-ikn-doc () {
+    local repo="$1"
+    local docpath="$2"
+    local dest=~/Documents/Coding/web/ikn/ikn/"$docpath"
+    local src="$repo/doc/_build/html"
+
+    rm -rf "$dest" &&
+        pushd "$repo" &&
+        make doc-clean &&
+        make doc &&
+        popd &&
+        mkdir -p "$(dirname "$dest")" &&
+        cp -r "$src" "$dest" &&
+        push-ikn
+}
+
+push-fsmanage-doc () {
+    push-ikn-doc ~/"Documents/Coding/projects/in progress/fsmanage" doc/fsmanage
+}
+
+push-game-engine-doc () {
+    push-ikn-doc ~/"Documents/Coding/projects/games/in progress/game engine/src" \
+        doc/game-engine
 }
