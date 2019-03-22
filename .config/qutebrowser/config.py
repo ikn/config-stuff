@@ -41,7 +41,7 @@ c.tabs.width = 200
 c.url.auto_search = 'never'
 c.url.default_page = 'about:blank'
 c.url.open_base_url = True
-c.url.searchengines['search'] = 'https://www.google.de/search?q={}'
+c.url.searchengines['search'] = 'https://www.google.co.uk/search?q={}'
 c.url.searchengines['ddg'] = 'https://duckduckgo.com/?q={}'
 c.url.searchengines['site'] = 'https://duckduckgo.com/?q=!{}'
 c.url.start_pages = ['about:blank']
