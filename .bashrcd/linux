@@ -82,10 +82,20 @@ mount-mtp () {
 }
 
 umount-user () {
-    ls "$MNT_DIR" | while read d; do
-        fusermount -u "$MNT_DIR/$d"
-        rmdir "$MNT_DIR/$d" || exit 1
-    done
+    if [ "$#" -eq 0 ]; then
+        ls 2> /dev/null "$MNT_DIR"
+    else
+        local d
+        for d in "$@"; do echo "$d"; done
+    fi | {
+        local d
+        while read -r d; do
+            fusermount -u "$MNT_DIR/$d"
+            rmdir "$MNT_DIR/$d" || exit 1
+        done
+    }
+    local rtn="$?"
 
-    rmdir "$MNT_DIR"
+    rmdir "$MNT_DIR" 2> /dev/null
+    return "$rtn"
 }
