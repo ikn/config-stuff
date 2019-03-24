@@ -6,7 +6,6 @@ pids=()
 temp_dir="$(mktemp -d)"
 
 cleanup () {
-    echo CLEANUP
     local pid
     for pid in "${pids[@]}"; do
         kill "$pid"
