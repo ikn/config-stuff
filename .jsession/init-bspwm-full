@@ -1,5 +1,5 @@
 transmission-gtk -m
 pluma tmp/daily
-birdtray
+sleep 2 && birdtray
 thunderbird-min
 discord-min
