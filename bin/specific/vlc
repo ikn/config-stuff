@@ -10,6 +10,16 @@ dbusname="org.mpris.MediaPlayer2.vlc"
 cmd="/usr/bin/vlc"
 current_desktop="$(bspc query -D -d focused)"
 
+# urlencode argument and print it
+urlencode () {
+    python3 -c '
+import sys
+import urllib.parse
+
+print(urllib.parse.quote(sys.argv[1]), end="")
+' "$1"
+}
+
 # get window ID for any window of the given class on the given desktop
 getwid () {
     local wclass="$1"
@@ -26,9 +36,9 @@ getwid () {
 getcons () {
     echo "$1"
     dbus-send --print-reply --session --dest=org.freedesktop.DBus \
-        /org/freedesktop/DBus org.freedesktop.DBus.ListNames \
-        | grep '^ *string ":' \
-        | sed 's/.*"\(.*\)"$/\1/'
+        /org/freedesktop/DBus org.freedesktop.DBus.ListNames |
+        grep '^ *string ":' |
+        sed 's/.*"\(.*\)"$/\1/'
 }
 
 # get process IDs for the dbus connection names on stdin
@@ -68,7 +78,9 @@ cmppid () {
 # only open in existing instance for calls like "vlc --started-from-file $uri"
 uri=
 [ "$#" -eq 2 ] && [ "$1" = "--started-from-file" ] && [ -n "$2" ] && uri="$2"
-[ "${uri:0:1}" = "/" ] && uri="file://$uri"
+echo >&2 -n "URI = $uri -> $(urlencode "$uri")"
+[ "${uri:0:1}" = "/" ] && uri="file://$(urlencode "$uri")"
+echo >&2 " -> $uri"
 
 wid=
 [ -n "$uri" ] && wid="$(getwid "$wclass" "$current_desktop")"
@@ -76,11 +88,11 @@ pid=
 [ -n "$wid" ] && pid="$(xprop -id "$wid" _NET_WM_PID | awk '{ print $NF }')"
 con=
 [ -n "$pid" ] && con="$(
-    getcons "$dbusname" \
-        | getconpids \
-        | filterpidname "$pname" \
-        | cmppid "$pid" \
-        | cut -d" " -f1
+    getcons "$dbusname" |
+        getconpids |
+        filterpidname "$pname" |
+        cmppid "$pid" |
+        cut -d" " -f1
 )"
 
 done=
