@@ -2,6 +2,7 @@
 
 from sys import argv
 import os
+import signal
 import shutil
 from subprocess import call
 
@@ -12,6 +13,9 @@ from subprocess import call
 FFMPEG_ARGS = ('-c:v', 'libx264', '-preset', 'slow',
                '-c:a', 'libvorbis', '-ab', '128k')
 SEGMENT_EXT = '.mkv'
+
+# ensure proper interrupt behaviour
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def gen_fns (dir_path, n, ext, c='A'):
     fns = []
@@ -51,7 +55,7 @@ with open(seg_fn, 'w') as f:
 
 failed = False
 for (in_fn, start, end), fn in zip(timings, seg_fns):
-    cmd = (('ffmpeg', '-i', in_fn, '-map', '0') + FFMPEG_ARGS +
+    cmd = (('ffmpeg', '-y', '-i', in_fn, '-map', '0') + FFMPEG_ARGS +
            ('-ss', str(start), '-t', str(end - start), fn))
     print(cmd)
     code = call(cmd)
