@@ -24,6 +24,7 @@ alias py='python'
 alias py2='python2'
 alias :q='exit'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
+alias bc='bc -l'
 
 syntax-highlight () {
     if type -p pygmentize > /dev/null; then
