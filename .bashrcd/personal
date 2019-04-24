@@ -7,13 +7,14 @@ export GW2_DPSREPORT_URL="http://a.dps.report"
 export GW2_DPSREPORT_SIZE_THRESHOLD_CUSTOM=150000
 export GW2_DPSREPORT_CLIPBOARD=clipboard
 export GW2_DPSREPORT_WEB_BROWSER='qutebrowser --loglevel critical'
+export GW2_WINEPREFIX=/media/Data/ssd/games/guild-wars-2
 
 source ~/bin/specific/mount-ftp
 
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias transmission-daemon='transmission-daemon -g ~/.config/transmission/'
-alias gw2-dpsreport='gw2-dpsreport --clipboard --open-in-browser'
+alias gw2-dpsreport='WINEPREFIX="$GW2_WINEPREFIX" gw2-dpsreport --clipboard --open-in-browser'
 alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/null'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias toggle-redshift='killall -USR1 redshift'
@@ -166,7 +167,7 @@ enc-trim-all () {
 }
 
 gw2-repair () {
-    wine "$WINEPREFIX/drive_c/Program Files/Guild Wars 2/Gw2-64.exe" --repair
+    wine "$GW2_WINEPREFIX/drive_c/Program Files/Guild Wars 2/Gw2-64.exe" --repair
 }
 
 transfer-podcasts () {
