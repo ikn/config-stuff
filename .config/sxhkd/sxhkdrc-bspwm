@@ -98,7 +98,8 @@ super + ctrl + {a,comma,e,o}
 super + s
     bspc node -s biggest.local.\!focused
 super + alt + s
-    bspc node -s "$(xorg-choose-window aoeuhtns)" --follow
+    bspc node -s "$(xorg-choose-window aoeuhtns \
+        -b "$(bspc query -N -n focused)")" --follow
 super + ctrl + shift + {a,comma,e,o}
     dir={west,north,east,south}; \
     if "$BSPWM_SCRIPTS_DIR"/node-in-direction "$dir"; then \
@@ -111,7 +112,8 @@ super + t
     "$BSPWM_SCRIPTS_DIR"/auto-presel br biggest.local.\!focused; \
     bspc node -n biggest.local.\!focused
 super + alt + t
-    target_wid="$(xorg-choose-window aoeuhtns)"; \
+    target_wid="$(xorg-choose-window aoeuhtns \
+        -b "$(bspc query -N -n focused)")"; \
     [ -z "$target_wid" ] && exit; \
     "$BSPWM_SCRIPTS_DIR"/auto-presel br "$target_wid"; \
     bspc node -n "$target_wid" --follow
