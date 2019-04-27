@@ -18,16 +18,15 @@ update () {
     desktop="$(bspc query -D -d focused)"
     flags=
     [ -z "$(bspc query -N -n last)" ] && desktop_colour="$empty_colour"
-    [ "$(bspc query -T -d "$desktop" | jshon -e layout -u)" = monocle ] && flags=" [<fc=$urgent_colour>M</fc>]"
+    [ "$(bspc query -T -d "$desktop" | jshon -e layout -u)" = monocle ] &&
+        flags=" [<fc=$urgent_colour>M</fc>]"
     echo -n "<action=\`bspc desktop -f next\`>\
 desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc>$flags</action>"
 
     title="$(xtitle)"
     if [ -n "$title" ]; then
-        [ "${#title}" -gt "$max_title_length" ] && \
-            title="$(
-                echo "$title" | head -c"$truncate_title_size"
-            )$truncated_title_suffix"
+        [ "${#title}" -gt "$max_title_length" ] &&
+            title="${title:0:$truncate_title_size}$truncated_title_suffix"
         echo -n " || <raw=${#title}:$title/>"
     fi
 
@@ -35,10 +34,8 @@ desktop: <fc=$desktop_colour>$(render_desktop "$desktop")</fc>$flags</action>"
         desktop="$(bspc query -D -n "$id")"
 
         title="$(xtitle "$id")"
-        [ "${#title}" -gt "$max_urgent_title_length" ] && \
-            title="$(
-                echo "$title" | head -c"$truncate_urgent_title_size"
-            )$truncated_title_suffix"
+        [ "${#title}" -gt "$max_urgent_title_length" ] &&
+            title="${title:0:$truncate_urgent_title_size}$truncated_title_suffix"
 
         echo -n " || <action=\`bspc node -f last.urgent\`>\
 [<fc=$highlight_colour>$(render_desktop "$desktop")</fc>] \
