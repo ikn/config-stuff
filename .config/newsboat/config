@@ -1,0 +1,25 @@
+article-sort-order date asc
+browser qutebrowser
+ignore-mode display
+max-items 10000
+openbrowser-and-mark-jumps-to-next-unread yes
+reset-unread-on-update "*"
+text-width 100
+show-keymap-hint no
+show-read-articles no
+show-read-feeds no
+
+macro R set show-read-articles yes
+macro r set show-read-articles no
+macro y set browser "echo %u >> /home/j/media/dl-list" ; open-in-browser-and-mark-read ; set browser qutebrowser
+macro a set browser "echo %u >> /home/j/media/dl-list-aud" ; open-in-browser-and-mark-read ; set browser qutebrowser
+
+unbind-key A
+unbind-key C
+unbind-key s
+unbind-key n
+unbind-key p
+unbind-key J
+unbind-key K
+unbind-key N
+bind-key m toggle-article-read

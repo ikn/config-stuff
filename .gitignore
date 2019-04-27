@@ -10,7 +10,6 @@
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
 !/bin/specific/maintain-fullscreen
-!/bin/specific/news
 !/bin/specific/runpanel
 !/bin/specific/set-wallpaper
 !/bin/specific/temp
@@ -24,6 +23,8 @@
 !/.config/bspwm/*
 !/.config/git/
 !/.config/git/ignore
+!/.config/newsboat/
+!/.config/newsboat/config
 !/.config/qutebrowser/
 !/.config/qutebrowser/config.py
 !/.config/sxhkd/
