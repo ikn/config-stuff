@@ -1,5 +1,6 @@
 article-sort-order date asc
 browser qutebrowser
+goto-next-feed no
 ignore-mode display
 max-items 10000
 openbrowser-and-mark-jumps-to-next-unread yes
@@ -22,4 +23,9 @@ unbind-key p
 unbind-key J
 unbind-key K
 unbind-key N
+unbind-key j
+unbind-key k
+
+bind-key k up
+bind-key j down
 bind-key m toggle-article-read
