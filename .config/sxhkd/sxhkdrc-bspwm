@@ -59,7 +59,8 @@ super + {a,comma,e,o}
         bspc monitor -f "$dir"; \
     fi
 super + Tab
-    bspc node -f last.local
+    target_wid="$("$BSPWM_SCRIPTS_DIR"/get-last-visible-window)"; \
+    [ -n "$target_wid" ] && bspc node -f "$target_wid"
 super + u
     bspc node -f last.urgent
 super + ctrl + Tab

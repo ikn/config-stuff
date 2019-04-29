@@ -1,0 +1,16 @@
+#! /usr/bin/env python3
+
+import sys
+
+from bspwmpython.querytree import get_tree
+
+tree = get_tree()
+desktops = {m['focusedDesktopId'] for m in tree['monitors']}
+node_history_iter = (n['nodeId'] for n in reversed(tree['focusHistory'])
+                     if n['nodeId'] != 0 and n['desktopId'] in desktops)
+try:
+    current_node = next(node_history_iter)
+    prev_node = next(n for n in node_history_iter if n != current_node)
+    print(hex(prev_node))
+except StopIteration:
+    pass
