@@ -1,0 +1,117 @@
+#! /usr/bin/env bash
+
+# manage-tv-recordings /media/Data/TV /media/Data/media/videos/tv
+
+# only move recordings that were last modified at least this many seconds ago
+MIN_RECORDING_AGE=$((3 * 60 * 60))
+# max network usage for transfers from staging to dest dir
+MAX_TRANSFER_RATE=1MiB
+
+SOURCE_DIR="$1"
+STAGING_DIR="$SOURCE_DIR"/staging
+DEST_DIR="$2"
+
+[ -z "$SOURCE_DIR" ] && {
+    echo >&2 "error: expected first argument: source dir"
+    exit 2
+}
+[ -z "$DEST_DIR" ] && {
+    echo >&2 "error: expected second argument: dest dir"
+    exit 2
+}
+
+
+# read recording names; write names that are regular files in the given dir
+filter_to_files () {
+    local dir="$1"
+    local name
+    while read -r name; do
+        if [ -f "$dir/$name" ]; then
+            echo "$name"
+        fi
+    done
+}
+
+
+# read recording names; write recording names that are ready to move
+filter_to_finished_recordings () {
+    local now_unix="$(date +%s)"
+    local max_mtime_unix="$((now_unix - MIN_RECORDING_AGE))"
+    local name
+    while read -r name; do
+        local mtime_unix="$(stat --format=%Y -- "$SOURCE_DIR/$name")"
+        if [ "$mtime_unix" -lt "$max_mtime_unix" ]; then
+            echo "$name"
+        fi
+    done
+}
+
+
+# read recording names and move them from source dir to staging dir
+sync_source_to_staging () {
+    mkdir -p "$STAGING_DIR"
+
+    local orig_name
+    while read -r orig_name; do
+        local name="${orig_name%.*}"
+        local ext="${orig_name##*.}"
+
+        # replace suffix number with timestamp
+        local suffix="${name##*-}"
+        [[ "$suffix" =~ ^[[:digit:]]+$ ]] && name="${name%-*}"
+        name="$name-$(stat --format=%Y -- "$SOURCE_DIR/$orig_name")"
+        # remove prefix
+        [ "${name:0:5}" = "New: " ] && name="${name:5}"
+
+        echo >&2 "rename: $orig_name -> $name.$ext"
+        mv "$SOURCE_DIR/$orig_name" "$STAGING_DIR/$name.$ext" || return 1
+    done
+
+    echo >&2
+}
+
+
+# move all files from staging dir to dest dir in an interruptible way
+sync_staging_to_dest () {
+    mkdir -p "$DEST_DIR"
+    rsync --verbose \
+        --recursive \
+        --remove-source-files \
+        --bwlimit="$MAX_TRANSFER_RATE" \
+        --partial-dir=.rsync-partial \
+        -- "$STAGING_DIR/" "$DEST_DIR"
+}
+
+
+# organise files in dest dir into dirs by series
+organise_dest_series () {
+    ls "$DEST_DIR" | filter_to_files "$DEST_DIR" | sort | {
+        local prev_name=
+        local prev_series=
+        local name
+        while read -r name; do
+            local series="${name%-*.*}"
+            if [ -n "$prev_name" ] && [ "$series" = "$prev_series" ]; then
+                mkdir -p "$DEST_DIR/$series"
+                if [ -f "$DEST_DIR/$prev_name" ]; then
+                    mv "$DEST_DIR/$prev_name" "$DEST_DIR/$series/$prev_name"
+                fi
+                mv "$DEST_DIR/$name" "$DEST_DIR/$series/$name"
+            fi
+            prev_name="$name"
+            prev_series="$series"
+        done
+    }
+}
+
+
+ls "$SOURCE_DIR" |
+    filter_to_files "$SOURCE_DIR" |
+    filter_to_finished_recordings |
+    sync_source_to_staging
+for code in "${PIPESTATUS[@]}"; do
+    [ "$code" -ne 0 ] && exit "$code"
+done
+
+sync_staging_to_dest &&
+    organise_dest_series
