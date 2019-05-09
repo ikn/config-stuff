@@ -1,0 +1,116 @@
+#! /usr/bin/env python3
+
+import sys
+import os
+import datetime
+import json
+import subprocess
+import urllib.request
+
+COMMAND_UPDATE = 'update'
+COMMAND_NOTIFY = 'notify'
+ARG_COMMAND = 'command'
+ARG_LOCATION_ID = 'location id'
+ARG_STORE_PATH = 'store path'
+
+API_URL = (
+    'https://refusecalendarapi.azurewebsites.net/' +
+    'collection/search/{location_id}/?numberOfCollections=10')
+
+
+def fail(*msg):
+    print('error:', *msg, file=sys.stderr)
+    sys.exit(1)
+
+
+def check_command_args(command, args, expected_num_args):
+    if len(args) != expected_num_args:
+        msg = 'command \'{}\' accepts {} arguments'
+        fail(msg.format(command, expected_num_args))
+
+
+def parse_args():
+    if len(sys.argv) < 2:
+        fail('expected argument: command')
+    command = sys.argv[1]
+    command_args = sys.argv[2:]
+    parsed_args = {ARG_COMMAND: command}
+
+    if command == COMMAND_UPDATE:
+        check_command_args(command, command_args, 2)
+        parsed_args[ARG_LOCATION_ID] = command_args[0]
+        parsed_args[ARG_STORE_PATH] = command_args[1]
+
+    elif command == COMMAND_NOTIFY:
+        check_command_args(command, command_args, 1)
+        parsed_args[ARG_STORE_PATH] = command_args[0]
+
+    else:
+        fail('unknown command:', command)
+
+    return parsed_args
+
+
+def fetch_collections(location_id):
+    url = API_URL.format(location_id=location_id)
+    with urllib.request.urlopen(url) as req:
+        if req.getcode() != 200:
+            fail('API request failed: HTTP {}'.format(req.getcode()))
+        res = json.load(req)
+
+    collections = ({
+        'date': datetime.datetime.fromisoformat(collection['date']),
+        'types': {t.lower() for t in collection['roundTypes']},
+    } for collection in res['collections'])
+    return sorted(collections, key=lambda c: c['date'])
+
+
+def write_collections(collections, store_path):
+    os.makedirs(os.path.dirname(store_path), exist_ok=True)
+    with open(store_path, 'w') as store_file:
+        for collection in collections:
+            store_file.write(
+                '{timestamp} Bins will be collected on {day}: {types}\n'.format(
+                    timestamp=int(collection['date'].timestamp()),
+                    day=collection['date'].strftime('%A'),
+                    types=', '.join(sorted(collection['types'])),
+                ))
+
+
+def read_collections(store_path):
+    try:
+        with open(store_path, 'r') as store_file:
+            for line in (l.strip() for l in store_file):
+                raw_timestamp, desc = line.split(maxsplit=1)
+                date = datetime.datetime.fromtimestamp(int(raw_timestamp))
+                yield {'date': date, 'desc': desc}
+    except FileNotFoundError:
+        return []
+
+
+def notify(collections):
+    notifications = []
+    for collection in collections:
+        actual_date = collection['date'].date()
+        min_date = actual_date - datetime.timedelta(days=2)
+        today = datetime.datetime.now().date()
+
+        if today < min_date:
+            break
+        elif today < actual_date:
+            print('notify:', collection['desc'], file=sys.stderr)
+            notifications.append(collection['desc'])
+
+    if notifications:
+        subprocess.check_call((
+            'urxvt', '-e', 'bash', '-c', 'echo "$@"; read', '-',
+            '\n'.join(notifications)
+        ))
+
+
+args = parse_args()
+if args[ARG_COMMAND] == COMMAND_UPDATE:
+    write_collections(
+        fetch_collections(args[ARG_LOCATION_ID]), args[ARG_STORE_PATH])
+elif args[ARG_COMMAND] == COMMAND_NOTIFY:
+    notify(read_collections(args[ARG_STORE_PATH]))

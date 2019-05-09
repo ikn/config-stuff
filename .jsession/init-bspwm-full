@@ -3,3 +3,4 @@ pluma tmp/daily
 sleep 2 && birdtray
 thunderbird-min
 discord-min
+cambridge-bins notify ~/.local/share/cambridge-bins/store
