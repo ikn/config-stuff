@@ -180,7 +180,7 @@ transfer-podcasts () {
         rm -r "$backup_dir" &&
             mkdir -p "$backup_dir" &&
             mv "$src_dir"/*.* "$backup_dir" &&
-            rm -r "$dest_dir" &&
+            rm -rf "$dest_dir" &&
             mkdir -p "$dest_dir" &&
             cp "$backup_dir"/* "$dest_dir"
         rtn="$?"
