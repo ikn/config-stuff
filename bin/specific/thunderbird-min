@@ -5,6 +5,7 @@
 thunderbird &
 pid="$!"
 xdotool search --sync --onlyvisible --class Thunderbird windowunmap
+sleep 5
 kill "$pid"
 thunderbird &
 xdotool search --sync --onlyvisible --class Thunderbird windowunmap
