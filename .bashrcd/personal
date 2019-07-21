@@ -15,6 +15,7 @@ alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias transmission-daemon='transmission-daemon -g ~/.config/transmission/'
 alias gw2-dpsreport='WINEPREFIX="$GW2_WINEPREFIX" gw2-dpsreport --clipboard --open-in-browser'
+alias gw2-arcdps-install='WINEPREFIX="$GW2_WINEPREFIX" gw2-arcdps-install'
 alias fplog='tail -n 0 -f ~/.macromedia/Flash_Player/Logs/flashlog.txt 2>/dev/null'
 alias fp='flashplayerdebugger *.swf 2> /dev/null'
 alias toggle-redshift='killall -USR1 redshift'
