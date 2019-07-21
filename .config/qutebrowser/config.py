@@ -36,7 +36,7 @@ c.tabs.background = True
 c.tabs.last_close = 'close'
 c.tabs.new_position.related = 'last'
 c.tabs.position = 'left'
-c.tabs.title.format = '{title}'
+c.tabs.title.format = '{current_title}'
 c.tabs.width = 200
 c.url.auto_search = 'never'
 c.url.default_page = 'about:blank'
@@ -46,7 +46,7 @@ c.url.searchengines['ddg'] = 'https://duckduckgo.com/?q={}'
 c.url.searchengines['site'] = 'https://duckduckgo.com/?q=!{}'
 c.url.start_pages = ['about:blank']
 c.url.yank_ignored_parameters = []
-c.window.title_format = 'qutebrowser - {title}'
+c.window.title_format = 'qutebrowser - {current_title}'
 
 # normal mode
 config.bind('i', 'enter-mode insert')
