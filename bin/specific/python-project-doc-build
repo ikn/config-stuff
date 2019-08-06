@@ -1,0 +1,175 @@
+#! /usr/bin/env bash
+
+# Distributed under the terms of the BSD 3-Clause license
+
+# Builds documentation for Python/Sphinx projects with a specific structure.
+# Builds for each released version and the currently checked-out version.
+# Requirements:
+#  - `make doc` builds documentation in `doc/_build/`
+#  - `make clean` removes `doc/_build/`
+#  - `doc/` contains `conf.py` and `Makefile`; `make html` here builds doc to
+#    the current directory
+#  - Git repository using tags for versions
+#  - the parent directory of the Git repository provides the project name
+
+# Usage: python-project-doc-build SOURCE-PATH DEST-PATH BASE-URL
+#
+# SOURCE-PATH: any path within the repository
+# DEST-PATH: directory to build documentation to, within a subdirectory named
+#            like the project (existing files are deleted)
+# BASE-URL: due to a Sphinx shortcoming, this must be the URL the documentation
+#           will be hosted at, excluding a subpath named like the project
+
+PROJECT_DOC_DIR=doc
+PROJECT_DOC_BUILD_DIR="$PROJECT_DOC_DIR"/_build
+DEVELOPMENT_VERSION=development
+
+[ "$#" -ne 3 ] && {
+    echo >&2 "usage: python-project-doc-build SOURCE-PATH DEST-PATH BASE-URL"
+    exit 2
+}
+SOURCE_PATH="$1"
+DEST_PATH="$2"
+BASE_URL="$3"
+
+
+handle-pipe-error () {
+    local err
+    for err in "$@"; do
+        if [ "$err" -ne 0 ]; then return "$err"; fi
+    done
+}
+
+
+prepare-repo () {
+    local git_root
+
+    cd "$SOURCE_PATH" &&
+        git_root="$(git rev-parse --show-toplevel)" &&
+        cd "$git_root" &&
+        make clean
+}
+
+
+get-project-name () {
+    local project_path
+
+    project_path="$(readlink -f ..)" &&
+        basename "$project_path"
+}
+
+
+get-project-versions () {
+    git tag | sort --version-sort
+    handle-pipe-error "${PIPESTATUS[@]}"
+}
+
+
+render-index-doc () {
+    local project_name
+    local project_url
+
+    project_name="$(get-project-name)" &&
+        project_url="$BASE_URL/$project_name" &&
+        cat <<EOF
+$project_name documentation versions
+================================================================================
+
+.. toctree::
+    $DEVELOPMENT_VERSION <$project_url/version/$DEVELOPMENT_VERSION/index.html>
+EOF
+    local err="$?"
+
+    ( exit "$err" ) &&
+        get-project-versions | tac | {
+            local version
+            while read -r version; do
+                echo "    $version <$project_url/version/$version/index.html>"
+                touch "$PROJECT_DOC_BUILD_DIR"/
+            done
+        }
+    handle-pipe-error "${PIPESTATUS[@]}"
+}
+
+
+build-index () {
+    mkdir -p "$PROJECT_DOC_BUILD_DIR"/ &&
+        cp -t "$PROJECT_DOC_BUILD_DIR" \
+            "$PROJECT_DOC_DIR"/conf.py \
+            "$PROJECT_DOC_DIR"/Makefile &&
+        render-index-doc > "$PROJECT_DOC_BUILD_DIR"/index.rst &&
+        pushd "$PROJECT_DOC_BUILD_DIR" > /dev/null &&
+        make html &&
+        popd > /dev/null
+}
+
+
+build-current () {
+    make doc
+}
+
+
+persist-doc () {
+    local rel_dest_path="$1"
+    local project_name
+    local dest_path
+
+    project_name="$(get-project-name)" &&
+        dest_path="$DEST_PATH/$project_name/$rel_dest_path" &&
+        rm -rf "$dest_path"/ &&
+        mkdir -p "$(dirname "$dest_path")" &&
+        mv "$PROJECT_DOC_BUILD_DIR/html" "$dest_path" #&&
+        #make clean
+}
+
+
+with-saved-repo-state () {
+    local branch=
+    local stashed=n
+
+    git stash &&
+        stashed=y &&
+        branch="$(git rev-parse --abbrev-ref HEAD)" &&
+        eval "$@"
+    local cmd_err="$?"
+
+    if [ -n "$branch" ]; then git checkout "$branch"; fi &&
+        if [ "$stashed" = y ]; then git stash pop; fi || {
+            echo >&2 "error:" \
+                "failed to restore the git repository to its original state;" \
+                "check current branch and stashed changes"
+            return 1
+        }
+    return "$cmd_err"
+}
+
+
+build-persist-versions () {
+    get-project-versions | {
+        local version
+        while read -r version; do
+            git checkout "$version" &&
+                build-current &&
+                persist-doc version/"$version" ||
+                exit 1
+        done
+    }
+    handle-pipe-error "${PIPESTATUS[@]}"
+}
+
+
+cleanup-dest () {
+    local project_name
+
+    project_name="$(get-project-name)" &&
+        rm -rf "$DEST_PATH/$project_name"/
+}
+
+
+prepare-repo &&
+    build-index && persist-doc "" &&
+    build-current && persist-doc version/"$DEVELOPMENT_VERSION" &&
+    with-saved-repo-state build-persist-versions || {
+        cleanup-dest
+        exit 1
+    }

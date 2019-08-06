@@ -11,6 +11,7 @@
 !/bin/specific/lock
 !/bin/specific/maintain-fullscreen
 !/bin/specific/manage-tv-recordings
+!/bin/specific/python-project-doc-build
 !/bin/specific/runpanel
 !/bin/specific/set-wallpaper
 !/bin/specific/temp
