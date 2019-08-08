@@ -12,8 +12,9 @@
 #  - Git repository using tags for versions
 #  - the parent directory of the Git repository provides the project name
 
-# Usage: python-project-doc-build SOURCE-PATH DEST-PATH BASE-URL
+# Usage: python-project-doc-build MODE SOURCE-PATH DEST-PATH BASE-URL
 #
+# MODE: 'init' or 'update-current'
 # SOURCE-PATH: any path within the repository
 # DEST-PATH: directory to build documentation to, within a subdirectory named
 #            like the project (existing files are deleted)
@@ -24,13 +25,20 @@ PROJECT_DOC_DIR=doc
 PROJECT_DOC_BUILD_DIR="$PROJECT_DOC_DIR"/_build
 DEVELOPMENT_VERSION=development
 
-[ "$#" -ne 3 ] && {
-    echo >&2 "usage: python-project-doc-build SOURCE-PATH DEST-PATH BASE-URL"
+[ "$#" -ne 4 ] && {
+    echo >&2 "usage: python-project-doc-build" \
+        "MODE SOURCE-PATH DEST-PATH BASE-URL"
     exit 2
 }
-SOURCE_PATH="$1"
-DEST_PATH="$2"
-BASE_URL="$3"
+MODE="$1"
+SOURCE_PATH="$2"
+DEST_PATH="$3"
+BASE_URL="$4"
+
+if [ "$MODE" != init ] && [ "$MODE" != update-current ]; then
+    echo >&2 "invalid value for MODE: $MODE"
+    exit 2
+fi
 
 
 handle-pipe-error () {
@@ -167,9 +175,13 @@ cleanup-dest () {
 
 
 prepare-repo &&
-    build-index && persist-doc "" &&
-    build-current && persist-doc version/"$DEVELOPMENT_VERSION" &&
-    with-saved-repo-state build-persist-versions || {
+    if [ "$MODE" = init ]; then
+        build-index && persist-doc "" &&
+            build-current && persist-doc version/"$DEVELOPMENT_VERSION" &&
+            with-saved-repo-state build-persist-versions
+    else
+        build-current && persist-doc version/"$DEVELOPMENT_VERSION"
+    fi || {
         cleanup-dest
         exit 1
     }
