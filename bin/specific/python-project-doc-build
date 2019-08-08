@@ -80,7 +80,7 @@ render-index-doc () {
     project_name="$(get-project-name)" &&
         project_url="$BASE_URL/$project_name" &&
         cat <<EOF
-$project_name documentation versions
+$project_name documentation – versions
 ================================================================================
 
 .. toctree::
