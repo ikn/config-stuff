@@ -133,11 +133,14 @@ persist-doc () {
 
 with-saved-repo-state () {
     local branch=
+    local to_stash
     local stashed=n
 
-    git stash &&
-        stashed=y &&
-        branch="$(git rev-parse --abbrev-ref HEAD)" &&
+    branch="$(git rev-parse --abbrev-ref HEAD)" &&
+        to_stash="$(git diff --name-only HEAD)" &&
+        if [ -n "$to_stash" ]; then
+            git stash && stashed=y
+        fi &&
         eval "$@"
     local cmd_err="$?"
 
