@@ -200,26 +200,10 @@ push-ikn () {
 }
 
 push-ikn-doc () {
-    local repo="$1"
-    local docpath="$2"
-    local dest=~/Documents/Coding/web/ikn/ikn/"$docpath"
-    local src="$repo/doc/_build/html"
+    local source_path="$1"
+    local dest_path=~/Documents/Coding/web/ikn/ikn/doc
+    local base_url=http://ikn.org.uk/doc
 
-    rm -rf "$dest" &&
-        pushd "$repo" &&
-        make doc-clean &&
-        make doc &&
-        popd &&
-        mkdir -p "$(dirname "$dest")" &&
-        cp -r "$src" "$dest" &&
+    python-project-doc-build init "$source_path" "$dest_path" "$base_url" &&
         push-ikn
-}
-
-push-fsmanage-doc () {
-    push-ikn-doc ~/"Documents/Coding/projects/in progress/fsmanage" doc/fsmanage
-}
-
-push-game-engine-doc () {
-    push-ikn-doc ~/"Documents/Coding/projects/games/in progress/game engine/src" \
-        doc/game-engine
 }
