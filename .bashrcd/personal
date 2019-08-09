@@ -200,10 +200,11 @@ push-ikn () {
 }
 
 push-ikn-doc () {
-    local source_path="$1"
+    local mode="$1"
+    local source_path="$2"
     local dest_path=~/Documents/Coding/web/ikn/ikn/doc
     local base_url=http://ikn.org.uk/doc
 
-    python-project-doc-build init "$source_path" "$dest_path" "$base_url" &&
+    python-project-doc-build "$mode" "$source_path" "$dest_path" "$base_url" &&
         push-ikn
 }

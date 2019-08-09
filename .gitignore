@@ -1,5 +1,7 @@
 *
 !/bin/
+!/bin/git-hooks/
+!/bin/git-hooks/*
 !/bin/specific/
 !/bin/specific/bspwm-panel
 !/bin/specific/cambridge-bins

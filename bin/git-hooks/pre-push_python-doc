@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+source ~/.bashrc
+
+ref_found=n
+includes_tag=n
+while read -r local_ref local_sha remote_ref remote_sha; do
+    ref_found=y
+    [[ "$local_ref" == refs/tags/* ]] && includes_tag=y
+done
+
+if [ "$ref_found" = y ]; then
+    if [ "$includes_tag" = y ]; then
+        push-ikn-doc init .
+    else
+        push-ikn-doc update-current .
+    fi
+fi
