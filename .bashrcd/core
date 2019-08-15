@@ -88,6 +88,16 @@ sumfs () {
    ls -l "$@" | awk '{print $5}' | paste -sd+ - | bc
 }
 
+pypi-publish () {
+    local gitroot
+    gitroot="$(gitroot)" && pushd "$gitroot" && {
+        make clean &&
+            python3 setup.py sdist bdist_wheel &&
+            twine upload dist/*
+        popd
+    }
+}
+
 # git
 
 git () {
