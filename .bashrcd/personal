@@ -171,6 +171,29 @@ gw2-repair () {
     wine "$GW2_WINEPREFIX/drive_c/Program Files/Guild Wars 2/Gw2-64.exe" --repair
 }
 
+gw2-switch-profile () {
+    local name="$1"
+    [ -z "$name" ] && {
+        echo >&2 "expected argument: profile name"
+        return 2
+    }
+    local cfg_dir="$GW2_WINEPREFIX/drive_c/users/$USER/Application Data/Guild Wars 2"
+    local previous_name
+
+    if [ -f "$cfg_dir/current-profile" ]; then
+        previous_name="$(cat "$cfg_dir/current-profile")" &&
+            mkdir -p "$cfg_dir/profiles/$previous_name" &&
+            cp -t "$cfg_dir/profiles/$previous_name" -- \
+                "$cfg_dir"/{GFXSettings.GW2-64.exe.xml,Local.dat}
+    fi &&
+
+        if [ -d "$cfg_dir/profiles/$name" ]; then
+            cp -t "$cfg_dir" -- \
+                "$cfg_dir/profiles/$name"/{GFXSettings.GW2-64.exe.xml,Local.dat}
+        fi &&
+        echo "$name" > "$cfg_dir/current-profile"
+}
+
 transfer-podcasts () {
     local src_dir=~/media/podcasts
     local backup_dir="$src_dir"/tablet
