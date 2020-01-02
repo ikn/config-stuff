@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
 
-DISPLAY=:0.0 \
+DISPLAY="$(head -n1 ~/.jsession/running | cut -d" " -f2)" \
     feh --no-fehbg --bg-max --image-bg black \
     ~/.backgrounds/"$(ls ~/.backgrounds | shuf -n1)"
