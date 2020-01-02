@@ -6,11 +6,11 @@ Config {
     commands = [
         Run Network "enp4s0" [
             "-S", "true", "-t", "↓<rx>↑<tx>",
-            "-H", "900000", "-l", "#5d5", "-n", "#5d5", "-h", "#d55"
+            "-H", "900000", "-l", "#5d5", "-n", "#5d5", "-h", "#e77"
         ] 50,
         Run Cpu [
             "-t", "<total>%",
-            "-H", "50", "-l", "#5d5", "-n", "#5d5", "-h", "#d55"
+            "-H", "50", "-l", "#5d5", "-n", "#5d5", "-h", "#e77"
         ] 20,
         Run ThermalZone 2 [
             "-t", "<temp>C",
@@ -18,7 +18,7 @@ Config {
         ] 50,
         Run Memory [
             "-t", "<available>M",
-            "-L", "500", "-l", "#d55", "-n", "#5d5", "-h", "#5d5"
+            "-L", "500", "-l", "#e77", "-n", "#5d5", "-h", "#5d5"
         ] 50,
         Run DiskU [
             ("/", "/ <free>"),
@@ -26,7 +26,7 @@ Config {
             ("/media/Data", "data <free>"),
             ("/media/Data/ssd", "ssd <free>")
         ] [
-            "-L", "2", "-l", "#d55", "-n", "#5d5", "-h", "#5d5"
+            "-L", "2", "-l", "#e77", "-n", "#5d5", "-h", "#5d5"
         ] 100,
         Run Date "%H:%M %a %d %b" "date" 50,
         Run UnsafeStdinReader
