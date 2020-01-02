@@ -4,8 +4,6 @@
 
 URxvt.perl-ext-common: default,matcher,keyboard-select
 ! colours
-!URxvt.depth: 32
-!URxvt.background: rgba:0000/0000/0000/cccc
 URxvt.foreground: white
 URxvt.background: rgb:08/08/08
 ! scroll rules

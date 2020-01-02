@@ -1,7 +1,5 @@
 #! /usr/bin/env python3
 
-import sys
-
 from bspwmpython.querytree import get_tree
 
 tree = get_tree()

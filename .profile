@@ -6,5 +6,5 @@ export MNT_DIR="$HOME/mnt"
 export TRAY_MONITOR=1
 
 export EDITOR=/usr/bin/vim
-export WEB_BROWSER="$HOME/bin/nonspecific/uzbl-tabbed-open"
+export WEB_BROWSER=qutebrowser
 export VISUAL="urxvt -e $EDITOR"
