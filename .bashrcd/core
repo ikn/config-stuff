@@ -8,13 +8,17 @@ export HISTCONTROL=ignoredups
 export HISTFILE=~/.bash_history_real
 shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
+export HTTP_PROXY="$http_proxy"
+export HTTPS_PROXY="$https_proxy"
 
 alias grep='grep --color=auto'
 alias less='less -i'
-alias ls='ls --color=auto'
+alias ls='ls -F --color=auto'
 alias ssh='ssh -t'
 alias ag='ag -i'
-alias tree='tree -FC'
+alias tree='tree -FCa'
+alias curl='curl -g'
+alias ncdu='ncdu -x'
 
 alias v='vim'
 alias l='ls'
@@ -55,6 +59,37 @@ show () {
 }
 
 complete -A alias -A function -A command show
+
+# split arguments by '--' and store in existing `before` and `after` arrays
+split_args () {
+    local is_after=
+    for arg in "$@"; do
+        if [ -z "$is_after" ]; then
+            if [ "$arg" = "--" ]; then
+                is_after=y
+            else
+                before+=("$arg")
+            fi
+        else
+            after+=("$arg")
+        fi
+    done
+}
+
+# shell-escape all arguments
+esc-cmdline () {
+    "$PYTHON2" -c "
+import sys
+import pipes
+
+# make stdout binary so we don't convert newlines
+if sys.platform == 'win32':
+    import os, msvcrt
+    msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+
+print(' '.join(map(pipes.quote, sys.argv[1:])))
+    " "$@"
+}
 
 fix-perms () {
     for dir in "$@"; do
@@ -98,12 +133,138 @@ pypi-publish () {
     }
 }
 
-# git
+web () {
+    local http_proxy_args=()
+    [ -n "$http_proxy" ] && http_proxy_args=(-http-proxy "${http_proxy##*/}")
+    local https_proxy_args=()
+    [ -n "$https_proxy" ] && \
+        https_proxy_args=(-https-proxy "${https_proxy##*/}")
+    links "${http_proxy_args[@]}" "${https_proxy_args[@]}" duckduckgo.com
+}
+
+urlencode () {
+    "$PYTHON3" -c "
+import sys
+import urllib.parse
+print(urllib.parse.quote(sys.stdin.read()), end='')
+    "
+}
+
+urldecode () {
+    "$PYTHON3" -c "
+import sys
+import urllib.parse
+print(urllib.parse.unquote(sys.stdin.read()), end='')
+    "
+}
+
+mocha () {
+    ./node_modules/.bin/mocha "$@"
+}
+
+npm () {
+    command npm --python="$PYTHON2" "$@"
+}
+
+openssl-show-cert () {
+    openssl x509 -inform pem -noout -text < "$1"
+}
+
+find-rss () {
+    curl "$1" -L | sed 's/ /\n/g' | grep -i '\(rss\|feed\|atom\)' -B2 -A2
+}
+
+ports () {
+    watch sudo netstat -tpln
+}
+
+
+# ---- maven
+
+
+mvn () {
+    command mvn -e -DtrimStackTrace=false "$@"
+}
+
+mvn-build-modules-arg () {
+    local module
+    local first=y
+    for module in "$@"; do
+        [ "$first" = n ] && echo -n ,
+        echo -n "$module"
+        first=n
+    done
+}
+
+mvn-get-profiles () {
+    local args=()
+    [ "$#" -ge 1 ] && args+=(-pl "$1")
+    shift
+    mvn help:all-profiles "$@" "${args[@]}" >&2 -Doutput=>(cat)
+}
+
+mvn-get-plugins () {
+    local args=()
+    [ "$#" -ge 1 ] && args+=(-pl "$1")
+    shift
+
+    mvn help:effective-pom "$@" "${args[@]}" >&2 -Doutput=>(cat) |
+        xml2json |
+        jshon -C 2> /dev/null \
+            -e project -e build -e plugins -e plugin -a -e groupId -u -p -e artifactId -u |
+        sed 's/^null$//' |
+        while true; do
+            read -r groupId || break
+            read -r artifactId || break
+            echo "$groupId:$artifactId"
+        done
+}
+
+mvn-generate-site () {
+    local args=()
+    [ -n "$1" ] && args+=(-pl "$1")
+    mvn "${args[@]}" org.apache.maven.plugins:maven-site-plugin:3.7.1:site
+}
+
+mvn-generate-site-if-missing () {
+    return 0
+    [ -f "${1:+./}${1:-.}/target/site/index.html" ] || mvn-generate-site
+}
+
+mvn-test-report () {
+    local args=()
+    [ -n "$1" ] && args+=(-pl "$1")
+    mvn-generate-site-if-missing "$@" &&
+        mvn "${args[@]}" \
+            surefire-report:failsafe-report-only surefire-report:report-only
+}
+
+mvn-open-test-report () {
+    local report_file="$PWD${1+/}$1/target/site/failsafe-report.html"
+    "$WEB_BROWSER" --target=window \
+        "file://$(echo -n "$report_file" | urlencode)" &
+    disown
+}
+
+_complete_mvn-modules () {
+    local modules="$(git ls-files |
+        grep -- '/pom.xml$' |
+        sed 's/\/pom\.xml$//')"
+    local IFS=$'\n'
+    COMPREPLY=($(compgen -W "$modules" "$2"))
+}
+complete -F _complete_mvn-modules \
+    mvn-get-profiles mvn-generate-site mvn-generate-site-if-missing \
+    mvn-test-report mvn-open-test-report
+
+
+# ---- git
+
 
 git () {
     case "$1" in
     fetch)
-        command git fetch -t "${@:2}"
+        command git fetch --tags --prune --prune-tags "${@:2}"
         ;;
     *)
         command git "$@"
@@ -112,14 +273,20 @@ git () {
 }
 
 # get the current git branch name
-alias gitbranch='git rev-parse --abbrev-ref HEAD'
+gitbranch () {
+    git rev-parse --abbrev-ref HEAD
+}
 
 gitfirst () {
     git hash-object -t tree /dev/null
 }
 
-logorigin () {
+git-log-origin () {
     git log "origin/$(git rev-parse --abbrev-ref HEAD)" "$@"
+}
+
+gittags () {
+    git log --tags --simplify-by-decoration --pretty="format:%ci %d"
 }
 
 gitnew () {
@@ -144,6 +311,10 @@ gitnew () {
 
 gitfetchnew () {
     git fetch && gitnew && gitnew --stat
+}
+
+gitpushnew () {
+    git push --set-upstream origin "$(gitbranch)"
 }
 
 # get files changed since the last git commit
@@ -218,7 +389,7 @@ gitresethard () {
     else
         git reset HEAD -- "$@"
         git checkout HEAD -- "$@"
-        git clean -fd -- "$@"
+        git clean -fdx -- "$@"
     fi
 }
 
@@ -287,11 +458,69 @@ gitup () {
     return "$rtn"
 }
 
-links () {
-    local http_proxy_args=()
-    [ -n "$http_proxy" ] && http_proxy_args=(-http-proxy "${http_proxy##*/}")
-    local https_proxy_args=()
-    [ -n "$https_proxy" ] && \
-        https_proxy_args=(-https-proxy "${https_proxy##*/}")
-    command links "${http_proxy_args[@]}" "${https_proxy_args[@]}" "$@"
+# determine the 'name' of the current git repository
+git-repo-name () {
+    cfg_lines="$(git config --local --get-regexp '^remote\.[^.]+\.url$')"
+    url="$(echo "$cfg_lines" | cut -s -d" " -f2-)"
+    [ -z "$cfg_lines" ] || [ "$(echo "$cfg_lines" | wc -l)" -ne 1 ] && {
+        echo >&2 "error: repo doesn't have exactly one remote, or remote.url is not set"
+        return 1
+    }
+
+    # we may have `host/repo/path` or `host:repo/path`, possibly prefixed by `scheme://` and `user@`
+    url_without_scheme="${url#*://}"
+    name="$(echo "$url_without_scheme" | cut -s -d: -f2-)"
+    [ -z "$name" ] && name="$(echo "$url_without_scheme" | cut -s -d/ -f2-)"
+    [ -z "$name" ] && {
+        echo >&2 "error: remote url doesn't have a name: $url"
+        return 1
+    }
+
+    echo "$name"
+}
+
+
+# --- completion
+
+
+# _complete_first CMD ARG... -- COMPLETE_ARG...
+# completion function that completes just the first argument
+#   CMD: completion function to run for the first argument (no escaping is performed)
+#   ARG: arguments to pass to the command before completion arguments
+#   COMPLETE_ARG: normal arguments to a bash completion function
+# other arguments are completed with filenames
+_complete_first () {
+    local before=()
+    local after=()
+    split_args "$@"
+
+    if [ "$COMP_CWORD" -le 1 ]; then
+        "${before[@]}" "${after[@]}"
+    else
+        COMPREPLY=($(compgen -f "${after[1]}"))
+    fi
+}
+
+# _complete_upto CMD WORD COMPLETE_ARG...
+# completion function that only completes arguments until a specific argument
+#   CMD: completion function to run for arguments before WORD (no escaping is performed)
+#   WORD: only arguments before an argument equal to this are completed using CMD
+#   COMPLETE_ARG: normal arguments to a bash completion function
+# other arguments are completed with filenames
+_complete_upto () {
+    local cmd="$1"
+    local word="$2"
+    shift 2
+
+    local split=
+    for arg in "${COMP_WORDS[@]::$COMP_CWORD}"; do
+        [ "$arg" = "$word" ] && { split=y; break; }
+    done
+
+    if [ -z "$split" ]; then
+        $cmd "$@"
+        COMPREPLY=($(compgen -W "$word ${COMPREPLY[*]}" "$2"))
+    else
+        COMPREPLY=($(compgen -f "$2"))
+    fi
 }

@@ -1,11 +1,12 @@
 #! /bin/bash
 
 alias pac='pacman'
-alias paclog='less /var/log/pacman.log'
+alias pacman='pacman --color=auto'
+alias paclog='less -R /var/log/pacman.log'
 alias inst='sudo pacman -S'
 alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
-alias owned='pacman -Qo `find .` 2>&1 | grep -v ^error'
+alias pactree='pactree -c'
 
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
@@ -18,5 +19,3 @@ aur-sync-git () {
         fi
     done)
 }
-
-alias npm='npm --python=python2'
