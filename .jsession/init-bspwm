@@ -6,6 +6,7 @@ xset -dpms
 xset s off
 redshift -l 52.2:0.1
 xrandr --output HDMI-1-2 --right-of HDMI-1-1
+killall pulseaudio; sleep 2 && pulseaudio
 
 sxhkd -c .config/sxhkd/sxhkdrc-bspwm -t 0.2
 bspwm
