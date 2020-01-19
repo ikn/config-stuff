@@ -2,7 +2,7 @@
 
 export PYTHONPATH="$PYTHONPATH:$HOME/Documents/Coding/Python modules"
 
-alias nvmon='nvidia-smi'
+alias nvmon='watch nvidia-smi'
 
 scanimg () {
     local f=~/scan-"$RANDOM.tiff"
