@@ -218,7 +218,7 @@ push-ikn () {
     rsync -vr --protect-args --update --delete --temp-dir=/tmp \
         ~/Documents/Coding/web/ikn/ikn/ ~/mnt/ikn/public_html/
     rtn="$?"
-    [ -z "$ftp" ] && umount-user ikn
+    umount-user ikn
     return "$rtn"
 }
 
