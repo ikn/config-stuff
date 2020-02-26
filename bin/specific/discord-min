@@ -1,7 +1,16 @@
 #! /usr/bin/env sh
 
 discord &
-xdotool search --sync --onlyvisible --class discord windowunmap --sync
-desktop_name="$(bspc query -D -d)"
-desktop_number="$(bspc query -D | nl -v 0 -n rz | grep "$desktop_name" | cut -f1)"
-xdotool search --sync --onlyvisible --desktop "$desktop_number" --class discord windowunmap
+while true; do
+    window_id="$(xdotool search --sync --onlyvisible --class discord)"
+    window_name="$(xprop -id "$window_id" |
+        grep '^WM_NAME(' |
+        sed 's/^.* = *"\(.*\)"/\1/'
+    )"
+    echo NAME = $window_name
+    if [ "$window_name" != "Discord Updater" ]; then
+        wmctrl -x -c discord
+        break
+    fi
+    sleep .5
+done
