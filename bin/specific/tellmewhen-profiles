@@ -1,0 +1,179 @@
+#! /usr/bin/env python3
+
+import itertools
+import sys
+import os
+import subprocess
+import shlex
+
+CONFIG_PATH = os.path.join(os.path.expanduser('~'), '.config', 'tellmewhen')
+CACHE_PATH = os.path.join(os.path.expanduser('~'), '.cache', 'tellmewhen')
+
+TIMERS_PATH = os.path.join(CONFIG_PATH, 'timers')
+PROFILES_PATH = os.path.join(CONFIG_PATH, 'profiles')
+BINDS_PATH = os.path.join(CONFIG_PATH, 'binds')
+PROFILE_PATH = os.path.join(CONFIG_PATH, 'profile')
+LOG_PATH = os.path.join(CACHE_PATH, 'log')
+PROFILES_HEADING_TOKEN = '#'
+PROFILES_COMMENT_TOKEN = '!'
+MENU_COMMAND = ['dmenu', '-b', '-l', '10']
+TERMINAL_COMMAND = ['urxvt', '-e']
+SHELL_COMMAND = ['bash', '-c']
+SELF_COMMAND = ['python3', sys.argv[0]]
+
+
+class AppError (Exception):
+    def __init__ (self, msg, code=1):
+        Exception.__init__(self, msg)
+        self.code = code
+        self.msg = msg
+
+
+def read_profiles ():
+    profiles = {}
+    with open(PROFILES_PATH, 'r') as f:
+        section = None
+        for line in f:
+            token = line.strip()
+
+            if token == '' or token.startswith(PROFILES_COMMENT_TOKEN):
+                pass
+            elif token.startswith(PROFILES_HEADING_TOKEN):
+                section = token[1:].lstrip()
+                if section in profiles:
+                    msg = 'profiles file: duplicate section: {}'
+                    raise AppError(msg.format(section))
+                profiles[section] = []
+            else:
+                profiles[section].append(
+                    [timer.strip() for timer in token.split(' ')])
+
+    return profiles
+
+
+def read_binds ():
+    bind_names = []
+    with open(BINDS_PATH, 'r') as f:
+        for line in f:
+            bind = line.strip()
+            if bind != '':
+                bind_names.append(bind)
+    return bind_names
+
+
+def read_profile (profile):
+    profiles = read_profiles()
+    if profile not in profiles:
+        raise AppError('unknown profile: {}'.format(profile))
+    return profiles[profile]
+
+
+def write_current_profile (profile):
+    os.makedirs(os.path.dirname(PROFILE_PATH), exist_ok=True)
+    with open(PROFILE_PATH, 'w') as f:
+        f.write(profile)
+
+
+def read_current_profile ():
+    try:
+        with open(PROFILE_PATH, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        raise AppError('server hasn\'t been launched')
+
+
+def display_binds (timers):
+    bind_names = read_binds()
+    if len(bind_names) < len(timers):
+        print('warning: not enough binds to cover all timers',
+              file=sys.stderr)
+
+    timer_display_names = [
+        timer[0] + ('' if len(timer) == 1 else ' [+{}]'.format(len(timer) - 1))
+        for timer in timers
+    ]
+    timer_max_length = max((len(t) for t in timer_display_names), default=0)
+    for timer, bind in itertools.zip_longest(timer_display_names, bind_names):
+        if timer is None:
+            break
+        print(timer.ljust(timer_max_length + 2),
+              '(not mapped)' if bind is None else bind)
+
+
+def escape_command (args):
+    return ' '.join(shlex.quote(arg) for arg in args)
+
+
+def launch_profile (profile):
+    display_binds(read_profile(profile))
+    print()
+    write_current_profile(profile)
+    timer_paths = [os.path.join(TIMERS_PATH, name)
+                   for name in os.listdir(TIMERS_PATH)]
+    command = ['tellmewhend', '--'] + timer_paths
+    os.execvp(command[0], command)
+
+
+def launch (args):
+    if len(args) != 1:
+        raise AppError('command expected exactly 1 argument: profile name')
+    launch_profile(args[0])
+
+
+def launch_gui (args):
+    if len(args) != 0:
+        raise AppError('command expected no arguments')
+
+    profiles = read_profiles()
+    output = subprocess.check_output(
+        MENU_COMMAND,
+        input='\n'.join(sorted(profiles.keys())).encode('utf8'))
+    profile = output.decode('utf8').strip()
+
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    launch_cli_command = SELF_COMMAND + ['launch', profile]
+    command = TERMINAL_COMMAND + SHELL_COMMAND + [
+        '{} 2> {}'.format(escape_command(launch_cli_command), LOG_PATH)
+    ]
+    os.execvp(command[0], command)
+
+
+def start_timer (args):
+    if len(args) != 1:
+        raise AppError('command expected exactly 1 argument: timer ID')
+    try:
+        id_ = int(args[0])
+    except ValueError:
+        raise AppError('invalid timer ID: {}'.format(args[0]))
+    timers = read_profile(read_current_profile())
+    if id_ >= len(timers):
+        raise AppError('unknown timer ID: {}'.format(id_))
+    subprocess.check_call(['tellmewhenc', 'start'] + timers[id_])
+
+
+def reset_timers (args):
+    if len(args) != 0:
+        raise AppError('command expected no arguments')
+    subprocess.check_call(['tellmewhenc', 'cancel'])
+
+
+def dispatch_command (args, cmds):
+    if len(args) < 2:
+        raise AppError('expected argument: command')
+    cmd = args[1]
+    if cmd not in cmds:
+        raise AppError(
+            'unknown command: {}; options: {}'.format(cmd, '|'.join(cmds)))
+    cmds[cmd](args[2:])
+
+
+try:
+    dispatch_command(sys.argv, {
+        'launch': launch,
+        'launch-gui': launch_gui,
+        'start-timer': start_timer,
+        'reset-timers': reset_timers,
+    })
+except AppError as e:
+    print('error: {}'.format(e.msg), file=sys.stderr)
+    sys.exit(e.code)

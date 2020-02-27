@@ -16,6 +16,7 @@
 !/bin/specific/python-project-doc-build
 !/bin/specific/runpanel
 !/bin/specific/set-wallpaper
+!/bin/specific/tellmewhen-profiles
 !/bin/specific/temp
 !/bin/specific/thunderbird-min
 !/bin/specific/toggle-window
@@ -36,6 +37,8 @@
 !/.config/xmobar/
 !/.config/xmobar/xmobarrc
 !/.config/stalonetray
+!/.config/tellmewhen/
+!/.config/tellmewhen/binds
 !/.local/
 !/.local/share/
 !/.local/share/bspwm/

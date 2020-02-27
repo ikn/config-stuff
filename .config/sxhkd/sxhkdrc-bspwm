@@ -47,6 +47,12 @@ ctrl + alt + y
 Pause
     ~/bin/specific/toggle-window Thunderbird
 
+# tellmewhen-profiles
+ctrl + {1-9,0}
+    /home/j/bin/specific/tellmewhen-profiles start-timer {0-8,9}
+ctrl + grave
+    /home/j/bin/specific/tellmewhen-profiles reset-timers
+
 ## bspwm
 # focus window
 super + {a,comma,e,o}
