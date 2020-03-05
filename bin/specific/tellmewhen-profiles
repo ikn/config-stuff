@@ -148,7 +148,8 @@ def start_timer (args):
     timers = read_profile(read_current_profile())
     if id_ >= len(timers):
         raise AppError('unknown timer ID: {}'.format(id_))
-    subprocess.check_call(['tellmewhenc', 'start'] + timers[id_])
+    for timer in timers[id_]:
+        subprocess.check_call(['tellmewhenc', 'start', timer])
 
 
 def reset_timers (args):
