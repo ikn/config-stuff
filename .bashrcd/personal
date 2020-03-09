@@ -53,7 +53,7 @@ _podcastdl-new () {
 alias mediadl-new='_ytdl-new-aud; _ytdl-new; _podcastdl-new'
 
 ytvlc () {
-    vlc "$(youtube-dl -g "$@")" --meta-title="$(youtube-dl -e "$1")"
+    vlc "$(youtube-dl -g -- "$@")" --meta-title="$(youtube-dl -e -- "$1")"
 }
 
 twitchdl () {
