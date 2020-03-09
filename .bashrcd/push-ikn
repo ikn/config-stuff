@@ -1,0 +1,108 @@
+#! /usr/bin/env bash
+
+IKN_AWS_S3_PROFILE=ikn_upload
+IKN_AWS_S3_BUCKET=media.ikn.org.uk
+
+push-ikn () {
+    mount-ftp ikn || return 1
+    rsync -vr --protect-args --update --delete --temp-dir=/tmp \
+        ~/Documents/Coding/web/ikn/ikn/ ~/mnt/ikn/public_html/
+    rtn="$?"
+    umount-user ikn
+    return "$rtn"
+}
+
+push-ikn-doc () {
+    local mode="$1"
+    local source_path="$2"
+    local dest_path=~/Documents/Coding/web/ikn/ikn/doc
+    local base_url=http://ikn.org.uk/doc
+
+    python-project-doc-build "$mode" "$source_path" "$dest_path" "$base_url" &&
+        push-ikn
+}
+
+_ikn-aws-s3 () {
+    aws s3 --profile "$IKN_AWS_S3_PROFILE" "$@"
+}
+
+_ikn-aws-s3-norm-dir () {
+    local path="$1"
+    path="${path##/}"
+    path="${path%%/}"
+    echo "$path${path:+/}"
+}
+
+push-ikn-media () {
+    [ "$#" -ne 2 ] && {
+        echo >&2 "error: expected arguments: source file, dest remote dir"
+        return 2
+    }
+    local src_file="$1"
+    local dest_dir="$(_ikn-aws-s3-norm-dir "$2")"
+    dest_uri="s3://$IKN_AWS_S3_BUCKET/$dest_dir${src_file##*/}"
+    _ikn-aws-s3 cp --acl public-read "$src_file" "$dest_uri" >&2
+}
+
+rm-ikn-media () {
+    [ "$#" -ne 1 ] && {
+        echo >&2 "error: expected argument: file path"
+        return 2
+    }
+    local file="$1"
+    _ikn-aws-s3 rm "s3://$IKN_AWS_S3_BUCKET/$file" >&2
+}
+
+_complete_push-ikn-media () {
+    if [ "$COMP_CWORD" -eq 1 ]; then
+        compopt -o filenames
+        local IFS=$'\n'
+        COMPREPLY=($(compgen -f "$2"))
+
+    elif [ "$COMP_CWORD" -eq 2 ]; then
+        if [[ $2 == */* ]]; then
+            local base_dir="$(_ikn-aws-s3-norm-dir "${2%/*}")"
+        else
+            local base_dir=
+        fi
+
+        local dirs="$(
+            _ikn-aws-s3 ls "s3://$IKN_AWS_S3_BUCKET/$base_dir" |
+                sed 's/^ *//' |
+                grep '^PRE' |
+                sed 's/^PRE *//' |
+                while read -r dir; do
+                    echo "$base_dir$dir"
+                done
+        )"
+
+        compopt -o nospace
+        compopt -o filenames
+        local IFS=$'\n'
+        COMPREPLY=($(compgen -W "$dirs" "$2"))
+    fi
+}
+
+_complete_rm-ikn-media () {
+    if [[ $2 == */* ]]; then
+        local base_dir="$(_ikn-aws-s3-norm-dir "${2%/*}")"
+    else
+        local base_dir=
+    fi
+
+    local files="$(
+        _ikn-aws-s3 ls "s3://$IKN_AWS_S3_BUCKET/$base_dir" |
+            sed -E 's/^( +PRE +|([^ ]+ +){3})//' |
+            while read -r file; do
+                echo "$base_dir$file"
+            done
+    )"
+
+    compopt -o nospace
+    compopt -o filenames
+    local IFS=$'\n'
+    COMPREPLY=($(compgen -W "$files" "$2"))
+}
+
+complete -F _complete_push-ikn-media push-ikn-media
+complete -F _complete_rm-ikn-media rm-ikn-media

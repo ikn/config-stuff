@@ -7,7 +7,6 @@
 !/bin/specific/cambridge-bins
 !/bin/specific/discord-min
 !/bin/specific/enc-trim
-/bin/specific/mount-ftp
 !/bin/specific/gmrun-smart
 !/bin/specific/irc-urxvt-remote
 !/bin/specific/lock
@@ -50,6 +49,7 @@
 !/.bashrc
 !/.bashrcd/
 !/.bashrcd/*
+/.bashrcd/mount-ftp
 !/.conkyrc
 !/.ghci
 !/.gitconfig

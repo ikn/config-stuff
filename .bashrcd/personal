@@ -9,8 +9,6 @@ export GW2_DPSREPORT_CLIPBOARD=clipboard
 export GW2_DPSREPORT_WEB_BROWSER='qutebrowser --loglevel critical'
 export GW2_WINEPREFIX=/media/Data/ssd/games/guild-wars-2
 
-source ~/bin/specific/mount-ftp
-
 alias fcsh-wrap='fcsh-wrap -optimize=true -static-link-runtime-shared-libraries=true'
 alias fcsh-wrap-dbg='fcsh-wrap -compiler.debug=true'
 alias transmission-daemon='transmission-daemon -g ~/.config/transmission/'
@@ -193,23 +191,4 @@ transfer-podcasts () {
         umount-user mtp
     }
     return "${rtn:-$?}"
-}
-
-push-ikn () {
-    mount-ftp ikn || return 1
-    rsync -vr --protect-args --update --delete --temp-dir=/tmp \
-        ~/Documents/Coding/web/ikn/ikn/ ~/mnt/ikn/public_html/
-    rtn="$?"
-    umount-user ikn
-    return "$rtn"
-}
-
-push-ikn-doc () {
-    local mode="$1"
-    local source_path="$2"
-    local dest_path=~/Documents/Coding/web/ikn/ikn/doc
-    local base_url=http://ikn.org.uk/doc
-
-    python-project-doc-build "$mode" "$source_path" "$dest_path" "$base_url" &&
-        push-ikn
 }
