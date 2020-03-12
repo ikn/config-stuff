@@ -40,8 +40,15 @@ push-ikn-media () {
     }
     local src_file="$1"
     local dest_dir="$(_ikn-aws-s3-norm-dir "$2")"
-    dest_uri="s3://$IKN_AWS_S3_BUCKET/$dest_dir${src_file##*/}"
-    _ikn-aws-s3 cp --acl public-read "$src_file" "$dest_uri" >&2
+    local dest_file="$dest_dir${src_file##*/}"
+    dest_uri="s3://$IKN_AWS_S3_BUCKET/$dest_file"
+    _ikn-aws-s3 cp --acl public-read "$src_file" "$dest_uri" >&2 && {
+        local dest_path="$(echo -n "$dest_file" | urlencode)"
+        local dest_url="http://player.media.ikn.org.uk/$dest_path"
+        echo -n "$dest_url" | xclip -selection clipboard
+        echo
+        echo "$dest_url"
+    }
 }
 
 rm-ikn-media () {
