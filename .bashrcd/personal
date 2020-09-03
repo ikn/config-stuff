@@ -67,49 +67,6 @@ twitchdl () {
     done
 }
 
-fl () {
-    if [ -z "$1" ]; then
-        n=$(flash)
-        if [ -z "$n" ]; then
-            # nothing to play
-            return
-        else
-            # play first video
-            n=$(echo "$n" | head -n1 | cut -d" " -f1)
-        fi
-    else
-        # got video to play
-        n="$1"
-    fi
-    flash "$n" vlc
-}
-
-flcp () {
-    if [ "$#" -ge 2 ]; then
-        dest="$2"
-        tmp="$(mktemp -d)"
-        flash "$1" cp -t "$tmp"
-        mv "$tmp/$1" "$dest"
-        rm -rf "$tmp"
-    else
-        if [ -n "$1" ]; then
-            dest="$1"
-        else
-            dest=.
-        fi
-
-        flash | cut -d" " -f1 | while read num; do
-            flash "$num" cp -t "$dest"
-        done
-    fi
-}
-
-flcpto () {
-    n="$(flash | head -n1 | cut -d" " -f1)"
-    echo "$n"
-    flcp "$n" "$1"
-}
-
 if [ "$STARTIRCREMOTE" = "y" ]; then
     irc () {
         TERM=xterm-256color ssh $host "bash -l -c 'tmux attach'" && exit
