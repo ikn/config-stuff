@@ -8,7 +8,7 @@ redshift -l 52.2:0.1
 xrandr --output HDMI2 --right-of HDMI1
 xrandr --output HDMI-1-2 --right-of HDMI-1-1
 
-sxhkd -c .config/sxhkd/sxhkdrc-bspwm -t 0.2
+sxhkd -c .config/sxhkd/bspwm.sxhkdrc
 bspwm
 
 urxvtd
