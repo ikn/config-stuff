@@ -4,7 +4,7 @@ c.colors.tabs.indicator.start = 'white'
 c.colors.tabs.indicator.stop = 'black'
 c.completion.cmd_history_max_items = 1000
 c.completion.height = 300
-c.completion.open_categories = ['history']
+c.completion.open_categories = []
 c.completion.shrink = True
 c.confirm_quit = ['downloads']
 c.content.cache.maximum_pages = 15
@@ -12,7 +12,9 @@ c.content.geolocation = False
 c.content.host_blocking.enabled = False
 c.content.host_blocking.lists = []
 c.content.host_blocking.whitelist = []
-c.content.media_capture = False
+c.content.media.audio_capture = False
+c.content.media.video_capture = False
+c.content.media.audio_video_capture = False
 c.content.proxy = 'http://localhost:8118'
 c.downloads.location.directory = '/home/j'
 c.downloads.location.prompt = False
@@ -28,8 +30,10 @@ c.input.insert_mode.auto_leave = False
 c.input.insert_mode.leave_on_load = False
 c.input.links_included_in_focus_chain = False
 c.input.partial_timeout = 60000
+c.input.mouse.back_forward_buttons = False
 c.new_instance_open_target = 'tab-silent'
 c.prompt.filebrowser = False
+c.scrolling.bar = 'always'
 c.search.incremental = True
 c.session.lazy_restore = True
 c.tabs.background = True
@@ -82,22 +86,22 @@ config.bind('<Return>', 'follow-selected')
 config.bind('<Ctrl-Return>', 'follow-selected -t')
 config.bind('a', 'back')
 config.bind('e', 'forward')
-config.bind('o', 'set-cmd-text -s :open')
-config.bind('O', 'set-cmd-text :open {url:pretty}')
-config.bind('h', 'set-cmd-text -s :open')
-config.bind('s', 'set-cmd-text -s :open search')
-config.bind('S', 'set-cmd-text -s :open ddg')
-config.bind('l', 'set-cmd-text -s :open site')
+config.bind('o', 'set completion.open_categories [] ;; set-cmd-text -s :open')
+config.bind('O', 'set completion.open_categories [] ;; set-cmd-text :open {url:pretty}')
+config.bind('h', 'set completion.open_categories ["history"] ;; set-cmd-text -s :open')
+config.bind('s', 'set completion.open_categories [] ;; set-cmd-text -s :open search')
+config.bind('S', 'set completion.open_categories [] ;; set-cmd-text -s :open ddg')
+config.bind('l', 'set completion.open_categories [] ;; set-cmd-text -s :open site')
 config.bind('gu', 'navigate up')
 config.bind('gU', 'navigate up -t')
 config.bind('gh', 'view-source')
-config.bind('f', 'hint links')
+config.bind('f', 'hint links current')
 config.bind(';s', 'hint links fill :open {hint-url}')
-config.bind(';i', 'hint images')
+config.bind(';c', 'hint all right-click')
 
 config.bind('t', 'open -t')
-config.bind('T', 'set-cmd-text -s :open -t {url:pretty}')
-config.bind('H', 'set-cmd-text -s :open -t')
+config.bind('T', 'set completion.open_categories [] ;; set-cmd-text :open -t {url:pretty}')
+config.bind('H', 'set completion.open_categories ["history"] ;; set-cmd-text -s :open -t')
 config.bind('F', 'hint links tab-fg')
 config.bind(';r', 'hint --rapid links tab-bg')
 config.bind('c', 'tab-clone')
@@ -121,7 +125,7 @@ config.bind('DD', 'download')
 config.bind('Dc', 'download-cancel')
 config.bind('DC', 'download-clear')
 config.bind(';d', 'hint --rapid links download')
-config.bind('<F12>', 'inspector')
+config.bind('<F12>', 'devtools window')
 
 # hint mode
 config.bind('<Escape>', 'leave-mode', mode='hint')
