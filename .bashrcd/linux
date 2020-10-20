@@ -98,7 +98,7 @@ umount-user () {
     fi | {
         local d
         while read -r d; do
-            fusermount -u "$MNT_DIR/$d"
+            fusermount -u -z "$MNT_DIR/$d"
             rmdir "$MNT_DIR/$d" || exit 1
         done
     }
