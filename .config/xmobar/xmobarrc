@@ -24,6 +24,7 @@ Config {
             ("/", "/ <free>"),
             ("/home", "/home <free>"),
             ("/media/Data", "data <free>"),
+            ("/media/Data/media", "media <free>"),
             ("/media/Data/ssd", "ssd <free>")
         ] [
             "-L", "2", "-l", "#e77", "-n", "#5d5", "-h", "#5d5"
