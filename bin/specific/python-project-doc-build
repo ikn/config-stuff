@@ -16,10 +16,9 @@
 #
 # MODE: 'init' or 'update-current'
 # SOURCE-PATH: any path within the repository
-# DEST-PATH: directory to build documentation to, within a subdirectory named
-#            like the project (existing files are deleted)
+# DEST-PATH: directory to build documentation to (existing files are deleted)
 # BASE-URL: due to a Sphinx shortcoming, this must be the URL the documentation
-#           will be hosted at, excluding a subpath named like the project
+#           will be hosted at
 
 PROJECT_DOC_DIR=doc
 PROJECT_DOC_BUILD_DIR="$PROJECT_DOC_DIR"/_build
@@ -75,16 +74,14 @@ get-project-versions () {
 
 render-index-doc () {
     local project_name
-    local project_url
 
     project_name="$(get-project-name)" &&
-        project_url="$BASE_URL/$project_name" &&
         cat <<EOF
 $project_name documentation – versions
 ================================================================================
 
 .. toctree::
-    $DEVELOPMENT_VERSION <$project_url/version/$DEVELOPMENT_VERSION/index.html>
+    $DEVELOPMENT_VERSION <$BASE_URL/version/$DEVELOPMENT_VERSION/index.html>
 EOF
     local err="$?"
 
@@ -92,7 +89,7 @@ EOF
         get-project-versions | tac | {
             local version
             while read -r version; do
-                echo "    $version <$project_url/version/$version/index.html>"
+                echo "    $version <$BASE_URL/version/$version/index.html>"
                 touch "$PROJECT_DOC_BUILD_DIR"/
             done
         }
@@ -119,15 +116,13 @@ build-current () {
 
 persist-doc () {
     local rel_dest_path="$1"
-    local project_name
     local dest_path
 
-    project_name="$(get-project-name)" &&
-        dest_path="$DEST_PATH/$project_name/$rel_dest_path" &&
+    dest_path="$DEST_PATH/$rel_dest_path" &&
         rm -rf "$dest_path"/ &&
         mkdir -p "$(dirname "$dest_path")" &&
-        mv "$PROJECT_DOC_BUILD_DIR/html" "$dest_path" #&&
-        #make clean
+        mv "$PROJECT_DOC_BUILD_DIR/html" "$dest_path" &&
+        make clean
 }
 
 
@@ -170,10 +165,7 @@ build-persist-versions () {
 
 
 cleanup-dest () {
-    local project_name
-
-    project_name="$(get-project-name)" &&
-        rm -rf "$DEST_PATH/$project_name"/
+    rm -rf "$DEST_PATH"/
 }
 
 

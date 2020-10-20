@@ -2,6 +2,8 @@
 
 source ~/.bashrc
 
+URL=http://ikn.org.uk/lib/pyepgdb/doc
+
 ref_found=n
 includes_tag=n
 while read -r local_ref local_sha remote_ref remote_sha; do
@@ -11,8 +13,8 @@ done
 
 if [ "$ref_found" = y ]; then
     if [ "$includes_tag" = y ]; then
-        push-ikn-doc init .
+        ikn-push-doc init . "$URL"
     else
-        push-ikn-doc update-current .
+        ikn-push-doc update-current . "$URL"
     fi
 fi

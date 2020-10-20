@@ -1,25 +1,43 @@
 #! /usr/bin/env bash
 
+IKN_DIR=~/Documents/Coding/web/ikn/ikn
 IKN_AWS_S3_PROFILE=ikn_upload
 IKN_AWS_S3_BUCKET=media.ikn.org.uk
 
-push-ikn () {
-    mount-ftp ikn || return 1
-    rsync -vr --protect-args --update --delete --temp-dir=/tmp \
-        ~/Documents/Coding/web/ikn/ikn/ ~/mnt/ikn/public_html/
-    rtn="$?"
-    umount-user ikn
-    return "$rtn"
+ikn-build () {
+    make -C "$IKN_DIR"
 }
 
-push-ikn-doc () {
+ikn-test () {
+    "$WEB_BROWSER" localhost:8000 &
+    python -m http.server -d "$IKN_DIR"/dist
+}
+
+ikn-push () {
+    local subdir="${1:-}"
+
+    ikn-build || return 1
+
+    while [ "${subdir%/}" != "$subdir" ]; do
+        subdir="${subdir%/}"
+    done
+    local src_dir="$IKN_DIR/dist/$subdir"
+    local dest_dir="public_html/$subdir"
+    local cmd="mirror --reverse --dereference --delete --verbose"
+    local cmd_args="$(esc-cmdline "$src_dir" "$dest_dir")"
+    lftp -c "connect montana.footholds.net && $cmd $cmd_args" || return 1
+
+    make -C "$IKN_DIR" clean
+}
+
+ikn-push-doc () {
     local mode="$1"
     local source_path="$2"
-    local dest_path=~/Documents/Coding/web/ikn/ikn/doc
-    local base_url=http://ikn.org.uk/doc
+    local base_url="$3"
+    local dest_path="$source_path"/../doc
 
     python-project-doc-build "$mode" "$source_path" "$dest_path" "$base_url" &&
-        push-ikn
+        ikn-push
 }
 
 _ikn-aws-s3 () {
@@ -33,7 +51,7 @@ _ikn-aws-s3-norm-dir () {
     echo "$path${path:+/}"
 }
 
-push-ikn-media () {
+ikn-push-media () {
     [ "$#" -ne 2 ] && {
         echo >&2 "error: expected arguments: source file, dest remote dir"
         return 2
@@ -51,7 +69,7 @@ push-ikn-media () {
     }
 }
 
-rm-ikn-media () {
+ikn-rm-media () {
     [ "$#" -ne 1 ] && {
         echo >&2 "error: expected argument: file path"
         return 2
@@ -60,7 +78,23 @@ rm-ikn-media () {
     _ikn-aws-s3 rm "s3://$IKN_AWS_S3_BUCKET/$file" >&2
 }
 
-_complete_push-ikn-media () {
+_complete_ikn-push () {
+    if [ "$COMP_CWORD" -eq 1 ]; then
+        local IFS=$'\n'
+        local reply=($(compgen -o dirnames "$IKN_DIR/dist/$2"))
+        local f
+        for f in "${reply[@]}"; do
+            # imitate `compopt -o filenames`
+            [ -d "$f" ] && {
+                f="$f/"
+                compopt -o nospace
+            }
+            COMPREPLY+=("${f#$IKN_DIR/dist/}")
+        done
+    fi
+}
+
+_complete_ikn-push-media () {
     if [ "$COMP_CWORD" -eq 1 ]; then
         compopt -o filenames
         local IFS=$'\n'
@@ -90,7 +124,7 @@ _complete_push-ikn-media () {
     fi
 }
 
-_complete_rm-ikn-media () {
+_complete_ikn-rm-media () {
     if [[ $2 == */* ]]; then
         local base_dir="$(_ikn-aws-s3-norm-dir "${2%/*}")"
     else
@@ -111,5 +145,6 @@ _complete_rm-ikn-media () {
     COMPREPLY=($(compgen -W "$files" "$2"))
 }
 
-complete -F _complete_push-ikn-media push-ikn-media
-complete -F _complete_rm-ikn-media rm-ikn-media
+complete -F _complete_ikn-push ikn-push
+complete -F _complete_ikn-push-media ikn-push-media
+complete -F _complete_ikn-rm-media ikn-rm-media
