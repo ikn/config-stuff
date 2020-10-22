@@ -34,12 +34,12 @@ Config {
     ],
     sepChar = "%", alignSep = "}{",
     template = " || %UnsafeStdinReader% | } \
-        \{ | <action=`urxvtc -e htop || urxvt -e htop`>\
+        \{ | <action=`alacritty -e htop`>\
             \%cpu% %thermal2% %memory%\
-        \</action> <action=`urxvtc -e sudo nethogs enp4s0 || urxvt -e sudo nethogs enp4s0`>\
+        \</action> <action=`alacritty -e sudo nethogs enp4s0`>\
             \%enp4s0%\
         \</action> \
-        \|| <action=`urxvtc -e sudo iotop || urxvt -e sudo iotop`>\
+        \|| <action=`alacritty -e sudo iotop`>\
             \%disku%\
         \</action> \
         \|| <action=`gsimplecal`>%date%</action> "

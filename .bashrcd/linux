@@ -38,13 +38,6 @@ man () {
         man "$@"
 }
 
-mkurgent () {
-    title="$1"
-    [ -z "$title" ] && title="urgent window"
-    urxvt -title "$title" -xrm "URxvt*urgentOnBell: True" \
-        -e bash -c 'sleep 2; echo -ne "\a"; sleep 600'
-}
-
 alias p='python -ic "
 import os, atexit, readline, rlcompleter
 hist = \"/home/j/.pyhistory\"

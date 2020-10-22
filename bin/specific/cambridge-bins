@@ -103,7 +103,7 @@ def notify(collections):
 
     if notifications:
         subprocess.check_call((
-            'urxvt', '-e', 'bash', '-c', 'echo "$@"; read', '-',
+            'alacritty', '-e', 'bash', '-c', 'echo "$@"; read', '-',
             '\n'.join(notifications)
         ))
 

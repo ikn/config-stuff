@@ -30,11 +30,11 @@ super + r
 
 ## programs
 ctrl + alt + t
-    urxvtc || urxvt
+    alacritty
 ctrl + alt + b
     qutebrowser
 ctrl + alt + n
-    urxvtc -e newsboat || urxvt -e newsboat
+    alacritty -e newsboat
 ctrl + alt + g
     pluma
 ctrl + alt + k

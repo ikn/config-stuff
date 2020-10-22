@@ -12,7 +12,6 @@ set-mouse-resolution 3400
 sxhkd -c .config/sxhkd/bspwm.sxhkdrc
 bspwm
 
-urxvtd
 bin/specific/set-wallpaper
 kupfer --no-splash
 sleep 2 && runpanel

@@ -17,7 +17,7 @@ LOG_PATH = os.path.join(CACHE_PATH, 'log')
 PROFILES_HEADING_TOKEN = '#'
 PROFILES_COMMENT_TOKEN = '!'
 MENU_COMMAND = ['dmenu', '-b', '-l', '10']
-TERMINAL_COMMAND = ['urxvt', '-e']
+TERMINAL_COMMAND = ['alacritty', '-e']
 SHELL_COMMAND = ['bash', '-c']
 SELF_COMMAND = ['python3', sys.argv[0]]
 

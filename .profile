@@ -7,4 +7,4 @@ export TRAY_MONITOR=1
 
 export EDITOR=/usr/bin/vim
 export WEB_BROWSER=qutebrowser
-export VISUAL="urxvt -e $EDITOR"
+export VISUAL="alacritty -e $EDITOR"
