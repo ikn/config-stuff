@@ -12,7 +12,7 @@ set-mouse-resolution 3400
 sxhkd -c .config/sxhkd/bspwm.sxhkdrc
 bspwm
 
-bin/specific/set-wallpaper
+sleep 1 && bin/specific/set-wallpaper
 kupfer --no-splash
 sleep 2 && runpanel
 maintain-fullscreen
