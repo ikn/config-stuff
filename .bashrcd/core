@@ -146,8 +146,12 @@ urlencode () {
     "$PYTHON3" -c "
 import sys
 import urllib.parse
-print(urllib.parse.quote(sys.stdin.read()), end='')
-    "
+if len(sys.argv) > 1 and sys.argv[1] == 'plus':
+    quote = urllib.parse.quote_plus
+else:
+    quote = urllib.parse.quote
+print(quote(sys.stdin.read()), end='')
+    " "$@"
 }
 
 urldecode () {
