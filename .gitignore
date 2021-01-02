@@ -50,6 +50,7 @@
 !/.bashrcd/
 !/.bashrcd/*
 /.bashrcd/mount-ftp
+/.bashrcd/private
 !/.conkyrc
 !/.ghci
 !/.gitconfig

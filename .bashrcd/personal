@@ -3,7 +3,7 @@
 export JAR=fastjar
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export DUSTFORCE_INSTALL_DIR=/opt/dustforce-dustmod
-export GW2_DPSREPORT_URL="http://a.dps.report"
+export GW2_DPSREPORT_URL="http://b.dps.report"
 export GW2_DPSREPORT_SIZE_THRESHOLD_CUSTOM=150000
 export GW2_DPSREPORT_CLIPBOARD=clipboard
 export GW2_DPSREPORT_WEB_BROWSER='qutebrowser --loglevel critical'
