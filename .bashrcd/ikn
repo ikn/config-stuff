@@ -61,7 +61,8 @@ ikn-push-media () {
     local dest_file="$dest_dir${src_file##*/}"
     dest_uri="s3://$IKN_AWS_S3_BUCKET/$dest_file"
     _ikn-aws-s3 cp --acl public-read "$src_file" "$dest_uri" >&2 && {
-        local dest_path="$(echo -n "$dest_file" | urlencode plus)"
+        local dest_path="$(
+            echo -n "$dest_file" | urlencode plus | sed 's:%2F:/:g')"
         local dest_url="http://player.media.ikn.org.uk/$dest_path"
         echo -n "$dest_url" | xclip -selection clipboard
         echo
