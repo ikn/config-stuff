@@ -1,3 +1,5 @@
+config.load_autoconfig(False)
+
 c.auto_save.session = True
 c.bindings.default = {}
 c.colors.tabs.indicator.start = 'white'
@@ -7,11 +9,9 @@ c.completion.height = 300
 c.completion.open_categories = []
 c.completion.shrink = True
 c.confirm_quit = ['downloads']
+c.content.blocking.enabled = False
 c.content.cache.maximum_pages = 15
 c.content.geolocation = False
-c.content.host_blocking.enabled = False
-c.content.host_blocking.lists = []
-c.content.host_blocking.whitelist = []
 c.content.media.audio_capture = False
 c.content.media.video_capture = False
 c.content.media.audio_video_capture = False
@@ -29,7 +29,6 @@ c.input.forward_unbound_keys = 'none'
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.leave_on_load = False
 c.input.links_included_in_focus_chain = False
-c.input.partial_timeout = 60000
 c.input.mouse.back_forward_buttons = False
 c.new_instance_open_target = 'tab-silent'
 c.prompt.filebrowser = False
@@ -53,8 +52,8 @@ c.url.yank_ignored_parameters = []
 c.window.title_format = 'qutebrowser - {current_title}'
 
 # normal mode
-config.bind('i', 'enter-mode insert')
-config.bind('<Ctrl-P>', 'enter-mode passthrough')
+config.bind('i', 'mode-enter insert')
+config.bind('<Ctrl-P>', 'mode-enter passthrough')
 config.bind(':', 'set-cmd-text :')
 config.bind('<Escape>', 'clear-keychain ;; search')
 
@@ -82,8 +81,8 @@ config.bind('r', 'reload')
 config.bind('R', 'reload -f')
 config.bind('x', 'stop')
 
-config.bind('<Return>', 'follow-selected')
-config.bind('<Ctrl-Return>', 'follow-selected -t')
+config.bind('<Return>', 'selection-follow')
+config.bind('<Ctrl-Return>', 'selection-follow -t')
 config.bind('a', 'back')
 config.bind('e', 'forward')
 config.bind('o', 'set completion.open_categories [] ;; set-cmd-text -s :open')
@@ -128,18 +127,18 @@ config.bind(';d', 'hint --rapid links download')
 config.bind('<F12>', 'devtools window')
 
 # hint mode
-config.bind('<Escape>', 'leave-mode', mode='hint')
+config.bind('<Escape>', 'mode-leave', mode='hint')
 
 # insert mode
-config.bind('<Ctrl-E>', 'open-editor', mode='insert')
-config.bind('<Escape>', 'leave-mode', mode='insert')
+config.bind('<Ctrl-E>', 'edit-text', mode='insert')
+config.bind('<Escape>', 'mode-leave', mode='insert')
 config.bind('<Shift-Ins>', 'insert-text {primary}', mode='insert')
 
 # passthrough mode
-config.bind('<Ctrl-P>', 'leave-mode', mode='passthrough')
+config.bind('<Ctrl-P>', 'mode-leave', mode='passthrough')
 
 # register mode
-config.bind('<Escape>', 'leave-mode', mode='register')
+config.bind('<Escape>', 'mode-leave', mode='register')
 
 # command mode
 config.bind('<Alt-B>', 'rl-backward-word', mode='command')
@@ -162,7 +161,7 @@ config.bind('<Ctrl-U>', 'rl-unix-line-discard', mode='command')
 config.bind('<Ctrl-W>', 'rl-unix-word-rubout', mode='command')
 config.bind('<Ctrl-Y>', 'rl-yank', mode='command')
 config.bind('<Down>', 'command-history-next', mode='command')
-config.bind('<Escape>', 'leave-mode', mode='command')
+config.bind('<Escape>', 'mode-leave', mode='command')
 config.bind('<Return>', 'command-accept', mode='command')
 config.bind('<Shift-Delete>', 'completion-item-del', mode='command')
 config.bind('<Shift-Tab>', 'completion-item-focus prev', mode='command')
@@ -186,7 +185,7 @@ config.bind('<Ctrl-W>', 'rl-unix-word-rubout', mode='prompt')
 config.bind('<Ctrl-X>', 'prompt-open-download', mode='prompt')
 config.bind('<Ctrl-Y>', 'rl-yank', mode='prompt')
 config.bind('<Down>', 'prompt-item-focus next', mode='prompt')
-config.bind('<Escape>', 'leave-mode', mode='prompt')
+config.bind('<Escape>', 'mode-leave', mode='prompt')
 config.bind('<Return>', 'prompt-accept', mode='prompt')
 config.bind('<Shift-Tab>', 'prompt-item-focus prev', mode='prompt')
 config.bind('<Tab>', 'prompt-item-focus next', mode='prompt')
@@ -196,7 +195,7 @@ config.bind('<Up>', 'prompt-item-focus prev', mode='prompt')
 
 config.bind('<Alt-Shift-Y>', 'prompt-yank --sel', mode='yesno')
 config.bind('<Alt-Y>', 'prompt-yank', mode='yesno')
-config.bind('<Escape>', 'leave-mode', mode='yesno')
+config.bind('<Escape>', 'mode-leave', mode='yesno')
 config.bind('<Return>', 'prompt-accept', mode='yesno')
 config.bind('n', 'prompt-accept no', mode='yesno')
 config.bind('y', 'prompt-accept yes', mode='yesno')
