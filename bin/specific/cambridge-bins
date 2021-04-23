@@ -14,8 +14,8 @@ ARG_LOCATION_ID = 'location id'
 ARG_STORE_PATH = 'store path'
 
 API_URL = (
-    'https://refusecalendarapi.azurewebsites.net/' +
-    'collection/search/{location_id}/?numberOfCollections=10')
+    'https://servicelayer3c.azure-api.net/wastecalendar/' +
+    'collection/search/{location_id}/?numberOfCollections=3')
 
 
 def fail(*msg):
@@ -59,7 +59,8 @@ def fetch_collections(location_id):
         res = json.load(req)
 
     collections = ({
-        'date': datetime.datetime.fromisoformat(collection['date']),
+        'date': datetime.datetime.fromisoformat(
+            collection['date'].replace('Z', '+00:00')),
         'types': {t.lower() for t in collection['roundTypes']},
     } for collection in res['collections'])
     return sorted(collections, key=lambda c: c['date'])
