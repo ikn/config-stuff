@@ -75,7 +75,7 @@ umount-encrypted () {
 mount-mtp () {
     local d="$MNT_DIR"/mtp
     mkdir -p "$d"
-    simple-mtpfs "$d" || {
+    aft-mtp-mount "$d" || {
         rm -rf "$d"
         rmdir mnt 2> /dev/null
         return 1

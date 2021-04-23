@@ -134,7 +134,7 @@ gw2-switch-profile () {
 transfer-podcasts () {
     local src_dir=~/media/podcasts
     local backup_dir="$src_dir"/tablet
-    local dest_dir=~/mnt/mtp/Podcasts
+    local dest_dir=~/mnt/mtp/"Internal storage"/Podcasts
     local rtn=
 
     mount-mtp && {
