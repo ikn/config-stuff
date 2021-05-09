@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=System;
+Name=Shut Down
+Icon=system-shutdown
+Exec=jsession-quit halt
+Terminal=false
+StartupNotify=false

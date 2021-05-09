@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=System;
+Name=Log Out
+Icon=system-log-out
+Exec=jsession-quit logout
+Terminal=false
+StartupNotify=false

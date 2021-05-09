@@ -40,6 +40,11 @@
 !/.config/tellmewhen/binds
 !/.local/
 !/.local/share/
+!/.local/share/applications/
+!/.local/share/applications/
+!/.local/share/applications/logout.desktop
+!/.local/share/applications/reboot.desktop
+!/.local/share/applications/shutdown.desktop
 !/.local/share/bspwm/
 !/.local/share/bspwm/*
 !/.local/share/bspwm/bspwmpython/*

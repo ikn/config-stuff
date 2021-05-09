@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=System;
+Name=Restart
+Icon=system-reboot
+Exec=jsession-quit reboot
+Terminal=false
+StartupNotify=false
