@@ -1,0 +1,85 @@
+window:
+  padding:
+    x: 2
+    y: 3
+  dynamic_title: true
+
+scrolling:
+  history: 10000
+
+font:
+  normal:
+    family: monospace
+    style: Regular
+  bold:
+    family: monospace
+    style: Bold
+  italic:
+    family: monospace
+    style: Italic
+  bold_italic:
+    family: monospace
+    style: Bold Italic
+  size: 10.0
+  offset:
+    x: 0
+    y: 1
+
+draw_bold_text_with_bright_colors: true
+colors:
+  primary:
+    background: '#080808'
+    foreground: '#ffffff'
+  normal:
+    black:   '#2e3436'
+    red:     '#cc0000'
+    green:   '#4e9a06'
+    yellow:  '#c4a000'
+    blue:    '#3465a4'
+    magenta: '#75507b'
+    cyan:    '#06989a'
+    white:   '#d3d7cf'
+  bright:
+    black:   '#555753'
+    red:     '#ef2929'
+    green:   '#8ae234'
+    yellow:  '#fce94f'
+    blue:    '#729ffc'
+    magenta: '#ad7fa8'
+    cyan:    '#34e2e1'
+    white:   '#eeeeec'
+
+cursor:
+  style: Underline
+  unfocused_hollow: true
+  thickness: 0.2
+
+mouse:
+  double_click: { threshold: 200 }
+  triple_click: { threshold: 200 }
+  hide_when_typing: true
+
+hints:
+  modifiers: Control
+
+mouse_bindings:
+  - { mouse: Middle, action: PasteSelection }
+
+key_bindings:
+  - { key: Up,       mods: Shift,   mode: ~Alt,     action: ScrollLineUp,  }
+  - { key: Down,     mods: Shift,   mode: ~Alt,     action: ScrollLineDown,  }
+  - { key: C,        mods: Alt,                     action: Copy             }
+  - { key: V,        mods: Alt,                     action: Paste            }
+  - { key: Insert,   mods: Control,                 action: CopySelection   }
+  - { key: Insert,   mods: Shift,                   action: PasteSelection   }
+  - { key: S,        mods: Alt,   mode: ~Alt,       action: SearchBackward,  }
+
+  - { key: V,        mods: Control|Shift,           action: ReceiveChar            }
+  - { key: C,        mods: Control|Shift,           action: ReceiveChar             }
+  - { key: F,        mods: Control|Shift,           action: ReceiveChar    }
+  - { key: B,        mods: Control|Shift,           action: ReceiveChar   }
+  - { key: Key0,     mods: Control,                 action: ReceiveChar    }
+  - { key: Equals,   mods: Control,                 action: ReceiveChar }
+  - { key: NumpadAdd, mods: Control,                action: ReceiveChar }
+  - { key: NumpadSubtract, mods: Control,           action: ReceiveChar }
+  - { key: Minus,    mods: Control,                 action: ReceiveChar }

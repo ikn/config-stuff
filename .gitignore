@@ -23,6 +23,8 @@
 !/mm.cfg
 !/.ansible.cfg
 !/.config/
+!/.config/alacritty/
+!/.config/alacritty/alacritty.yml
 !/.config/bspwm/
 !/.config/bspwm/*
 !/.config/git/
