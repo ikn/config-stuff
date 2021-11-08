@@ -60,7 +60,17 @@ mouse:
   hide_when_typing: true
 
 hints:
-  modifiers: Control
+  enabled:
+   - regex: "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+             [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+     command: xdg-open
+     post_processing: true
+     mouse:
+       enabled: false
+       mods: None
+     binding:
+       key: U
+       mods: Control|Shift
 
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
