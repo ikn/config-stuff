@@ -1,4 +1,4 @@
-article-sort-order date asc
+article-sort-order date-asc
 browser qutebrowser
 goto-next-feed no
 ignore-mode display
@@ -10,8 +10,6 @@ show-keymap-hint no
 show-read-articles no
 show-read-feeds no
 
-macro R set show-read-articles yes
-macro r set show-read-articles no
 macro y set browser "echo %u >> /home/j/media/dl-list" ; open-in-browser-and-mark-read ; set browser qutebrowser
 macro a set browser "echo %u >> /home/j/media/dl-list-aud" ; open-in-browser-and-mark-read ; set browser qutebrowser
 
