@@ -135,10 +135,13 @@ transfer-podcasts () {
     local root_dir=~/media/podcasts
     local src_dir="$root_dir"/tablet/new
     local backup_dir="$root_dir"/tablet/"$(date +%s)"
-    local dest_dir=~/mnt/mtp/"Internal storage"/Podcasts
+    # tablet
+    #local dest_dir=~/mnt/mtp/"Internal storage"/Podcasts
+    # phone
+    local dest_dir=~/mnt/mtp/"Internal shared storage"/Download
     local rtn=
 
-    #mount-mtp && {
+    mount-mtp && {
         mkdir -p "$src_dir" "$backup_dir" &&
             echo -n "move new files to $src_dir ... " &&
             read &&
@@ -147,7 +150,34 @@ transfer-podcasts () {
             mkdir -p "$dest_dir" &&
             cp "$backup_dir"/* "$dest_dir"
         rtn="$?"
-        #umount-user mtp
-    #}
+        umount-user mtp
+    }
     return "${rtn:-$?}"
+}
+
+rename-photos () {
+    local f
+    while read -r f; do
+        local src="$(readlink -f "$f")"
+        local date="$(exiv2 pr "$src" |
+            grep "^Image timestamp" |
+            awk '{ print $4 }' |
+            sed -e 's/:/-/g')"
+        if [ -z "$date" ]; then
+            continue
+        fi
+
+        local name="$(basename "$src")"
+        local dest="$(dirname "$src")/$date ${name,,}"
+        if [ -e "$dest" ]; then
+            echo >&2 "error: already exists: $dest"
+        else
+            mv "$src" "$dest"
+        fi
+    done < <(command ls)
+}
+
+archive-photos () {
+    rename-photos
+    mogrify -resize 1296x972 *.jpg
 }
