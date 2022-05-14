@@ -7,7 +7,7 @@ alias iotop='sudo iotop -o'
 alias nethogs='sudo nethogs enp4s0'
 alias free='free -h'
 alias info='info --vi-keys'
-alias dmesg='dmesg -H -w'
+alias dmesg='sudo dmesg -H -w'
 alias df='df -h'
 
 alias crontab='fcrontab'
@@ -21,8 +21,8 @@ export JAVA8="$JAVA8_HOME"/bin/java
 export JAVA11_HOME=/usr/lib/jvm/java-11-openjdk
 export JAVA11="$JAVA11_HOME"/bin/java
 
-alias aoeu='setxkbmap gb'
-alias asdf='setxkbmap gb dvorakukp'
+alias aoeu='setxkbmap gb -option -option caps:escape -option terminate:ctrl_alt_bksp'
+alias asdf='setxkbmap gb dvorakukp -option -option caps:escape -option terminate:ctrl_alt_bksp'
 
 man () {
     local w=100
