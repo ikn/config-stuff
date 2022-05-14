@@ -17,6 +17,7 @@ trap cleanup SIGINT SIGTERM
 
 fifos=()
 num_monitors="$(bspc query -M | wc -l)"
+TRAY_MONITOR="$(( $TRAY_MONITOR > ($num_monitors - 1) ? ($num_monitors - 1) : $TRAY_MONITOR ))"
 for (( monitor = 0; monitor < num_monitors; monitor += 1 )); do
     fifo="$temp_dir/$monitor"
     fifos+=("$fifo")
