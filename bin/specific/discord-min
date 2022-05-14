@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-discord &
+discord --no-sandbox &
 while true; do
     window_id="$(xdotool search --sync --onlyvisible --class discord)"
     window_name="$(xprop -id "$window_id" |
