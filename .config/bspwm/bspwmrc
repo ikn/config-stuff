@@ -28,12 +28,12 @@ bspc config pointer_action3 none
 
 bspc config external_rules_command "$BSPWM_SCRIPTS_DIR"/adjust-new-window
 bspc config removal_adjustment false
-bspc rule -a orage state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Pyroom state=floating
 bspc rule -a dustmod.bin.x86_64 state=fullscreen
 bspc rule -a Zathura state=tiled
 bspc rule -a jetbrains-idea state=tiled
+bspc rule -a albert border=off focus=on
 
 # set up desktops - need to do this after some settings above, since they're
 # global and get applied to desktops when they're created/reset

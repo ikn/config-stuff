@@ -14,7 +14,8 @@ sxhkd -c .config/sxhkd/bspwm.sxhkdrc
 bspwm
 
 sleep 1 && bin/specific/set-wallpaper
-kupfer --no-splash
+albert
 sleep 2 && runpanel
 maintain-fullscreen
 /usr/lib/xfce4/notifyd/xfce4-notifyd
+cambridge-bins notify ~/.local/share/cambridge-bins/store
