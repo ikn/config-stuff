@@ -25,7 +25,6 @@ alias l='ls'
 alias aw='ag -sw'
 alias sedr='sed -r'
 alias py='python'
-alias py2='python2'
 alias :q='exit'
 alias pb="curl -F 'sprunge=<-' http://sprunge.us"
 alias bc='bc -l'
@@ -78,7 +77,7 @@ split_args () {
 
 # shell-escape all arguments
 esc-cmdline () {
-    "$PYTHON2" -c "
+    "$PYTHON3" -c "
 import sys
 import pipes
 
@@ -160,14 +159,6 @@ import sys
 import urllib.parse
 print(urllib.parse.unquote(sys.stdin.read()), end='')
     "
-}
-
-mocha () {
-    ./node_modules/.bin/mocha "$@"
-}
-
-npm () {
-    command npm --python="$PYTHON2" "$@"
 }
 
 openssl-show-cert () {

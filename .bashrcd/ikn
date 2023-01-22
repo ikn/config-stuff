@@ -5,7 +5,7 @@ IKN_AWS_S3_PROFILE=ikn_upload
 IKN_AWS_S3_BUCKET=media.ikn.org.uk
 
 ikn-build () {
-    make -C "$IKN_DIR"
+    make -C "$IKN_DIR" clean all
 }
 
 ikn-test () {
