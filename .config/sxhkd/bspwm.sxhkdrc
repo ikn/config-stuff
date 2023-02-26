@@ -43,9 +43,6 @@ ctrl + alt + c
     gsimplecal
 ctrl + alt + y
     bash -ic "ytvlc \"$(xclip -selection clipboard -o)\""
-# toggle Thunderbird
-Pause
-    ~/bin/specific/toggle-window Thunderbird
 
 # tellmewhen-profiles
 ctrl + {1-9,0}

@@ -1,11 +1,7 @@
 #! /usr/bin/env sh
 
-# for some reason, the first time it starts and gets unmapped, the window stops
-# rendering
 thunderbird &
 pid="$!"
 xdotool search --sync --onlyvisible --class Thunderbird windowunmap
-sleep 5
+sleep 60
 kill "$pid"
-thunderbird &
-xdotool search --sync --onlyvisible --class Thunderbird windowunmap
