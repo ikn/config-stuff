@@ -8,6 +8,8 @@ redshift -l 52.2:0.1
 xrandr --output HDMI2 --right-of HDMI1
 xrandr --output HDMI-1-2 --right-of HDMI-1-1
 razer-mouse-init
+# for input-remapper
+lxpolkit
 input-remapper-control --command stop-all && input-remapper-control --command autoload
 
 sxhkd -c .config/sxhkd/bspwm.sxhkdrc
