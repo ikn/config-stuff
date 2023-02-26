@@ -1,5 +1,5 @@
 Config {
-    font = "xft:Monospace:pixelsize=13",
+    font = "Mono 10",
     bgColor = "#222", fgColor = "#ddd",
     position = BottomP 0 0,
     lowerOnStart = True, persistent = False, hideOnStart = False,

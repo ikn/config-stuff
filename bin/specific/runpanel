@@ -2,6 +2,7 @@
 
 TRAY_MONITOR="${TRAY_MONITOR:-0}"
 TRAY_SIZE=125
+PANEL_HEIGHT=21
 pids=()
 temp_dir="$(mktemp -d)"
 
@@ -26,11 +27,11 @@ for (( monitor = 0; monitor < num_monitors; monitor += 1 )); do
     # trayer can only show on 1 monitor
     if [ "$monitor" = "$TRAY_MONITOR" ]; then
         # tint is argb; transparency needed for tint to work
-        trayer --align left --widthtype pixel --width "$TRAY_SIZE" --height 21 \
+        trayer --align left --widthtype pixel --width "$TRAY_SIZE" --height "$PANEL_HEIGHT" \
             --transparent true --alpha 0 --tint '0xFF222222' \
             --monitor "$monitor" &
         pids+=("$!")
-        xmobar --position "BottomP $TRAY_SIZE 0" --screen "$monitor" < "$fifo" &
+        xmobar --position "BottomHM $PANEL_HEIGHT $TRAY_SIZE 0 0 0" --screen "$monitor" < "$fifo" &
         pids+=("$!")
     else
         xmobar --screen "$monitor" < "$fifo" &
