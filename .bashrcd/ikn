@@ -25,7 +25,7 @@ ikn-push () {
     local dest_dir="public_html/$subdir"
     local cmd="mirror --reverse --dereference --delete --verbose"
     local cmd_args="$(esc-cmdline "$src_dir" "$dest_dir")"
-    lftp -c "connect cov1.webhostserver.co.uk && $cmd $cmd_args" || return 1
+    lftp -c "connect web1.bhx.zumedns.com && $cmd $cmd_args" || return 1
 
     make -C "$IKN_DIR" clean
 }
