@@ -34,7 +34,7 @@ for (( monitor = 0; monitor < num_monitors; monitor += 1 )); do
         xmobar --position "BottomHM $PANEL_HEIGHT $TRAY_SIZE 0 0 0" --screen "$monitor" < "$fifo" &
         pids+=("$!")
     else
-        xmobar --screen "$monitor" < "$fifo" &
+        xmobar --position "BottomHM $PANEL_HEIGHT 0 0 0 0" --screen "$monitor" < "$fifo" &
         pids+=("$!")
     fi
 done
