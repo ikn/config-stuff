@@ -12,7 +12,7 @@ alias pacnew='pacsave'
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
         pkg=($line)
-        if echo ${pkg[1]} | egrep -q '^[[:digit:]]{8}-[[:digit:]]+$' \
+        if echo ${pkg[1]} | grep -Eq '^[[:digit:]]{8}-[[:digit:]]+$' \
            || echo ${pkg[0]} | grep -q -- '-git$' \
            || echo ${pkg[0]} | grep -q -- '-hg$' \
            || echo ${pkg[0]} | grep -q -- '-bzr$'; then
