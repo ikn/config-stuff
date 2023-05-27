@@ -37,18 +37,6 @@ man () {
         man "$@"
 }
 
-alias p='python -ic "
-import os, atexit, readline, rlcompleter
-hist = \"/home/j/.pyhistory\"
-def save_history(historyPath = hist):
-    import readline
-    readline.write_history_file(hist)
-atexit.register(save_history)
-if os.path.exists(hist):
-    readline.read_history_file(hist)
-readline.parse_and_bind(\"tab: complete\")
-del os, atexit, readline, rlcompleter"'
-
 mount-encrypted () {
     sudo cryptsetup --type luks open "$1" "$2"
     udisksctl mount -b /dev/mapper/"$2"
