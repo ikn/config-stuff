@@ -28,7 +28,6 @@ bspc config pointer_action3 none
 
 bspc config external_rules_command "$BSPWM_SCRIPTS_DIR"/adjust-new-window
 bspc config removal_adjustment false
-bspc rule -a Kupfer.py focus=on
 bspc rule -a Pyroom state=floating
 bspc rule -a dustmod.bin.x86_64 state=fullscreen
 bspc rule -a Zathura state=tiled
