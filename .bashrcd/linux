@@ -4,7 +4,7 @@ export CFLAGS="$CFLAGS -fdiagnostics-color=always"
 
 alias locate='locate -i'
 alias iotop='sudo iotop -o'
-alias nethogs='sudo nethogs enp4s0'
+alias nethogs='sudo nethogs'
 alias free='free -h'
 alias info='info --vi-keys'
 alias dmesg='sudo dmesg -H -w'
@@ -15,10 +15,14 @@ export PYTHON3=python3
 export NODEJS=nodejs
 export JAVA_HOME=/usr/lib/jvm/default
 export JAVA=java
+export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk
+export JAVA7="$JAVA7_HOME"/bin/java
 export JAVA8_HOME=/usr/lib/jvm/java-8-openjdk
 export JAVA8="$JAVA8_HOME"/bin/java
 export JAVA11_HOME=/usr/lib/jvm/java-11-openjdk
 export JAVA11="$JAVA11_HOME"/bin/java
+export JAVA17_HOME=/usr/lib/jvm/java-17-openjdk
+export JAVA17="$JAVA17_HOME"/bin/java
 
 alias aoeu='setxkbmap gb -option -option caps:escape -option terminate:ctrl_alt_bksp'
 alias asdf='setxkbmap gb dvorakukp -option -option caps:escape -option terminate:ctrl_alt_bksp'
@@ -76,14 +80,109 @@ umount-user () {
 }
 
 docker-cleanup () {
-    sudo docker container prune -f
-    sudo docker volume prune -f
-    sudo docker image prune -f
+    docker container prune -f &&
+        docker volume prune -f --filter=all=true &&
+        docker network prune -f &&
+        docker image prune -f
 }
 
 docker-remove-containers () {
-    sudo docker container ls -qa |
-        xargs -r sudo docker container stop
-    sudo docker container ls -qa |
-        xargs -r sudo docker container rm
+    docker container ls -q | xargs -r docker container stop &&
+        docker container prune -f
 }
+
+docker-find-container () {
+    local image="$1"
+    [ -z "$image" ] && {
+        echo >&2 "expected argument: image name"
+        return 2
+    }
+
+    local id="$(
+        docker container ls -a --format '{{.ID}} {{.Image}}' |
+        grep -F "$image" |
+        cut -d" " -f1
+    )"
+    [ -z "$id" ] && {
+        echo >&2 "no container with image: $image"
+        return 1
+    }
+
+    if [ "$(echo "$id" | wc -l)" -gt 1 ]; then
+        echo >&2 "multiple containers with image: $image"
+        echo >&2 "$id"
+        return 1
+    fi
+
+    echo "$id"
+}
+
+docker-logs () {
+    while true; do
+        local id
+        id="$(docker-find-container "$1")" &&
+            docker logs -f "$id"
+        sleep 2
+    done
+}
+
+docker-shell () {
+    local container="$1"
+    local shell="${2:-bash}"
+    local id
+    id="$(docker-find-container "$container")" || return 1
+    state="$(docker container inspect "$id" | jshon -e 0 -e State -e Status -u)"
+
+    if [ "$state" = running ]; then
+        docker exec -it "$id" "$shell"
+    else
+        echo >&2 "note: container is not running, running in copy"
+        local img_id="$(uuidgen)"
+        docker container commit "$id" "$img_id" || return 1
+        docker run --rm -it --entrypoint "$shell" "$img_id"
+        docker image rm "$img_id"
+    fi
+}
+
+docker-volume-save () {
+    local volume="$1"
+    local dest="$2"
+    if [ -z "$volume" ] || [ -z "$dest" ]; then
+        echo >&2 "usage: docker-volume-save volume-id dest-path.tar"
+        return 1
+    fi
+    dest="$(readlink -f "$dest")"
+    mkdir -p "$(dirname "$dest")"
+    docker run --rm -v "$volume:/volume" -v "$(dirname "$dest")":/dest ubuntu \
+        tar -cf /dest/"$(basename "$dest")" /volume
+}
+
+docker-volume-load () {
+    local src="$1"
+    local volume="$2"
+    if [ -z "$src" ] || [ -z "$volume" ]; then
+        echo >&2 "usage: docker-volume-load src-path.tar volume-id"
+        return 1
+    fi
+    src="$(readlink -f "$src")"
+    docker run --rm -v "$volume:/volume" -v "$(dirname "$src")":/src ubuntu \
+        bash -c "cd /volume && tar -xf /src/$(esc-cmdline "$(basename "$src")") --strip 1"
+}
+
+_complete_docker-container-images () {
+    local names="$(
+        docker container ls --all --format '{{.Image}}'
+        docker container ls --all --format '{{.Image}}' |
+            cut -d: -f1 | rev | cut -d/ -f1 | rev
+        docker container ls --all --format '{{.Image}}' |
+            cut -d: -f1 | rev | cut -d/ -f1 | rev | cut -d- -f2-
+    )"
+    local IFS=$'\n'
+    # https://stackoverflow.com/questions/2805412/bash-completion-for-maven-escapes-colon/12495727#12495727
+    local cur
+    _get_comp_words_by_ref -n : cur
+    COMPREPLY=($(compgen -W "$names" "$cur"))
+    __ltrim_colon_completions "$cur"
+}
+complete -F _complete_docker-container-images \
+    docker-find-container docker-logs docker-shell

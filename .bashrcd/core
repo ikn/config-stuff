@@ -10,6 +10,7 @@ shopt -s histappend
 PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 export HTTP_PROXY="$http_proxy"
 export HTTPS_PROXY="$https_proxy"
+export NO_PROXY="$no_proxy"
 
 alias grep='grep --color=auto'
 alias less='less -i'
@@ -80,14 +81,14 @@ split_args () {
 esc-cmdline () {
     "$PYTHON3" -c "
 import sys
-import pipes
+import shlex
 
 # make stdout binary so we don't convert newlines
 if sys.platform == 'win32':
     import os, msvcrt
     msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
-print(' '.join(map(pipes.quote, sys.argv[1:])))
+print(' '.join(map(shlex.quote, sys.argv[1:])))
     " "$@"
 }
 
@@ -179,7 +180,12 @@ ports () {
 
 
 mvn () {
-    command mvn -e -DtrimStackTrace=false "$@"
+    command mvn -e -DtrimStackTrace=false --threads 1.0C "$@"
+}
+
+mvn-debug () {
+    MAVEN_DEBUG_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000" \
+        "$@"
 }
 
 mvn-build-modules-arg () {
@@ -260,7 +266,8 @@ complete -F _complete_mvn-modules \
 git () {
     case "$1" in
     fetch)
-        command git fetch --tags --prune --prune-tags "${@:2}"
+        command git fetch --all --prune &&
+            command git fetch --tags --prune-tags
         ;;
     *)
         command git "$@"
@@ -310,7 +317,7 @@ gitfetchnew () {
 }
 
 gitpushnew () {
-    git push --set-upstream origin "$(gitbranch)"
+    git push --set-upstream "${1:-origin}" "$(gitbranch)"
 }
 
 # get files changed since the last git commit
@@ -396,7 +403,7 @@ gitrebase () {
     local remote_changes=
     local current="$(gitbranch)"
 
-    git fetch || return 1
+    command git fetch --all > /dev/null || return 1
 
     # check for changes on remote but not local branch
     [ -n "$(git log --oneline "$current"..origin/"$current")" ] && remote_changes=y
