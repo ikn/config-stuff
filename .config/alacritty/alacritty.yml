@@ -30,6 +30,13 @@ colors:
   primary:
     background: '#080808'
     foreground: '#ffffff'
+  search:
+    matches:
+      foreground: '#000000'
+      background: '#ffffff'
+    focused_match:
+      foreground: '#000000'
+      background: '#ffff77'
   normal:
     black:   '#2e3436'
     red:     '#cc0000'
