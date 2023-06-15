@@ -7,7 +7,6 @@ alias inst='sudo pacman -S'
 alias uninst='sudo pacman -Rs'
 alias up='sudo pacman -Syu'
 alias pactree='pactree -c'
-alias pacnew='pacsave'
 
 aur-sync-git () {
     aur-sync -f $(pacman -Qm | while read line; do
